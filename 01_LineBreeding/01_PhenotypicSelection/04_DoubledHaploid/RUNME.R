@@ -1,24 +1,38 @@
-## Description 
 ## ------------------------------------------------------------------------
-# This script runs 20 years of a wheat breeding program with double haploid 
-# technology 
+##
+## Script name: Phenotypic line breeding program with doubled haploid technology  
+##
+## Authors: Chris Gaynor, Jon Bancic, Philip Greenspoon
+##
+## Date Created: 2023-01-23
+##
+## Email: 
+##
+## ------------------------------------------------------------------------
+##
+## Description:
+##   
+##
+## ------------------------------------------------------------------------
 
-## ------------------------------------------------------------------------
-# Load global parameters
+##-- Load packages 
+require("AlphaSimR")
+
+##-- Load global parameters
 source("GlobalParameters.R")
 
-# Create initial parents
+##-- Create initial parents
 source("CreateParents.R")
 
-# Fill breeding pipeline with unique individuals from initial parents
+##-- Fill breeding pipeline with unique individuals from initial parents
 source("FillPipeline.R")
 
-# Initialize variables for results
+##-- Initialize variables for results
 dhMean = dhVar = numeric(40)
 
-# Burn-in phase
+##-- Burn-in phase
 for(year in 1:20){ #Change to any number of desired years
-  cat("Working on year:",year,"\n")
+  cat("Working on burnin year:",year,"\n")
   source("UpdateParents.R") #Pick parents
   source("AdvanceYear.R") #Advances yield trials by a year
   # Update results
@@ -26,9 +40,9 @@ for(year in 1:20){ #Change to any number of desired years
   dhVar[year] = varG(DH)
 }
 
-# Future phase
+##-- Future phase
 for(year in 1:20){ #Change to any number of desired years
-  cat("Working on year:",year,"\n")
+  cat("Working on future year:",year,"\n")
   source("UpdateParents.R") #Pick parents
   source("AdvanceYear.R") #Advances yield trials by a year
   # Update results
