@@ -1,4 +1,3 @@
 # jbancic_alphasimr_plants
 
-test
-A line I wrote on my local computer  
+This is a repository of AlphaSimR R code templates for different plant breeding programs.
