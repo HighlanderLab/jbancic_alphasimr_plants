@@ -1,21 +1,21 @@
 ## ------------------------------------------------------------------------
 ##
-## Script name: Phenotypic line breeding program with doubled haploid technology  
+## Script name: Phenotypic line breeding program with doubled haploid technology
 ##
 ## Authors: Chris Gaynor, Jon Bancic, Philip Greenspoon
 ##
 ## Date Created: 2023-01-23
 ##
-## Email: 
+## Email:
 ##
 ## ------------------------------------------------------------------------
 ##
 ## Description:
-##   
+##
 ##
 ## ------------------------------------------------------------------------
 
-##-- Load packages 
+##-- Load packages
 require("AlphaSimR")
 
 ##-- Load global parameters
@@ -41,7 +41,8 @@ for(year in 1:20){ #Change to any number of desired years
 }
 
 ##-- Future phase
-for(year in 1:20){ #Change to any number of desired years
+for(year in 21:40){ #Change to any number of desired years ##PG:
+                    #changed to 21:40 so that it saves properly
   cat("Working on future year:",year,"\n")
   source("UpdateParents.R") #Pick parents
   source("AdvanceYear.R") #Advances yield trials by a year

@@ -11,3 +11,6 @@ rm(TmpPop)
 Parents = selectInd(Parents,nParents-nParentsPYT)
 #Add PYT parents
 Parents = c(Parents,selectInd(PYT,nParentsPYT))
+
+##PG: Not sure about this nParentsPYT and nParentsAYT thing. Could it
+##be clearer? This file seems less tidy than the others.
