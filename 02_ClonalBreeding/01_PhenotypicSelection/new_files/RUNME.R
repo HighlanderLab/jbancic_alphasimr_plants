@@ -1,11 +1,31 @@
-rm(list = ls())
-setwd("~/jbancic_alphasimr_plants/02_ClonalBreeding/01_PhenotypicSelection/new_files/")
-library(AlphaSimR)
-##Simulating parameters
-# Models a single trait representing yield for tea breeding program at Unilever Tea Kenya
+## ------------------------------------------------------------------------
+##
+## Script name: Phenotypic line breeding program with doubled haploid technology
+##
+## Authors: Chris Gaynor, Jon Bancic, Philip Greenspoon
+##
+## Date Created: 2023-01-23
+##
+## Email:
+##
+## ------------------------------------------------------------------------
+##
+## Description:
+##
+##
+## ------------------------------------------------------------------------
+
+##-- Load packages
+require("AlphaSimR")
 
 ##-- Load global parameters
 source("GlobalParameters.R")
+
+##-- Create initial parents
+source("CreateParents.R")
+
+##-- Fill breeding pipeline with unique individuals from initial parents
+source("FillPipeline.R")
 
 #create vectors for storing the summary data
 for(REP in 1:nReps){
@@ -26,7 +46,7 @@ for(REP in 1:nReps){
   P = runif(15)
 
   ##-- Fill breeding pipeline with unique individuals from initial parents
-  source("fillPipeline.R")
+  source("FillPipeline.R")
 
   ## Replace presampled p-values for all cycles of burn-in + future breeding
   ## These are used in the burn-in and future evaluation steps
@@ -35,17 +55,12 @@ for(REP in 1:nReps){
   ## Run 40 cycle of breeding program
   for(year in 1:nBurnIn){
     cat(" Working on year ", year, "\n", sep = "")
-
     source("UpdateParents.R") #Pick parents
-
     source("AdvanceYear.R") #Advances yield trials by a year
 
-        # Report mean and variance
+    # Report mean and variance
     output$meanSeed[year] = meanG(Seedlings)
     output$varSeed[year] = varG(Seedlings)
-
-    gp = genParam(Seedlings)
-
   }
 
   # Save output
