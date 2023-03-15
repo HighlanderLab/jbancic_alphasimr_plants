@@ -13,18 +13,9 @@ for(REP in 1:nReps){
   output = data.frame(year = 1:nCycles,
                       rep = rep(REP, nCycles),
                       scenario = rep("BURNIN", nCycles),
-                      meanParent = numeric(nCycles),
-                      varParent = numeric(nCycles),
-                      meanSeed = numeric(nCycles),
-                      meanACT = numeric(nCycles),
-                      meanECT = numeric(nCycles),
-                      varSeed = numeric(nCycles),
-                      varACT = numeric(nCycles),
-                      varECT = numeric(nCycles),
-                      GenicVar = numeric(nCycles),
-                      CovG_HW = numeric(nCycles),
-                      accSeed = numeric(nCycles),
-                      accACT = numeric(nCycles))
+                      meanG = numeric(nCycles),
+                      varG = numeric(nCycles),
+                      accSel = numeric(nCycles))
 
 
   ##-- Create initial parents
@@ -50,21 +41,10 @@ for(REP in 1:nReps){
     source("AdvanceYear.R") #Advances yield trials by a year
 
         # Report mean and variance
-    output$meanParent[year] = meanG(Parents)
-    output$varParent[year] = varG(Parents)
-
     output$meanSeed[year] = meanG(Seedlings)
-    output$meanACT[year] = meanG(ACT5)
-    output$meanECT[year] = meanG(ECT6)
-
     output$varSeed[year] = varG(Seedlings)
-    output$varACT[year] = varG(ACT5)
-    output$varECT[year] = varG(ECT6)
 
     gp = genParam(Seedlings)
-    output$GenicVar[year] = genicVarG(Seedlings)
-    output$CovG_HW[year] = gp$covG_HW        #Genetic Covariance nonHWE
-
 
   }
 

@@ -29,7 +29,7 @@
     ACT2 = ACT1
 
     # Year 6
-    output$accSeed[year] = cor(gv(HPT3),pheno(HPT3)) # accuracy based on 2000 inds
+    output$accSel[year] = cor(gv(HPT3),pheno(HPT3)) # accuracy based on 2000 inds
     ACT1 = selectInd(HPT3, nInd = nClonesPhenoACT, use = "pheno")
 
     # Year 5
