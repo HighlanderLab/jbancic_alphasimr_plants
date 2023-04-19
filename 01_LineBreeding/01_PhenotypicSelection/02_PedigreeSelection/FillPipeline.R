@@ -1,55 +1,126 @@
-#-----------------------------------------------------------------------
-# Fill breeding pipeline
-#-----------------------------------------------------------------------
-#Set initial yield trials with unique individuals
-for(year in 1:8){
-  cat("  FillPipeline year:",year,"of 7\n")
-  if(year<9){
-    #Year 1
+##-----------------------------------------------------------------------
+## Fill breeding pipeline
+##-----------------------------------------------------------------------
+##Set initial yield trials with unique individuals
+for(year in 1:9){
+  cat("FillPipeline year:",year,"of 9\n")
+  if(year<10){
+    ##Year 1
     F1 = randCross(Parents, nCrosses)
   }
+  if(year<9){
+    ##Year 2
+    F2 = vector("list",nCrosses) #Keep crosses seperate
+    for(i in 1:nCrosses){ #Loop over crosses
+      F2_i = self(F1[i], nProgeny = nF2) ##PG: Broke Chris's line into two
+      F2[[i]] = selectInd(F2_i, nInd = nF2_ind)
+    }
+  }
   if(year<8){
-    #Year 2
-    F2 = self(F1, nProgeny = nF2)
+    ##Year 3
+    F3 = vector("list",nCrosses) #Selected plants from each cross
+    for(i in 1:nCrosses){ #Loop over crosses
+      n = nInd(F2[[i]]) #Number of rows per cross
+      F3rows = vector("list",n) #Rows in crosses
+      F3pheno = numeric(n) #Row phenotypes
+      for(j in 1:n){
+        F3rows[[j]] = self(F2[[i]][j],plantsPerRow)
+        F3pheno[j] = meanP(F3rows[[j]])
+      }
+      ## Select "nF3_row" F3 rows per cross
+      take = order(F3pheno,decreasing=TRUE)[1:nF3_row]
+      F3rows = F3rows[take]
+      ## Select "nF3_ind" plants per selected F3 row
+      for(j in 1:nF3_row){
+        F3rows[[j]] = selectInd(F3rows[[j]],nF3_ind)
+      }
+      F3[[i]] = mergePops(F3rows)
+    }
   }
   if(year<7){
-    ##Year 3
-    ##PG: Using reps = 1 for now
-    S1_HDRW = self(F2, nProgeny = nS1)
-    S1_HDRW = setPheno(S1_HDRW, varE = varE, reps = repS1)
-    S1_HDRW = selectFam(S1_HDRW, nFam = nS1_fam)
-    S1_HDRW = selectWithinFam(S1_HDRW, nS1_ind)
+    ##Year 4
+    ## Grow selected plants in F4 rows
+    F4 = vector("list",nCrosses) #Selected plants from each cross
+    for(i in 1:nCrosses){ #Loop over crosses
+      n = nInd(F3[[i]]) #Number of rows per cross
+      F4rows = vector("list",n) #Rows in crosses
+      F4pheno = numeric(n) #Row phenotypes
+      for(j in 1:n){
+        F4rows[[j]] = self(F3[[i]][j],plantsPerRow)
+        F4pheno[j] = meanP(F4rows[[j]])
+      }
+      ## Select "nF4_row" F4 rows per cross
+      take = order(F4pheno,decreasing=TRUE)[1:nF4_row]
+      F4rows = F4rows[take]
+      ## Select "nF4_ind" plants per F4 row
+      for(j in 1:nF4_row){
+        F4rows[[j]] = selectInd(F4rows[[j]],nF4_ind)
+      }
+      F4[[i]] = mergePops(F4rows)
+    }
   }
   if(year<6){
-    #Year 4
-    S2 = self(S1_HDRW, nProgeny = nS2)
-    S2 = setPheno(S2, varE = varE, reps = repS2)
-    S2 = selectFam(S2, nFam = nS2_fam)
-    S2 = selectWithinFam(S2, nS2_ind)
+    ##Year 5
+    ## Grow selected plants in F5 rows
+    F5 = vector("list",nCrosses) #Selected plants from each cross
+    for(i in 1:nCrosses){ #Loop over crosses
+      n = nInd(F4[[i]]) #Number of rows per cross
+      F5rows = vector("list",n) #Rows in crosses
+      F5pheno = numeric(n) #Row phenotypes
+      for(j in 1:n){
+        F5rows[[j]] = self(F4[[i]][j],plantsPerRow)
+        F5pheno[j] = meanP(F5rows[[j]])
+      }
+      ## Select "nF5_row" F5 rows per cross
+      take = order(F5pheno,decreasing=TRUE)[1:nF5_row]
+      F5rows = F5rows[take]
+      ## Select "nF5_ind" plants per F5 row
+      for(j in 1:nF5_row){
+        F5rows[[j]] = selectInd(F5rows[[j]],nF5_ind)
+      }
+      F5[[i]] = mergePops(F5rows)
+    }
   }
   if(year<5){
-    ##Year 5
-    S3 = self(S2, nProgeny = nS3)
-    S3 = setPheno(S3, varE = varE, reps = repS3)
-    S3 = selectFam(S3, nFam = nS3_fam)
-    S3 = selectWithinFam(S3, nS3_ind)
+    ##Year 6
+    ## Grow selected plants in F6 rows
+    F6 = vector("list",nCrosses) #Selected plants from each cross
+    for(i in 1:nCrosses){ #Loop over crosses
+      n = nInd(F5[[i]]) #Number of rows per cross
+      F6lines = vector("list",n) #Rows in crosses
+      F6pheno = numeric(n) #Row phenotypes
+      for(j in 1:n){
+        F6lines[[j]] = F5[[i]][j] #No selfing due to deriving lines
+        F6_j = self(F5[[i]][j],plantsPerRow) ##PG what's going on
+        ##here? Selecting lines on the basis of selfed families phenotype.
+        F6pheno[j] = meanP(F6_j)
+      }
+      ## Select "nF6_row" F6 rows per cross
+      take = order(F6pheno,decreasing=TRUE)[1:nF6_row]
+      F6lines = F6lines[take]
+      ## Derive new lines from rows
+      F6[[i]] = mergePops(F6lines)
+    }
+    F6 = mergePops(F6)
+    F6 = setPheno(F6, h2=h2, reps = repF6)
   }
   if(year<4){
-    ##Year 6
-    S4_PYT = self(S3, nProgeny = nS4)
-    S4_PYT = setPheno(S4_PYT, varE = varE, reps = repS4)
-    S4_PYT = selectFam(S4_PYT, nFam = nS4_fam)
+    ##Year 7
+    ## Test newly derived lines in PYT
+    PYT = selectInd(F6, nPYT)
+    PYT = setPheno(PYT, h2 = h2, reps = repPYT)
+
   }
   if(year<3){
-    ##Year 7
-    S5_AYT = self(S4_PYT, nProgeny = nS5)
-    S5_AYT = setPheno(S5_AYT, varE = varE, reps = repS5)
-    S5_AYT = selectFam(S5_AYT, nFam = nS5_fam)
+    ##Year 8
+    ##AYT
+    AYT = selectInd(PYT, nAYT)
+    AYT = setPheno(AYT, h2 = h2, reps = repAYT)
   }
   if(year<2){
-    ##Year 8
-    S6_EYT = self(S5_AYT, nProgeny = nS6)
-    S6_EYT = setPheno(S6_EYT, varE = varE, reps = repS6)
-    S6_EYT = selectFam(S6_EYT, nFam = nS6_fam)
+    ##Year 9
+    ##EYT
+    EYT = selectInd(AYT, nEYT)
+    EYT = setPheno(EYT, h2 = h2, reps = repEYT)
   }
 }
