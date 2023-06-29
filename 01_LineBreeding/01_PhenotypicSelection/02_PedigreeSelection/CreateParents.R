@@ -4,34 +4,32 @@
 
 # Generate initial haplotypes
 founderPop = runMacs(nInd     = nParents,
+                     nChr = nChromosomes,
                      segSites = nQtl + nSnp,
                      inbred   = TRUE,
                      species  = "WHEAT")
 SP = SimParam$new(founderPop)
 
+
 # Add SNP chip
-SP$restrSegSites(nQtl, nSnp)
-if(nSnp > 0){
+SP$restrSegSites(nQtl, nSnp) ##PG: Not in Chris's
+if(nSnp > 0){ ##PG: Not in Chris's
   SP$addSnpChip(nSnp)
 }
 
 # Add traits: trait represents yield
-SP$addTraitAG(nQtlPerChr = nQtl,
+SP$addTraitAG(nQtlPerChr = nQtl, ##PG: Different from Chris's
               mean       = initMeanG,
               var        = initVarG,
               varEnv     = initVarEnv,
               varGxE     = initVarGE)
 
-# Collect pedigree
-SP$setTrackPed(TRUE)
-SP$setSexes("yes_sys")
+SP$setSexes("yes_sys") ##PG: Not in Chris's
+SP$setVarE(h2=h2)
 
 # Create founder parents
 Parents = newPop(founderPop)
 
-## Add phenotype reflecting 2 years of evaluation in S6_EYT
-## PG: Is this still right?
-Parents = setPheno(Parents, varE = varE, reps = repS6*2)
 rm(founderPop)
 
 

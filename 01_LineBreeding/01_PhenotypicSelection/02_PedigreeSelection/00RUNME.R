@@ -15,15 +15,14 @@
 ##
 ## -------------------------------------------------------------------------------
 rm(list = ls())
-setwd("~/jbancic_alphasimr_plants/01_LineBreeding/01_PhenotypicSelection/02_PedigreeSelection/")
+
 ##-- Load packages
 require("AlphaSimR")
 scenarioName = "Line_Pheno_pedigree"
 
 ##-- Load global parameters
 source("GlobalParameters.R")
-##PG: below file contains a function to calculate between family accuracies
-source("accuracy_selection_between_families.R")
+
 ##-- Create list to store results from reps
 results = list()
 
@@ -36,13 +35,13 @@ for(REP in 1:nReps) {
                       meanG    = numeric(nCycles),
                       varG     = numeric(nCycles),
                       accSel   = numeric(nCycles))
+  ##PG: Accuracy not currently being filled in
 
   ##-- Create initial parents
   source("CreateParents.R")
 
   ##-- Fill breeding pipeline with unique individuals from initial parents
   source("FillPipeline.R")
-
   ##-- Burn-in phase
   for(year in 1:nBurnin)
   {
@@ -50,10 +49,8 @@ for(REP in 1:nReps) {
     source("UpdateParents.R") # Pick parents
     source("AdvanceYear.R")   # Advances yield trials by a year
     # Report results
-    output$meanG[year] = meanG(F2)
-    ##PG:Which stage should we use for
-    ##this mean?
-    output$varG[year]  = varG(F2)
+    output$meanG[year] = meanG(mergePops(F2))
+    output$varG[year]  = varG(mergePops(F2))
   }
 
   ##-- Future phase
@@ -62,9 +59,9 @@ for(REP in 1:nReps) {
     cat("  Working on future year:",year,"\n")
     source("UpdateParents.R") # Pick parents
     source("AdvanceYear.R")   # Advances yield trials by a year
-    # Report results
-    output$meanG[year] = meanG(F2)
-    output$varG[year]  = varG(F2)
+    ## Report results
+    output$meanG[year] = meanG(mergePops(F2))
+    output$varG[year]  = varG(mergePops(F2))
   }
 
   ## Save results from current replicate

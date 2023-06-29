@@ -11,50 +11,55 @@ nCycles = nBurnin + nFuture
 #-- Genome simulation
 nQtl = 1000 # Number of QTL per chromosome
 nSnp = 0    # Number of SNP per chromosome
+nChromosomes = 1 #Number of chromosomes
 
 #-- Initial parents mean and variance
 initMeanG  = 0
 initVarG   = 1
 initVarEnv = 1e-6 # Virtually zero for consistency with 2-Part paper
 initVarGE  = 2
-varE       = 4 # Yield trial error variance, bushels per acre
-               # Relates to error variance for an entry mean
+h2 = 0.05
 
 #-- Breeding program details
-nParents = 50 # Simulates an equal number of landraces
-nCrosses = 100 # Number of crosses per year
+nParents = 20 # Simulates an equal number of landraces
+nCrosses = 40 # Number of crosses per year
 
-##PG: We will have to figure out what numbers to use.
-
-##Number of individuals per family to select in each stage
-nS1_ind = 2
-nS2_ind = 2
-nS3_ind = 2
-
-##Number of families to select in each stage
-nS1_fam = 5
-nS2_fam = 5
-nS3_fam = 5
-nS4_fam = 5
-nS5_fam = 5
-nS6_fam = 5
 
 ##Number of progeny per selfed individual in each stage
-nF2 = 10
-nS1 = 5
-nS2 = 5
-nS3 = 5
-nS4 = 5
-nS5 = 5
-nS6 = 5
+nF2 = 100
+plantsPerRow = 20
+
+
+##Number of individuals to select in each stage
+nF2_ind = 10
+nF3_ind = 4
+nF4_ind = 4
+nF5_ind = 4
+nPYT     = 100 # Entries per preliminary yield trial
+nAYT     = 50  # Entries per advanced yield trial
+nEYT     = 10  # Entries per elite yield trial
+
+##Number of rows to select in each stage
+nF3_row = 10
+nF4_row = 10
+nF5_row = 10
+nF6_row = 4
 
 ## Effective replication of yield trials
-repS1 = 1
-repS2 = 1
-repS3 = 1
-repS4 = 1
-repS5 = 1
-repS6 = 1
+repF6 = 4/9
+repPYT   = 1   #h2 =
+repAYT   = 4   #h2 =
+repEYT   = 8   #h2 =
+
+
+
+
+
+
+
+
+
+
 
 
 
