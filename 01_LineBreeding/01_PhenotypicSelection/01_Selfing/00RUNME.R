@@ -1,6 +1,6 @@
 ## -------------------------------------------------------------------------------
 ##
-## Script name: Phenotypic line breeding program with pedigree selection
+## Script name: Phenotypic line breeding program with selfing
 ##
 ## Authors: Chris Gaynor, Jon Bancic, Philip Greenspoon
 ##
@@ -15,10 +15,10 @@
 ##
 ## -------------------------------------------------------------------------------
 rm(list = ls())
-
+setwd("~/jbancic_alphasimr_plants/01_LineBreeding/01_PhenotypicSelection/01_Selfing/")
 ##-- Load packages
 require("AlphaSimR")
-scenarioName = "Line_Pheno_pedigree"
+scenarioName = "Line_Pheno_selfing"
 
 ##-- Load global parameters
 source("GlobalParameters.R")
@@ -28,6 +28,7 @@ results = list()
 
 for(REP in 1:nReps) {
   cat("Working on REP:", REP,"\n")
+
   ##-- Create a data frame to track key parameters
   output = data.frame(year     = 1:nCycles,
                       rep      = rep(REP, nCycles),
@@ -35,22 +36,24 @@ for(REP in 1:nReps) {
                       meanG    = numeric(nCycles),
                       varG     = numeric(nCycles),
                       accSel   = numeric(nCycles))
-  ##PG: Accuracy not currently being filled in
 
   ##-- Create initial parents
   source("CreateParents.R")
 
-  ##-- Fill breeding pipeline with unique individuals from initial parents
+  ##-- Fill breeding pipeline with unique individuals from initial
+  ##-- parents
   source("FillPipeline.R")
+
   ##-- Burn-in phase
   for(year in 1:nBurnin)
   {
     cat("  Working on burnin year:",year,"\n")
+    browser()
     source("UpdateParents.R") # Pick parents
     source("AdvanceYear.R")   # Advances yield trials by a year
     # Report results
-    output$meanG[year] = meanG(mergePops(F2))
-    output$varG[year]  = varG(mergePops(F2))
+    output$meanG[year] = meanG(S4)
+    output$varG[year]  = varG(S4)
   }
 
   ##-- Future phase
@@ -59,12 +62,12 @@ for(REP in 1:nReps) {
     cat("  Working on future year:",year,"\n")
     source("UpdateParents.R") # Pick parents
     source("AdvanceYear.R")   # Advances yield trials by a year
-    ## Report results
-    output$meanG[year] = meanG(mergePops(F2))
-    output$varG[year]  = varG(mergePops(F2))
+    # Report results
+    output$meanG[year] = meanG(S4)
+    output$varG[year]  = varG(S4)
   }
 
-  ## Save results from current replicate
+  # Save results from current replicate
   results = append(results, list(output))
 }
 
