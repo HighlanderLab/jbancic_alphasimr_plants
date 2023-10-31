@@ -44,8 +44,14 @@ FemaleHybridYT3 = setPheno(FemaleHybridYT3, reps = repYT3, p = p)
 
 ## Year 3 - apply genomic selection
 # Predict GCA
-MaleYT1 = setEBV(MaleYT1, gsModelM)
-FemaleYT1 = setEBV(FemaleYT1, gsModelF)
+if (exists("gsModel")) {
+  MaleYT1 = setEBV(MaleYT1, gsModel)
+  FemaleYT1 = setEBV(FemaleYT1, gsModel)
+} else {
+  MaleYT1 = setEBV(MaleYT1, gsModelM)
+  FemaleYT1 = setEBV(FemaleYT1, gsModelF)
+}
+
 # Report selection accuracy
 output$acc_sel[year]  = c((cor(MaleYT1@ebv,MaleYT1@gv) +
                              cor(FemaleYT1@ebv,FemaleYT1@gv))/2)
@@ -61,8 +67,13 @@ MaleDH = makeDH(MaleF1, nDH)
 FemaleDH = makeDH(FemaleF1, nDH)
 
 # Predict GCA of DHs
-MaleDH = setEBV(MaleDH, gsModelM)
-FemaleDH = setEBV(FemaleDH, gsModelF)
+if (exists("gsModel")) {
+  MaleDH = setEBV(MaleDH, gsModel)
+  FemaleDH = setEBV(FemaleDH, gsModel)
+} else {
+  MaleDH = setEBV(MaleDH, gsModelM)
+  FemaleDH = setEBV(FemaleDH, gsModelF)
+}
 # Select using EBVs
 MaleDH = selectInd(selectWithinFam(MaleDH, famMax, use = "ebv"), nInbred2, use = "ebv") 
 FemaleDH = selectInd(selectWithinFam(FemaleDH, famMax, use = "ebv"), nInbred2, use = "ebv")

@@ -1,8 +1,8 @@
 require(dplyr)
 
 #Read in results
-png("Results.png")
-df <- bind_rows(readRDS("LineGS.rds"))
+png("Results.png", height = 600, width = 300)
+df  <- bind_rows(readRDS("LineGS.rds"))
 
 #Plot results
 par(mfrow=c(3,1))

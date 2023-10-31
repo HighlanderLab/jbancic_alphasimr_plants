@@ -45,8 +45,3 @@ Seedlings = setPheno(F1, varE = VarE, reps = repHPT, p = P[year])
 # Year 1
 # Crossing block
 F1 = randCross(Parents, nCrosses = nCrosses, nProgeny = nProgeny)
-
-# Update training population (set to keep 6 years worth of records)
-ACT5@fixEff = as.integer(rep(year,nInd(ACT5)))  # year effect
-remove   = table(trainPop@fixEff)[1]            # remove oldest records
-trainPop = c(trainPop[-c(1:remove)], ACT5)      # add new records

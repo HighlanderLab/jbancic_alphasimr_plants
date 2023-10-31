@@ -3,10 +3,11 @@
 #-----------------------------------------------------------------------
 
 #-- Number of simulation replications and breeding cycles
-nReps   = 10      # Number of simulation replicates
-nBurnin = 20      # Number of years in burnin phase
-nFuture = 20      # Number of years in future phase
+nReps   = 1    # Number of simulation replicates
+nBurnin = 20   # Number of years in burnin phase
+nFuture = 20   # Number of years in future phase
 nCycles = nBurnin + nFuture
+startTP = 16   # Year to start training population
 
 #-- Genome simulation
 nChr = 15       # Number of chromosomes

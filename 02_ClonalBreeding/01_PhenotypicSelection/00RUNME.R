@@ -18,7 +18,7 @@ rm(list = ls())
 
 ##-- Load packages
 require("AlphaSimR")
-scenarioName = "Clonal_Pheno"
+scenarioName = "ClonalPheno"
 
 ##-- Load global parameters
 source("GlobalParameters.R")
@@ -75,6 +75,3 @@ for(REP in 1:nReps){
 
 # Save results
 saveRDS(results, file = paste0(scenarioName,".rds"))
-
-
-

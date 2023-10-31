@@ -46,12 +46,3 @@ Seedlings = setPheno(F1, varE = VarE, reps = repHPT, p = P[year])
 # Year 1
 # Crossing block
 F1 = randCross(Parents, nCrosses = nCrosses, nProgeny = nProgeny)
-
-# Update pedigree with new records from ACT stage
-Pedigree = rbind(Pedigree,
-                 data.frame(Ind   = c(ACT5@id),
-                            Sire  = c(ACT5@father),
-                            Dam   = c(ACT5@mother),
-                            Year  = year,
-                            Stage = c(rep("ACT",ACT5@nInd)),
-                            Pheno = c(ACT5@pheno)))

@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------
 
 #-- Number of simulation replications and breeding cycles
-nReps   = 10      # Number of simulation replicates
+nReps   = 1       # Number of simulation replicates
 nBurnin = 40      # Number of years in burnin phase
 nFuture = 40      # Number of years in future phase
 startRecords = 35 # Year when training and pedigree record collecting begins

@@ -1,6 +1,6 @@
 ## -------------------------------------------------------------------------------
 ##
-## Script name: Pedigree clonal breeding program
+## Script name: Genomic selection clonal breeding program
 ##
 ## Authors: 
 ##
@@ -18,8 +18,7 @@ rm(list = ls())
 
 ##-- Load packages
 require("AlphaSimR")
-require("asreml")
-scenarioName = "Clonal_Genomic"
+scenarioName = "ClonalGS"
 
 ##-- Load global parameters
 source("GlobalParameters.R")
@@ -49,27 +48,26 @@ for(REP in 1:nReps){
   P = runif(nCycles)
   
   ##-- Burn-in phase
-  for(year in 1:nBurnin)
-  { 
+  for(year in 1:nBurnin) { 
     cat("  Working on burnin year:",year,"\n")
     source("UpdateParents.R")  # Pick parents
-    source("AdvanceYear.R")    # Advances yield trials by a year and collects records
+    source("AdvanceYear.R")    # Advance yield trials by a year
+    source("StoreTrainPop.R")  # Store training population
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)
   }
   
-  
   ##-- Future phase
   # Replace three early stages with genomic prediction
   rm(HPT1,HPT2,HPT3)
   
-  for(year in (nBurnin+1):(nBurnin+nFuture))
-  { 
+  for(year in (nBurnin+1):(nBurnin+nFuture)) { 
     cat("  Working on future year:",year,"\n")
     source("RunModel_GS.R")    # Run pedigree model
     source("UpdateParents.R")  # Pick parents
-    source("AdvanceYear_GS.R") # Advances yield trials by a year and collects records
+    source("AdvanceYear_GS.R") # Advance yield trials by a year
+    source("StoreTrainPop.R")  # Store training population
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)

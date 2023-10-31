@@ -53,24 +53,3 @@ Seedlings = setPheno(F1, varE = VarE, reps = repHPT, p = P[year])
 # Year 1
 # Crossing block
 F1 = randCross(Parents, nCrosses = nCrosses, nProgeny = nProgeny)
-
-# Save pedigree records and training population for GS from year 35
-ACT5@fixEff <- as.integer(rep(year,nInd(ACT5)))
-if(year == startRecords) {
-  trainPop = ACT5
-  Pedigree = data.frame(Ind   = c(ACT5@id),
-                        Sire  = c(ACT5@father),
-                        Dam   = c(ACT5@mother),
-                        Year  = year,
-                        Stage = c(rep("ACT5",ACT5@nInd)),
-                        Pheno = c(ACT5@pheno))
-} else if(year > startRecords) {
-  trainPop = c(trainPop,ACT5)
-  Pedigree = rbind(Pedigree,
-                   data.frame(Ind   = c(ACT5@id),
-                              Sire  = c(ACT5@father),
-                              Dam   = c(ACT5@mother),
-                              Year  = year,
-                              Stage = c(rep("ACT5",ACT5@nInd)),
-                              Pheno = c(ACT5@pheno)))
-}

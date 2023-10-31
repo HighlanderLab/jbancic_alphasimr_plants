@@ -1,7 +1,7 @@
 require(dplyr)
 
 #Read in results
-png("Results.png")
+png("Results.png", height = 800, width = 600)
 df <- bind_rows(readRDS("HybridPheno.rds"))
 
 #Plot results

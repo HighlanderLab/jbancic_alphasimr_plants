@@ -4,7 +4,7 @@ require(dplyr)
 df <- bind_rows(readRDS("ClonalPedigree.rds"))
 
 #Plot results
-png("Results.png")
+png("Results.png", height = 600, width = 300)
 par(mfrow=c(3,1))
 
 #-- Inbred Genetic Gain

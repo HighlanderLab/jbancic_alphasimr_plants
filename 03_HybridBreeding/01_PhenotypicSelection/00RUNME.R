@@ -35,7 +35,7 @@ for(REP in 1:nReps){
   ##-- Create a data frame to track key parameters
   output = data.frame(year     = 1:nCycles,
                       rep      = rep(REP, nCycles),
-                      scenario = "",
+                      scenario = scenarioName,
                       meanG_inbred = numeric(nCycles),
                       varG_inbred  = numeric(nCycles),
                       meanG_hybrid = numeric(nCycles),

@@ -19,7 +19,7 @@ rm(list = ls())
 ##-- Load packages
 require("AlphaSimR")
 require("asreml")
-scenarioName = "Clonal_Pedigree"
+scenarioName = "ClonalPedigree"
 
 ##-- Load global parameters
 source("GlobalParameters.R")
@@ -53,7 +53,8 @@ for(REP in 1:nReps){
   { 
     cat("  Working on burnin year:",year,"\n")
     source("UpdateParents.R")  # Pick parents
-    source("AdvanceYear.R")    # Advances yield trials by a year and collects records
+    source("AdvanceYear.R")    # Advance yield trials by a year
+    source("StoreTrainPop.R")  # Store training population
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)
@@ -69,7 +70,8 @@ for(REP in 1:nReps){
     cat("  Working on future year:",year,"\n")
     source("RunModel_Pedigree.R")     # Run pedigree model
     source("UpdateParents.R")         # Pick parents
-    source("AdvanceYear_Pedigree.R")  # Advances yield trials by a year and collects records
+    source("AdvanceYear_Pedigree.R")  # Advance yield trials by a year
+    source("StoreTrainPop.R")  # Store training population
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)

@@ -1,10 +1,10 @@
 require(dplyr)
 
 #Read in results
-df <- bind_rows(readRDS("ClonalGenomic.rds"))
+df <- bind_rows(readRDS("ClonalGS.rds"))
 
 #Plot results
-png("Results.png")
+png("Results.png", height = 600, width = 300)
 par(mfrow=c(3,1))
 
 #-- Inbred Genetic Gain
