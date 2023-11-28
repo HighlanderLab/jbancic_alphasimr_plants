@@ -20,6 +20,8 @@
 # trait in the heterozygous state are advanced after 
 # backcrossing. 
 
+# Load packages
+rm(list = ls())
 library(AlphaSimR)
 
 # Create a genetic map with 2 chromosomes.
@@ -54,7 +56,8 @@ founderPop = addSegSite(founderPop,
                         siteName = "Trait",
                         chr = 1,
                         mapPos = 0.5, 
-                        haplo = matrix(c(0, 0, 1, 1), ncol=1))
+                        haplo = matrix(c(0, 0, 
+                                         1, 1), ncol=1))
 
 # Initialize the simulation parameters
 SP = SimParam$new(founderPop)
@@ -108,4 +111,6 @@ hist(IBD_ind, xlab="Percent IBD", main="Distribution of IBD in BC3F2")
 # Note that M6 co-localizes with the trait, so it will
 # have zero IBD with the recurrent parent.
 boxplot(IBD, main="Distribution of IBD by marker in BC3F2")
+
+
 
