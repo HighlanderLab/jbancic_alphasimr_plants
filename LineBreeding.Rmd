@@ -1,0 +1,301 @@
+---
+title: "Line breeding program"
+output: html_document
+date: "2023-12-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Preliminaries
+
+First we clear our workspace, load required packages, and create an object to store the scenario's name.
+```{r}
+rm(list = ls())
+
+##-- Load packages
+require("AlphaSimR")
+scenarioName = "LinePheno_DH"
+```
+
+## Specifying global parameters
+We define global parameters. Parameter values can be chosen based on estimates from prior analyses of real data or long-term trends, trial and error, or practical experience. For definitions of the parameters see Table 3 in the main text. Note that in the script files, this step is taken with `source("GlobalParameters.R")`, but here, for illustrative purposes, we include all code into a single continuous script. 
+
+```{r}
+#-- Number of simulation replications and breeding cycles
+nReps   = 1   
+nBurnin = 1 
+nFuture = 0  
+nCycles = nBurnin + nFuture
+
+#-- Genome simulation
+nQtl = 1000 
+nSnp = 0  
+
+#-- Initial parents mean and variance
+initMeanG  = 0
+initVarG   = 1
+initVarEnv = 1e-6 
+initVarGE  = 2
+varE       = 4
+
+#-- Breeding program details
+nParents = 50 
+nCrosses = 100 
+nDH      = 100 
+famMax   = 10  
+nPYT     = 500 
+nAYT     = 50  
+nEYT     = 10  
+
+# Effective replication of yield trials
+repHDRW  = 4/9 
+repPYT   = 1   
+repAYT   = 4   
+repEYT   = 8  
+```
+
+We create a list to store results from replications
+```{r}
+results = list()
+```
+
+We run a single replicate of our simulation. Note that in the script files we run through a `for` loop of the multiple replicates, but for illustrative purposes here, we only have one replicate.
+
+```{r}
+REP = 1
+```
+
+
+We create a data frame to track key parameters
+```{r}
+  output = data.frame(year     = 1:nCycles,
+                      rep      = rep(REP, nCycles),
+                      scenario = rep(scenarioName, nCycles),
+                      meanG    = numeric(nCycles),
+                      varG     = numeric(nCycles),
+                      accSel   = numeric(nCycles),
+                      inbCoef  = numeric(nCycles))
+```
+
+## Simulating genomes and founders
+We simulate founder genomes and create initial parents. AlphaSimR embeds MaCS software to generate founder genomes through a back-in-time (coalescent) simulation. Here we use a pre-defined demographic history for wheat. Note that in the script files this step is taken with `source("CreateParents.R")`.
+
+First we create a founder population, by generating initial haplotypes; and make a simulation parameter (`SP`) object.
+```{r}
+founderPop = runMacs(nInd     = nParents, 
+                     segSites = nQtl + nSnp,
+                     inbred   = TRUE, 
+                     species  = "WHEAT")
+SP = SimParam$new(founderPop)
+```
+
+We can include a SNP chip if desired
+```{r}
+SP$restrSegSites(nQtl, nSnp)
+if(nSnp > 0){
+  SP$addSnpChip(nSnp)
+}
+```
+
+We add a trait, representing yield, and specify the mean, and variance of QTL effects, as well as the environmental variance and variance due to genotype-by-environment interactions.
+
+```{r}
+SP$addTraitAG(nQtlPerChr = nQtl,
+              mean       = initMeanG,
+              var        = initVarG,
+              varEnv     = initVarEnv,
+              varGxE     = initVarGE)
+```
+
+We opt to track pedigree information, and set sexes of individuals
+
+```{r}
+SP$setTrackPed(TRUE)
+SP$setSexes("yes_sys")
+```
+
+We create founder parents and set a phenotype, reflecting 2 years of evaluation in EYT stage. 
+
+```{r}
+Parents = newPop(founderPop)
+
+Parents = setPheno(Parents, varE = varE, reps = repEYT*2)
+```
+Finally we clear the founderPop object to conserve computer memory.
+```{r}
+rm(founderPop)
+```
+
+## Filling the breeding pipeline
+We fill the breeding pipeline with unique individuals for each stage. The filling process is necessary to capture the overlap of different breeding cycles in real breeding programs, meaning that at any given time, a breeding program will have plants in all stages of the breeding program.
+We achieve this by running the founder parents through the crosses and selection steps of our breeding program, saving a population at a different breeding stage each time. 
+
+Our wheat breeding program consists of seven breeding stages and hence, we need to generate seven distinct breeding populations through this filling process. The first round runs through all stages, saving the population in the final (seventh) stage. The second round runs through the stages up to the sixth stage, saving the population at that stage. This process is repeated seven times until all stages have been populated. 
+Despite using the same founder parents, distinct populations are obtained because each round involves unique crossings and selections.
+
+
+Note that in the script files this step is taken with `source("FillPipeline.R")`.
+ 
+```{r}
+
+#Set initial yield trials with unique individuals
+for(year in 1:7){
+  cat("  FillPipeline year:",year,"of 7\n")
+  if(year<8){
+    #Year 1
+    F1 = randCross(Parents, nCrosses)
+  }
+  if(year<7){
+    #Year 2
+    DH = makeDH(F1, nDH)
+  }
+  if(year<6){
+    #Year 3
+    HDRW = setPheno(DH, varE = varE, reps = repHDRW)
+  }
+  if(year<5){
+    #Year 4
+    PYT = selectWithinFam(HDRW, famMax)
+    PYT = selectInd(PYT, nPYT)
+    PYT = setPheno(PYT, varE = varE, reps = repPYT)
+  }
+  if(year<4){
+    #Year 5
+    AYT = selectInd(PYT, nAYT)
+    AYT = setPheno(AYT, varE = varE, reps = repAYT)
+  }
+  if(year<3){
+    #Year 6
+    EYT1 = selectInd(AYT, nEYT)
+    EYT1 = setPheno(EYT1, varE = varE, reps = repEYT)
+  }
+  if(year<2){
+    #Year 7
+    EYT2 = setPheno(EYT1, varE = varE, reps = repEYT)
+    EYT2@pheno = (EYT1@pheno + EYT2@pheno)/2
+  }
+  if(year<1){
+    #Year 8
+  }
+}
+```
+ 
+We now will go through each of the operations performed in filling the pipeline, which are seen again in the Running the Burn-in phase section. 
+
+In "Year 1", `F1 = randCross(Parents, nCrosses)`, performs `nCrosses` random crosses of the parents to produce `nCrosses` F1s. 
+
+In "Year 2" `DH = makeDH(F1, nDH)` uses doubled-haploid technology to make `nDH` double haploids out of the F1s. By definition, these DH individuals are homozygous at all loci.
+
+In "Year 3" `HDRW = setPheno(DH, varE = varE, reps = repHDRW)` sets a phenotype in the DH lines with a certain error variance and replication, which captures a certain heritability.  The phenotype will be used as the basis for artificial selection.
+
+In "Year 4"  `PYT = selectWithinFam(HDRW, famMax)` performs selection within families such that no more than `famMax` DH lines per family can be carried forward; 
+    `PYT = selectInd(PYT, nPYT)` performs selection among all individuals in the Preliminary Yield Trial choosing the best `nPYT`; and 
+    `PYT = setPheno(PYT, varE = varE, reps = repPYT)` sets a phenotype of the remaining individuals.
+    
+In "Year 5"     `AYT = selectInd(PYT, nAYT)` performs selection in the Preliminary Yield Trial; and
+    `AYT = setPheno(AYT, varE = varE, reps = repAYT)` sets a phenotype for the remaining individuals.
+    
+In "Year 6"     `EYT1 = selectInd(AYT, nEYT)` performs selection in the Advanced Yield Trial; and
+    `EYT1 = setPheno(EYT1, varE = varE, reps = repEYT)` sets a phenotype for the remaining individuals in the first year of Elite Yield Trials.
+    
+In "Year 7"  `EYT2 = setPheno(EYT1, varE = varE, reps = repEYT)` sets a phenotype for individuals in second year of Elite Yield Trials; and 
+`EYT2@pheno = (EYT1@pheno + EYT2@pheno)/2` sets the Elite Yield Trial phenotype to be the average of the phenotypes of the two trial years.
+
+## Running the burn-in phase
+ 
+Now we will go through a single year of the breeding program's burn-in phase. In a real simulation, we would run multiple years of burn-in followed by multiple years of future breeding.
+
+```{r}
+year = 1
+```
+
+### Update Parents
+First we update our parents by replacing the 10 oldest parents with 10 new parents from EYT1 stage. Note that in the script files this step is taken with `source("UpdateParents.R")`.
+
+```{r}
+Parents = c(Parents[11:nParents], EYT1)
+```
+
+### Advance Year
+Then we advance a year, going through all the crossing and selection steps. In one year, each stage (year) of the breeding program is updated, reflecting the parallel breeding pipelines that are progressing. Note that in the script files this step is taken with `source("AdvanceYear.R")`.
+
+
+
+```{r}
+#Year 8
+#Release variety
+
+#Year 7
+EYT2 = setPheno(EYT1, varE = varE, reps = repEYT)
+EYT2@pheno = (EYT1@pheno + EYT2@pheno)/2
+
+#Year 6
+EYT1 = selectInd(AYT, nEYT)
+EYT1 = setPheno(EYT1, varE = varE, reps = repEYT)
+
+#Year 5
+AYT = selectInd(PYT, nAYT)
+AYT = setPheno(AYT, varE = varE, reps = repAYT)
+
+#Year 4
+output$accSel[year] = cor(HDRW@gv, HDRW@pheno)
+PYT = selectWithinFam(HDRW, famMax)
+PYT = selectInd(PYT, nPYT)
+PYT = setPheno(PYT, varE = varE, reps = repPYT)
+
+#Year 3
+HDRW = setPheno(DH, varE = varE, reps = repHDRW)
+
+#Year 2
+DH = makeDH(F1, nDH)
+
+#Year 1
+F1 = randCross(Parents, nCrosses)
+```
+
+We work backwards through the pipeline to avoid copying a population before performing operations on it. To explain further, consider what would happen if we went forwards through the pipeline instead. An incorrect first attempt at doing so might be to start with:
+
+
+```{r, eval = FALSE}
+#Year 1
+F1 = randCross(Parents, nCrosses)
+
+#Year 2
+DH = makeDH(F1, nDH)
+```
+
+But by making a new F1 (or DH), we have erased the F1 (or DH) from the previous year, which we require to make the DH (or HDRW) for this year, so instead we would need to save the F1 (or DH), as in the following, but this is inefficient both in terms of memory use and code presentation:
+
+```{r, eval = FALSE}
+#Year 1
+F1_save = F1
+F1 = randCross(Parents, nCrosses)
+
+#Year 2
+DH_save = DH
+DH = makeDH(F1_save, nDH)
+```
+
+And we would have to go through a similar process for all the stages. We avoid this process by running backwards through the pipeline instead, as shown above.
+
+Finally, for each year we save results 
+```{r}
+    output$meanG[year]   = meanG(DH)
+    output$varG[year]    = varG(DH)
+    output$inbCoef[year] = varG(F1)
+```
+
+
+
+
+<!-- ## Including Plots -->
+
+<!-- You can also embed plots, for example: -->
+
+<!-- ```{r pressure, echo=FALSE} -->
+<!-- plot(pressure) -->
+<!-- ``` -->
+
+<!-- Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. -->
