@@ -58,8 +58,8 @@ nYT4 = 20
 nYT5 = 4
 
 # Effective replication of yield trials
-repYT1 = 1
-repYT2 = 2
-repYT3 = 4
-repYT4 = 8
-repYT5 = 100
+repYT1 = 1    #h2 = 0.06
+repYT2 = 2    #h2 = 0.11
+repYT3 = 4    #h2 = 0.20
+repYT4 = 8    #h2 = 0.34
+repYT5 = 100  #h2 = 0.86

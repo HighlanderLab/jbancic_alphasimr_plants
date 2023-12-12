@@ -15,7 +15,6 @@
 ##
 ## -------------------------------------------------------------------------------
 rm(list = ls())
-setwd("~/jbancic_alphasimr_plants/01_LineBreeding/01_PhenotypicSelection/01_MassSelection/")
 
 ##-- Load packages
 require("AlphaSimR")

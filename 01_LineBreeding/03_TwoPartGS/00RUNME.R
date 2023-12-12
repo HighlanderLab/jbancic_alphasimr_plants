@@ -41,8 +41,7 @@ for(REP in 1:nReps){
                       scenario = "",
                       meanG = numeric(nCycles),
                       varG  = numeric(nCycles),
-                      acc_sel  = numeric(nCycles),
-                      acc_sel2 = numeric(nCycles))
+                      accSel  = numeric(nCycles))
   ##-- Create initial parents
   source("CreateParents.R")
 
@@ -69,7 +68,7 @@ for(REP in 1:nReps){
   ##-- Future phase: Genomic selection program
   cat("--> Working on Two-part line breeding program \n")
   # New parameters for population improvement
-  nCyclesPI = 4    # Number of rapid cycles per year
+  nCyclesPI = 2    # Number of rapid cycles per year
   nParents  = 50   # Number of parents
   nCrossPI  = 100  # Number of crosses per cycle
   nF1PI = 100      # Number of F1-PI to advance to PD 

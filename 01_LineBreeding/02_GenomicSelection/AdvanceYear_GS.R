@@ -16,11 +16,11 @@ EYT = setPheno(EYT, varE = varE, reps = repEYT)
 AYT = selectInd(PYT, nAYT)
 AYT = setPheno(AYT, varE = varE, reps = repAYT)
 
-#Year 3 - apply genomic selection ##PG I cut a year out because
-#phenotyping is spared
-HDRW = setEBV(DH, gsModel)
-output$acc_sel[year] = cor(HDRW@gv, HDRW@ebv)
-PYT = selectWithinFam(HDRW, famMax,use = "ebv")
+#Year 3 - apply genomic selection 
+#NOTE: HDRW removed because phenotyping not needed
+DH = setEBV(DH, gsModel)
+output$accSel[year] = cor(DH@gv, DH@ebv)
+PYT = selectWithinFam(DH, famMax,use = "ebv")
 PYT = selectInd(PYT, nPYT, use="ebv")
 PYT = setPheno(PYT, varE = varE, reps = repPYT)
 

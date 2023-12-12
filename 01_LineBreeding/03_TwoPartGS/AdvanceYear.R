@@ -17,7 +17,7 @@ AYT = selectInd(PYT, nAYT)
 AYT = setPheno(AYT, varE = varE, reps = repAYT)
 
 #Year 4
-output$acc_sel[year] = cor(HDRW@gv, HDRW@pheno)
+output$accSel[year] = cor(HDRW@gv, HDRW@pheno)
 PYT = selectWithinFam(HDRW, famMax)
 PYT = selectInd(PYT, nPYT)
 PYT = setPheno(PYT, varE = varE, reps = repPYT)
