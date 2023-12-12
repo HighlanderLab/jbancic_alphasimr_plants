@@ -4,23 +4,23 @@
 #Advance breeding program by 1 year
 #Works backwards through pipeline to avoid copying data
 
-##Year 10
+##Stage 10
 ##Release variety
 
-##Year 9
+##Stage 9
 EYT = selectInd(AYT, nEYT)
 EYT = setPheno(EYT, h2 = h2, reps = repEYT)
 
-#Year 8
+#Stage 8
 AYT = selectInd(PYT, nAYT)
 AYT = setPheno(AYT, h2 = h2, reps = repAYT)
 
-#Year 7
+#Stage 7
 output$accSel[year] = accuracy_family(F6)
 PYT = selectInd(F6, nPYT)
 PYT = setPheno(PYT, h2 = h2, reps = repPYT)
 
-##Year 6
+##Stage 6
 F6 = vector("list",nCrosses) #Selected plants from each cross
 for(i in 1:nCrosses){ #Loop over crosses
   n = nInd(F5[[i]]) #Number of rows per cross
@@ -40,7 +40,7 @@ for(i in 1:nCrosses){ #Loop over crosses
 F6 = mergePops(F6)
 F6 = setPheno(F6, h2=h2, reps = repF6)
 
-##Year 5
+##Stage 5
 ## Grow selected plants in F5 rows
 F5 = vector("list",nCrosses) #Selected plants from each cross
 for(i in 1:nCrosses){ #Loop over crosses
@@ -61,7 +61,7 @@ for(i in 1:nCrosses){ #Loop over crosses
   F5[[i]] = mergePops(F5rows)
 }
 
-##Year 4
+##Stage 4
 ## Grow selected plants in F4 rows
 F4 = vector("list",nCrosses) #Selected plants from each cross
 for(i in 1:nCrosses){ #Loop over crosses
@@ -82,7 +82,7 @@ for(i in 1:nCrosses){ #Loop over crosses
   F4[[i]] = mergePops(F4rows)
 }
 
-##Year 3
+##Stage 3
 F3 = vector("list",nCrosses) #Selected plants from each cross
 for(i in 1:nCrosses){ #Loop over crosses
   n = nInd(F2[[i]]) #Number of rows per cross
@@ -102,12 +102,12 @@ for(i in 1:nCrosses){ #Loop over crosses
   F3[[i]] = mergePops(F3rows)
 }
 
-##Year 2
+##Stage 2
 F2 = vector("list",nCrosses) #Keep crosses seperate
 for(i in 1:nCrosses){ #Loop over crosses
   F2_i = self(F1[i], nProgeny = nF2)
   F2[[i]] = selectInd(F2_i, nInd = nSelF2)
 }
 
-##Year 1
+##Stage 1
 F1 = randCross(Parents, nCrosses)

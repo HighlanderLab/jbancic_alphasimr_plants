@@ -2,22 +2,22 @@
 ## Fill breeding pipeline
 ##-----------------------------------------------------------------------
 ##Set initial yield trials with unique individuals
-for(year in 1:9){
-  cat("FillPipeline year:",year,"of 9\n")
-  if(year < 10){
-    ##Year 1
+for(stage in 1:9){
+  cat("FillPipeline stage:",stage,"of 9\n")
+  if(stage < 10){
+    ##Stage 1
     F1 = randCross(Parents, nCrosses)
   }
-  if(year < 9){
-    ##Year 2
+  if(stage < 9){
+    ##Stage 2
     F2 = vector("list",nCrosses) #Keep crosses seperate
     for(i in 1:nCrosses){ #Loop over crosses
       F2_i = self(F1[i], nProgeny = nF2)
       F2[[i]] = selectInd(F2_i, nInd = nSelF2)
     }
   }
-  if(year < 8){
-    ##Year 3
+  if(stage < 8){
+    ##Stage 3
     F3 = vector("list",nCrosses) #Selected plants from each cross
     for(i in 1:nCrosses){ #Loop over crosses
       n = nInd(F2[[i]]) #Number of rows per cross
@@ -37,8 +37,8 @@ for(year in 1:9){
       F3[[i]] = mergePops(F3rows)
     }
   }
-  if(year < 7){
-    ##Year 4
+  if(stage < 7){
+    ##Stage 4
     ## Grow selected plants in F4 rows
     F4 = vector("list",nCrosses) #Selected plants from each cross
     for(i in 1:nCrosses){ #Loop over crosses
@@ -59,8 +59,8 @@ for(year in 1:9){
       F4[[i]] = mergePops(F4rows)
     }
   }
-  if(year < 6){
-    ##Year 5
+  if(stage < 6){
+    ##Stage 5
     ## Grow selected plants in F5 rows
     F5 = vector("list",nCrosses) #Selected plants from each cross
     for(i in 1:nCrosses){ #Loop over crosses
@@ -81,8 +81,8 @@ for(year in 1:9){
       F5[[i]] = mergePops(F5rows)
     }
   }
-  if(year < 5){
-    ##Year 6
+  if(stage < 5){
+    ##Stage 6
     ## Grow selected plants in F6 rows
     F6 = vector("list",nCrosses) #Selected plants from each cross
     for(i in 1:nCrosses){ #Loop over crosses
@@ -103,21 +103,21 @@ for(year in 1:9){
     F6 = mergePops(F6)
     F6 = setPheno(F6, h2=h2, reps = repF6)
   }
-  if(year < 4){
-    ##Year 7
+  if(stage < 4){
+    ##Stage 7
     ## Test newly derived lines in PYT
     PYT = selectInd(F6, nPYT)
     PYT = setPheno(PYT, h2 = h2, reps = repPYT)
 
   }
-  if(year < 3){
-    ##Year 8
+  if(stage < 3){
+    ##Stage 8
     ##AYT
     AYT = selectInd(PYT, nAYT)
     AYT = setPheno(AYT, h2 = h2, reps = repAYT)
   }
-  if(year < 2){
-    ##Year 9
+  if(stage < 2){
+    ##Stage 9
     ##EYT
     EYT = selectInd(AYT, nEYT)
     EYT = setPheno(EYT, h2 = h2, reps = repEYT)
