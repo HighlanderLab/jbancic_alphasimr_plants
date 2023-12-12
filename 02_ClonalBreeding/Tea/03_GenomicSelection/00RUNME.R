@@ -1,18 +1,17 @@
 ## -------------------------------------------------------------------------------
 ##
-## Script name: Genomic selection clonal breeding program
+## Script name: Pedigree tea clonal breeding program
 ##
-## Authors: 
+## Authors: Nelson Lubanga, Jon Bancic
 ##
-## Date Created: 2023-01-23
+## Date Created: 2023-12-06
 ##
 ## Email:
 ##
 ## -------------------------------------------------------------------------------
 ##
 ## Description:
-## adapted from Lubanga et al. 2022
-##
+## Tea breeding program was adapted from Lubanga et al. 2023.
 ## -------------------------------------------------------------------------------
 rm(list = ls())
 

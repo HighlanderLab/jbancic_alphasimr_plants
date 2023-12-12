@@ -1,10 +1,10 @@
 ## -------------------------------------------------------------------------------
 ##
-## Script name: Phenotypic clonal breeding program
+## Script name: Genomic selection strawberry clonal breeding program
 ##
-## Authors: 
+## Authors: Christian Werner, Jon Bancic, Philip Greenspoon
 ##
-## Date Created: 2023-01-23
+## Date Created: 2023-12-06
 ##
 ## Email:
 ##
@@ -12,7 +12,9 @@
 ##
 ## Description:
 ##
-## adapted from Lubanga et al. 2022
+## Strawberry breeding program was adapted from Werner et al. 2023. 
+## Genomic selection is used to improve accuracy of selection in Seedlings 
+## and ST1 stages.
 ## -------------------------------------------------------------------------------
 rm(list = ls())
 
@@ -36,6 +38,7 @@ for(REP in 1:nReps){
                       scenario = rep(scenarioName, nCycles),
                       meanG    = numeric(nCycles),
                       varG     = numeric(nCycles),
+                      varD     = numeric(nCycles),
                       accSel   = numeric(nCycles))
 
   ##-- Create initial parents
@@ -53,20 +56,24 @@ for(REP in 1:nReps){
     cat("  Working on burnin year:",year,"\n")
     source("UpdateParents.R")  # Pick parents
     source("AdvanceYear.R")    # Advances yield trials by a year and collects records
+    source("StoreTrainPop.R")  # Store training population
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)
+    output$varD[year]  = varD(Seedlings)
   }
   
   ##-- Future phase
-  for(year in (nBurnin+1):(nBurnin+nFuture))
-  { 
+  for(year in (nBurnin+1):(nBurnin+nFuture)) { 
     cat("  Working on future year:",year,"\n")
-    source("UpdateParents.R")  # Pick parents
-    source("AdvanceYear.R")    # Advances yield trials by a year and collects records
+    source("RunModel_GS.R")      # Run pedigree model
+    source("UpdateParents_GS.R") # Pick parents
+    source("AdvanceYear_GS.R")   # Advance yield trials by a year
+    source("StoreTrainPop.R")    # Store training population
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)
+    output$varD[year]  = varD(Seedlings)
   }
   
   # Save results from current replicate

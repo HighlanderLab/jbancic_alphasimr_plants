@@ -23,28 +23,28 @@ rm(list = ls())
 ##-- Load packages
 require("AlphaSimR")
 
-##-- Load global parameters
-source("02_GenomicSelection/GlobalParameters.R")
+# Number of simulation replications
+nReps = 10
 
 for(REP in 1:nReps){
   cat("Working on REP:", REP,"\n")
   
-  ##-- Create a data frame to track key parameters
-  output = data.frame(year     = 1:nCycles,
-                      rep      = rep(REP, nCycles),
-                      scenario = "",
-                      meanG = numeric(nCycles),
-                      varG  = numeric(nCycles),
-                      acc_sel = numeric(nCycles))
+  ##-- Load global parameters
+  source("02_GenomicSelection/GlobalParameters.R")
 
   ##-- Create initial parents and set testers
   source("02_GenomicSelection/CreateParents.R")
 
   ##-- Fill breeding pipeline with unique individuals from initial parents
   source("02_GenomicSelection/FillPipeline.R")
-
-  ##-- Simulate year effects
-  P = runif(nCycles)
+  
+  ##-- Create a data frame to track key parameters
+  output = data.frame(year     = 1:nCycles,
+                      rep      = rep(REP, nCycles),
+                      scenario = "",
+                      meanG  = numeric(nCycles),
+                      varG   = numeric(nCycles),
+                      accSel = numeric(nCycles))
   
   ## -------------------------------------------------------------------------------
   ##-- Burn-in phase
@@ -63,7 +63,7 @@ for(REP in 1:nReps){
   
   ## -------------------------------------------------------------------------------
   ##-- Future phase: Phenotypic program
-  cat("--> Working on Phenotypic hybrid program \n")
+  cat("--> Working on Phenotypic selection program \n")
   for(year in (nBurnin+1):(nBurnin+nFuture)) { 
     cat(" Working on future year:",year,"\n")
     source("02_GenomicSelection/UpdateParents.R") # Pick new parents
@@ -81,8 +81,8 @@ for(REP in 1:nReps){
               col.names = !file.exists(file.name), row.names = F, append = T)
   
   ## -------------------------------------------------------------------------------
-  ##-- Future phase: Genomic selection program 
-  cat("--> Working on Genomic hybrid program \n")
+  ##-- Future phase: Genomic selection program with unconstrained costs
+  cat("--> Working on cost-unconstrained Genomic selection program \n")
   load("tmp.RData")
   for(year in (nBurnin+1):(nBurnin+nFuture)) { 
     cat(" Working on future year:",year,"\n")
@@ -96,18 +96,43 @@ for(REP in 1:nReps){
   }
   # Save results
   cat(" Saving results \n")
-  Scenario  <- output$scenario <- "LineGS"
+  Scenario  <- output$scenario <- "LineGS_unconst"
   file.name <- paste0("Results_",Scenario,".csv")
   write.table(output, file.name, sep = ",", 
               col.names = !file.exists(file.name), row.names = F, append = T)
   
   ## -------------------------------------------------------------------------------
-  ##-- Future phase: Two-Part Genomic selection program 
-  cat("--> Working on Two-Part Genomic hybrid program \n")
+  ##-- Future phase: Genomic selection program with constrained costs
+  cat("--> Working on cost-constrained Genomic selection program \n")
+  load("tmp.RData")
+  # Reduce number of DHs produced per cross 
+  # to offset costs of genotyping
+  nDH <- 75
+    
+  for(year in (nBurnin+1):(nBurnin+nFuture)) { 
+    cat(" Working on future year:",year,"\n")
+    source("02_GenomicSelection/RunGSModels.R")      # Run genomic model
+    source("02_GenomicSelection/UpdateParents_GS.R") # Pick new parents
+    source("02_GenomicSelection/AdvanceYear_GS.R")   # Advance yield trials by a year
+    source("02_GenomicSelection/StoreTrainPop.R")    # Store training population
+    # Report results
+    output$meanG[year] = meanG(DH)
+    output$varG[year]  = varG(DH)
+  }
+  # Save results
+  cat(" Saving results \n")
+  Scenario  <- output$scenario <- "LineGS_const"
+  file.name <- paste0("Results_",Scenario,".csv")
+  write.table(output, file.name, sep = ",", 
+              col.names = !file.exists(file.name), row.names = F, append = T)
+  
+  ## -------------------------------------------------------------------------------
+  ##-- Future phase: Two-Part genomic selection program 
+  cat("--> Working on Two-part genomic selection program \n")
   load("tmp.RData")
   
   # New parameters for population improvement
-  nCyclesPI = 4    # Number of rapid cycles per year
+  nCyclesPI = 2    # Number of rapid cycles per year
   nParents  = 50   # Number of parents
   nCrossPI  = 100  # Number of crosses per cycle
   nF1PI = 100      # Number of F1-PI to advance to PD 
@@ -123,6 +148,7 @@ for(REP in 1:nReps){
     output$meanG[year] = meanG(DH)
     output$varG[year]  = varG(DH)
   }
+  
   # Save results
   cat(" Saving results \n")
   Scenario  <- output$scenario <- "LineGSTP"

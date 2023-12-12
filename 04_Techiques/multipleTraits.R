@@ -110,3 +110,4 @@ pop3 = pop[order(hazelIndex, decreasing = T)][1:10]
 # Check correlation between naive and Smith-Hazel index
 cor(naiveIndex, hazelIndex)
 
+

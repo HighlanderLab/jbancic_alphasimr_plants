@@ -31,6 +31,6 @@ nClonesACT = 500  # Number of individuals selected at ACT stage
 nClonesECT = 40   # Number of individuals selected at ECT stage
 
 # Effective replication of yield trials
-repHPT     = 1    # (VarE/1 ; h2=0.05)
-repACT     = 25   # h2 = 0.45
-repECT     = 500  # h2 = 0.65
+repHPT     = 1   # h2=0.05
+repACT     = 15  # h2 = 0.45
+repECT     = 50  # h2 = 0.65

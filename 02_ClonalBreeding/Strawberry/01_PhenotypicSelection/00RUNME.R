@@ -1,25 +1,24 @@
 ## -------------------------------------------------------------------------------
 ##
-## Script name: Pedigree clonal breeding program
+## Script name: Phenotypic selection strawberry clonal breeding program
 ##
-## Authors: 
+## Authors: Christian Werner, Jon Bancic, Philip Greenspoon
 ##
-## Date Created: 2023-01-23
+## Date Created: 2023-12-06
 ##
 ## Email:
 ##
 ## -------------------------------------------------------------------------------
 ##
 ## Description:
-## adapted from Lubanga et al. 2022
 ##
+## Strawberry breeding program was adapted from Werner et al. 2023.
 ## -------------------------------------------------------------------------------
 rm(list = ls())
 
 ##-- Load packages
 require("AlphaSimR")
-require("asreml")
-scenarioName = "ClonalPedigree"
+scenarioName = "ClonalPheno"
 
 ##-- Load global parameters
 source("GlobalParameters.R")
@@ -53,25 +52,18 @@ for(REP in 1:nReps){
   { 
     cat("  Working on burnin year:",year,"\n")
     source("UpdateParents.R")  # Pick parents
-    source("AdvanceYear.R")    # Advance yield trials by a year
-    source("StoreTrainPop.R")  # Store training population
+    source("AdvanceYear.R")    # Advances yield trials by a year and collects records
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)
   }
   
-  
   ##-- Future phase
-  # Replace three early stages with pedigree prediction
-  rm(HPT1,HPT2,HPT3)
-  
   for(year in (nBurnin+1):(nBurnin+nFuture))
   { 
     cat("  Working on future year:",year,"\n")
-    source("RunModel_Pedigree.R")     # Run pedigree model
-    source("UpdateParents.R")         # Pick parents
-    source("AdvanceYear_Pedigree.R")  # Advance yield trials by a year
-    source("StoreTrainPop.R")  # Store training population
+    source("UpdateParents.R")  # Pick parents
+    source("AdvanceYear.R")    # Advances yield trials by a year and collects records
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)
@@ -83,4 +75,3 @@ for(REP in 1:nReps){
 
 # Save results
 saveRDS(results, file = paste0(scenarioName,".rds"))
-

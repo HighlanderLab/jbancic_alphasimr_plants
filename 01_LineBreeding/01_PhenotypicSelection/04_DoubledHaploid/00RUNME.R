@@ -35,8 +35,7 @@ for(REP in 1:nReps) {
                       scenario = rep(scenarioName, nCycles),
                       meanG    = numeric(nCycles),
                       varG     = numeric(nCycles),
-                      accSel   = numeric(nCycles),
-                      inbCoef  = numeric(nCycles))
+                      accSel   = numeric(nCycles))
   
   ##-- Create initial parents
   source("CreateParents.R")
@@ -53,7 +52,6 @@ for(REP in 1:nReps) {
     # Report results
     output$meanG[year]   = meanG(DH)
     output$varG[year]    = varG(DH)
-    output$inbCoef[year] = varG(F1)
   }
   
   ##-- Future phase

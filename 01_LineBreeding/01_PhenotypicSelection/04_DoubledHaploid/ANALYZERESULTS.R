@@ -17,5 +17,5 @@ plot(1:40,rowMeans(matrix(df$varG,ncol = max(df$rep))),type="l",
 
 #-- Selection accuracy
 plot(1:40,rowMeans(matrix(df$accSel,ncol = max(df$rep))),type="l",
-     main="Selection accuracy",xlab="Year",ylab="Correlation")
+     main="Selection accuracy in HDRW",xlab="Year",ylab="Correlation")
 dev.off()

@@ -16,8 +16,8 @@ nSnp = 400      # Number of SNP per chromosome
 nGenSplit = 100 # Heterotic pool split 
 
 #-- Initial inbred parents mean and variance
-initMeanG  = 70 # bushels per acre
-initVarG   = 20 # bushels per acre
+initMeanG = 70 # bushels per acre
+initVarG  = 20 # bushels per acre
 # Degree of dominance
 MeanDD = 0.92   # mean
 VarDD  = 0.3    # variance
@@ -58,8 +58,8 @@ nYT4 = 20
 nYT5 = 4
 
 # Effective replication of yield trials
-repYT1 = 1
-repYT2 = 2
-repYT3 = 4
-repYT4 = 8
-repYT5 = 100
+repYT1 = 1    #h2 = 0.06
+repYT2 = 2    #h2 = 0.11
+repYT3 = 4    #h2 = 0.20
+repYT4 = 8    #h2 = 0.34
+repYT5 = 100  #h2 = 0.86

@@ -52,5 +52,3 @@ for(i in 1:pop@nInd) {
 pop3 = setMarkerHaplo(pop, genMap)
 # Check genetic mean
 meanG(pop3)
-
-

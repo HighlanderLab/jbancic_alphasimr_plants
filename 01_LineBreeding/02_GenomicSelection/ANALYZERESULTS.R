@@ -16,7 +16,7 @@ plot(-19:20,rowMeans(matrix(df$varG,ncol = max(df$rep))),type="l",
      main="Genetic variance",xlab="Year",ylab="Variance")
 
 #-- Selection accuracy
-plot(-19:20,rowMeans(matrix(df$acc_sel,ncol = max(df$rep))),type="l",
+plot(-19:20,rowMeans(matrix(df$accSel,ncol = max(df$rep))),type="l",
      main="Selection accuracy",xlab="Year",ylab="Correlation")
 
 dev.off()

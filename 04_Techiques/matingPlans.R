@@ -4,12 +4,13 @@
 ##-- Load packages
 rm(list = ls())
 require("AlphaSimR")
+source("Functions.R")
 
 ##-- Create founder haplotypes
 founderPop = runMacs(nInd     = 100,
                      segSites = 1000,
                      inbred   = TRUE,
-                     species  = "WHEAT")
+                     species  = "MAIZE")
 # Set simulation parameters
 SP = SimParam$new(founderPop)
 
@@ -22,7 +23,8 @@ SP$addTraitAD(nQtlPerChr = 1000,
 
 # Create a single population
 pop = newPop(founderPop)
-pop = setPheno(pop,h2 = 0.5)
+pop = setPheno(pop, h2 = 0.5)
+
 # Create two populations and testers
 popA = pop[1:10]
 popB = pop[11:20]
@@ -69,16 +71,6 @@ varG(pop); varG(newPop)
 
 
 ##-- Specified crosses with maximum avoidance
-maxAvoidPlan = function(nInd, nProgeny=1L){
-  crossPlan = matrix(1:nInd, ncol=2, byrow=TRUE)
-  tmp = c(seq(1, nInd, by=2),
-          seq(2, nInd, by=2))
-  crossPlan = cbind(rep(tmp[crossPlan[,1]], 
-                        each=nProgeny),
-                    rep(tmp[crossPlan[,2]], 
-                        each=nProgeny))
-  return(crossPlan)
-}
 crossPlan = maxAvoidPlan(nInd = 20, nProgeny = 100)
 newPop = makeCross(pop, crossPlan)
 table(newPop@father, newPop@mother) # visualise
@@ -107,29 +99,32 @@ table(newPop@father, newPop@mother) # visualise
 for(i in 1:6){
   newPop = self(newPop, nProgeny = 1)
 }
+newPop = setPheno(newPop, h2 = 0.5)
 # Check inbreeding
 1-mean(rowMeans(1-abs(pullQtlGeno(pop)-1)))
 # Compare genetic mean and variance
 meanG(pop[1:8]); meanG(newPop)
 varG(pop[1:8]); varG(newPop)
+varP(pop[1:8]); varP(newPop)
+
+#-- Visualise MAGIC with PCA
+geno = pullQtlGeno(c(pop[1:8],newPop))
+PCA  = dudi.pca(df = geno, center = T, scale = F, scannf = FALSE, nf = 5)
+(VAF = 100 * PCA$eig[1:5]/sum(PCA$eig)) # variance explained
+df.PCA = data.frame("Pop" = c(rep("Parents",8),rep("MAGIC",1000)),
+                    "PC1" = PCA$l1$RS1,
+                    "PC2" = PCA$l1$RS2)
+# Plot
+ggplot(df.PCA, aes(x = PC1, y = PC2)) +
+  geom_point(aes(colour = factor(Pop))) +
+  ggtitle("Population structure") +
+  xlab(paste("Pcomp1: ",round(VAF[1],2),"%",sep="")) + 
+  ylab(paste("Pcomp2: ",round(VAF[2],2),"%",sep= ""))
 
 
 
 ## Crosses among two populations
 ######################################################################
-# Function to calculate heterosis
-calcHeterosis <- function(popA, popB, hybPop) {
-  inbMean = (meanG(popA) + meanG(popB))/2
-  hybMean = meanG(hybPop)
-  heterosis = meanG(hybPop) - (meanG(popA) + meanG(popB))/2
-  perHeterosis = (hybMean-inbMean)/inbMean*100
-  return(data.frame("Midparent value" = inbMean,
-                    "Hybrid value" = hybMean,
-                    "Heterosis" = heterosis,
-                    "Percent heterosis" = perHeterosis))
-}
-
-
 ##-- Testcross/Topcross/North Carolina 1 
 crossPlan = expand.grid(1:nInd(popA), 1:nInd(testerB))
 newPop = makeCross2(popA, popB, crossPlan, nProgeny = 1)
