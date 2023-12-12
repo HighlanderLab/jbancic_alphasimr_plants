@@ -2,37 +2,37 @@
 # Fill breeding pipeline
 #-----------------------------------------------------------------------
 #Set initial yield trials with unique individuals
-for(year in 1:7){
-  cat("  FillPipeline year:",year,"of 7\n")
-  if(year<7){
-    #Year 1
+for(stage in 1:7){
+  cat("  FillPipeline stage:",stage,"of 7\n")
+  if(stage<7){
+    #Stage 1
     F1 = randCross(Parents, nCrosses)
   }
-  if(year<6){
-    #Year 2
+  if(stage<6){
+    #Stage 2
     DH = makeDH(F1, nDH)
   }
-  if(year<5){
-    #Year 3
+  if(stage<5){
+    #Stage 3
     HDRW = setPheno(DH, varE = varE, reps = repHDRW)
   }
-  if(year<4){
-    #Year 4
+  if(stage<4){
+    #Stage 4
     PYT = selectWithinFam(HDRW, famMax)
     PYT = selectInd(PYT, nPYT)
     PYT = setPheno(PYT, varE = varE, reps = repPYT)
   }
-  if(year<3){
-    #Year 5
+  if(stage<3){
+    #Stage 5
     AYT = selectInd(PYT, nAYT)
     AYT = setPheno(AYT, varE = varE, reps = repAYT)
   }
-  if(year<2){
-    #Year 6
+  if(stage<2){
+    #Stage 6
     EYT = selectInd(AYT, nEYT)
     EYT = setPheno(EYT, varE = varE, reps = repEYT)
   }
-  if(year<1){
-    #Year 7
+  if(stage<1){
+    #Stage 7
   }
 }
