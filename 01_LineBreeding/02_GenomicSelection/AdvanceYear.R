@@ -4,29 +4,29 @@
 #Advance breeding program by 1 year
 #Works backwards through pipeline to avoid copying data
 
-#Year 7
+#Stage 7
 #Release variety
 
 
-#Year 6
+#Stage 6
 EYT = selectInd(AYT, nEYT)
 EYT = setPheno(EYT, varE = varE, reps = repEYT)
 
-#Year 5
+#Stage 5
 AYT = selectInd(PYT, nAYT)
 AYT = setPheno(AYT, varE = varE, reps = repAYT)
 
-#Year 4
+#Stage 4
 output$accSel[year] = cor(HDRW@gv, HDRW@pheno)
 PYT = selectWithinFam(HDRW, famMax)
 PYT = selectInd(PYT, nPYT)
 PYT = setPheno(PYT, varE = varE, reps = repPYT)
 
-#Year 3
+#Stage 3
 HDRW = setPheno(DH, varE = varE, reps = repHDRW)
 
-#Year 2
+#Stage 2
 DH = makeDH(F1, nDH)
 
-#Year 1
+#Stage 1
 F1 = randCross(Parents, nCrosses)

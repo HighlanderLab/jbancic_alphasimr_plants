@@ -484,84 +484,84 @@ selections.</p>
 <p>Note that in the script files this step is taken with
 <code>source(&quot;FillPipeline.R&quot;)</code>.</p>
 <pre class="r"><code>#Set initial yield trials with unique individuals
-for(year in 1:7){
-  cat(&quot;  FillPipeline year:&quot;,year,&quot;of 7\n&quot;)
-  if(year&lt;8){
-    #Year 1
+for(stage in 1:7){
+  cat(&quot;  FillPipeline stage:&quot;,stage,&quot;of 7\n&quot;)
+  if(stage&lt;8){
+    #Stage 1
     F1 = randCross(Parents, nCrosses)
   }
-  if(year&lt;7){
-    #Year 2
+  if(stage&lt;7){
+    #Stage 2
     DH = makeDH(F1, nDH)
   }
-  if(year&lt;6){
-    #Year 3
+  if(stage&lt;6){
+    #Stage 3
     HDRW = setPheno(DH, varE = varE, reps = repHDRW)
   }
-  if(year&lt;5){
-    #Year 4
+  if(stage&lt;5){
+    #Stage 4
     PYT = selectWithinFam(HDRW, famMax)
     PYT = selectInd(PYT, nPYT)
     PYT = setPheno(PYT, varE = varE, reps = repPYT)
   }
-  if(year&lt;4){
-    #Year 5
+  if(stage&lt;4){
+    #Stage 5
     AYT = selectInd(PYT, nAYT)
     AYT = setPheno(AYT, varE = varE, reps = repAYT)
   }
-  if(year&lt;3){
-    #Year 6
+  if(stage&lt;3){
+    #Stage 6
     EYT1 = selectInd(AYT, nEYT)
     EYT1 = setPheno(EYT1, varE = varE, reps = repEYT)
   }
-  if(year&lt;2){
-    #Year 7
+  if(stage&lt;2){
+    #Stage 7
     EYT2 = setPheno(EYT1, varE = varE, reps = repEYT)
     EYT2@pheno = (EYT1@pheno + EYT2@pheno)/2
   }
-  if(year&lt;1){
-    #Year 8
+  if(stage&lt;1){
+    #Stage 8
   }
 }</code></pre>
-<pre><code>##   FillPipeline year: 1 of 7
-##   FillPipeline year: 2 of 7
-##   FillPipeline year: 3 of 7
-##   FillPipeline year: 4 of 7
-##   FillPipeline year: 5 of 7
-##   FillPipeline year: 6 of 7
-##   FillPipeline year: 7 of 7</code></pre>
+<pre><code>##   FillPipeline stage: 1 of 7
+##   FillPipeline stage: 2 of 7
+##   FillPipeline stage: 3 of 7
+##   FillPipeline stage: 4 of 7
+##   FillPipeline stage: 5 of 7
+##   FillPipeline stage: 6 of 7
+##   FillPipeline stage: 7 of 7</code></pre>
 <p>We now will go through each of the operations performed in filling
 the pipeline, which are seen again in the Running the Burn-in phase
 section.</p>
-<p>In “Year 1”, <code>F1 = randCross(Parents, nCrosses)</code>, performs
-<code>nCrosses</code> random crosses of the parents to produce
+<p>In “Stage 1”, <code>F1 = randCross(Parents, nCrosses)</code>,
+performs <code>nCrosses</code> random crosses of the parents to produce
 <code>nCrosses</code> F1s.</p>
-<p>In “Year 2” <code>DH = makeDH(F1, nDH)</code> uses doubled-haploid
+<p>In “Stage 2” <code>DH = makeDH(F1, nDH)</code> uses doubled-haploid
 technology to make <code>nDH</code> double haploids out of the F1s. By
 definition, these DH individuals are homozygous at all loci.</p>
-<p>In “Year 3”
+<p>In “Stage 3”
 <code>HDRW = setPheno(DH, varE = varE, reps = repHDRW)</code> sets a
 phenotype in the DH lines with a certain error variance and replication,
 which captures a certain heritability. The phenotype will be used as the
 basis for artificial selection.</p>
-<p>In “Year 4” <code>PYT = selectWithinFam(HDRW, famMax)</code> performs
-selection within families such that no more than <code>famMax</code> DH
-lines per family can be carried forward;
+<p>In “Stage 4” <code>PYT = selectWithinFam(HDRW, famMax)</code>
+performs selection within families such that no more than
+<code>famMax</code> DH lines per family can be carried forward;
 <code>PYT = selectInd(PYT, nPYT)</code> performs selection among all
 individuals in the Preliminary Yield Trial choosing the best
 <code>nPYT</code>; and
 <code>PYT = setPheno(PYT, varE = varE, reps = repPYT)</code> sets a
 phenotype of the remaining individuals.</p>
-<p>In “Year 5” <code>AYT = selectInd(PYT, nAYT)</code> performs
+<p>In “Stage 5” <code>AYT = selectInd(PYT, nAYT)</code> performs
 selection in the Preliminary Yield Trial; and
 <code>AYT = setPheno(AYT, varE = varE, reps = repAYT)</code> sets a
 phenotype for the remaining individuals.</p>
-<p>In “Year 6” <code>EYT1 = selectInd(AYT, nEYT)</code> performs
+<p>In “Stage 6” <code>EYT1 = selectInd(AYT, nEYT)</code> performs
 selection in the Advanced Yield Trial; and
 <code>EYT1 = setPheno(EYT1, varE = varE, reps = repEYT)</code> sets a
 phenotype for the remaining individuals in the first year of Elite Yield
 Trials.</p>
-<p>In “Year 7”
+<p>In “Stage 7”
 <code>EYT2 = setPheno(EYT1, varE = varE, reps = repEYT)</code> sets a
 phenotype for individuals in second year of Elite Yield Trials; and
 <code>EYT2@pheno = (EYT1@pheno + EYT2@pheno)/2</code> sets the Elite
@@ -584,58 +584,58 @@ is taken with <code>source(&quot;UpdateParents.R&quot;)</code>.</p>
 <div id="advance-year" class="section level3">
 <h3>Advance Year</h3>
 <p>Then we advance a year, going through all the crossing and selection
-steps. In one year, each stage (year) of the breeding program is
-updated, reflecting the parallel breeding pipelines that are
-progressing. Note that in the script files this step is taken with
+steps. In one year, each stage of the breeding program is updated,
+reflecting the parallel breeding pipelines that are progressing. Note
+that in the script files this step is taken with
 <code>source(&quot;AdvanceYear.R&quot;)</code>.</p>
-<pre class="r"><code>#Year 8
+<pre class="r"><code>#Stage 8
 #Release variety
 
-#Year 7
+#Stage 7
 EYT2 = setPheno(EYT1, varE = varE, reps = repEYT)
 EYT2@pheno = (EYT1@pheno + EYT2@pheno)/2
 
-#Year 6
+#Stage 6
 EYT1 = selectInd(AYT, nEYT)
 EYT1 = setPheno(EYT1, varE = varE, reps = repEYT)
 
-#Year 5
+#Stage 5
 AYT = selectInd(PYT, nAYT)
 AYT = setPheno(AYT, varE = varE, reps = repAYT)
 
-#Year 4
+#Stage 4
 output$accSel[year] = cor(HDRW@gv, HDRW@pheno)
 PYT = selectWithinFam(HDRW, famMax)
 PYT = selectInd(PYT, nPYT)
 PYT = setPheno(PYT, varE = varE, reps = repPYT)
 
-#Year 3
+#Stage 3
 HDRW = setPheno(DH, varE = varE, reps = repHDRW)
 
-#Year 2
+#Stage 2
 DH = makeDH(F1, nDH)
 
-#Year 1
+#Stage 1
 F1 = randCross(Parents, nCrosses)</code></pre>
 <p>We work backwards through the pipeline to avoid copying a population
 before performing operations on it. To explain further, consider what
 would happen if we went forwards through the pipeline instead. An
 incorrect first attempt at doing so might be to start with:</p>
-<pre class="r"><code>#Year 1
+<pre class="r"><code>#Stage 1
 F1 = randCross(Parents, nCrosses)
 
-#Year 2
+#Stage 2
 DH = makeDH(F1, nDH)</code></pre>
 <p>But by making a new F1 (or DH), we have erased the F1 (or DH) from
 the previous year, which we require to make the DH (or HDRW) for this
 year, so instead we would need to save the F1 (or DH), as in the
 following, but this is inefficient both in terms of memory use and code
 presentation:</p>
-<pre class="r"><code>#Year 1
+<pre class="r"><code>#Stage 1
 F1_save = F1
 F1 = randCross(Parents, nCrosses)
 
-#Year 2
+#Stage 2
 DH_save = DH
 DH = makeDH(F1_save, nDH)</code></pre>
 <p>And we would have to go through a similar process for all the stages.

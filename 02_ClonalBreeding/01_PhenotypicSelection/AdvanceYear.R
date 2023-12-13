@@ -4,52 +4,52 @@
 # Advance breeding program by 1 year
 # Works backwards through pipeline to avoid copying data
 
-# Year 16
+# Stage 16
 ECT6 = setPheno(ECT5, varE = VarE, reps = repECT, p = P[year])
 
-# Year 15
+# Stage 15
 ECT5 = ECT4
 
-# Year 14
+# Stage 14
 ECT4 = ECT3
 
-# Year 13
+# Stage 13
 ECT3 = ECT2
 
-# Year 12
+# Stage 12
 ECT2 = ECT1
 
-# Year 11
+# Stage 11
 ECT1 = selectInd(ACT5, nInd = nClonesECT, use = "pheno")
 
-# Year 10
+# Stage 10
 ACT5 = setPheno(ACT4, varE = VarE, reps = repACT, p = P[year])
 
-# Year 9
+# Stage 9
 ACT4 = ACT3
 
-# Year 8
+# Stage 8
 ACT3 = ACT2
 
-# Year 7
+# Stage 7
 ACT2 = ACT1
 
-# Year 6
+# Stage 6
 output$accSel[year] = cor(gv(HPT3), pheno(HPT3)) # accuracy based on 2000 inds
 ACT1 = selectInd(HPT3, nInd = nClonesACT, use = "pheno")
 
-# Year 5
+# Stage 5
 HPT3 = setPheno(HPT2, varE = VarE, reps = repHPT, p = P[year])
 
-# Year 4
+# Stage 4
 HPT2 = HPT1
 
-# Year 3
+# Stage 3
 HPT1 = Seedlings
 
-# Year 2
+# Stage 2
 Seedlings = setPheno(F1, varE = VarE, reps = repHPT, p = P[year])
 
-# Year 1
+# Stage 1
 # Crossing block
 F1 = randCross(Parents, nCrosses = nCrosses, nProgeny = nProgeny)

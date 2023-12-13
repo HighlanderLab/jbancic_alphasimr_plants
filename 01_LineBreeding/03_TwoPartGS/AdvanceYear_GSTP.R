@@ -4,18 +4,18 @@
 #Advance breeding program by 1 year
 #Works backwards through pipeline to avoid copying data
 
-#Year 6
+#Stage 6
 #Release variety
 
-#Year 5
+#Stage 5
 EYT = selectInd(AYT, nEYT)
 EYT = setPheno(EYT, varE = varE, reps = repEYT)
 
-#Year 4
+#Stage 4
 AYT = selectInd(PYT, nAYT)
 AYT = setPheno(AYT, varE = varE, reps = repAYT)
 
-#Year 3 - apply genomic selection
+#Stage 3 - apply genomic selection
 #NOTE: HDRW removed because phenotyping not needed
 DH = setEBV(DH, gsModel)
 output$accSel[year] = cor(DH@gv, DH@ebv)
@@ -23,13 +23,13 @@ PYT = selectWithinFam(DH, famMax,use = "ebv")
 PYT = selectInd(PYT, nPYT, use="ebv")
 PYT = setPheno(PYT, varE = varE, reps = repPYT)
 
-#Year 2
+#Stage 2
 DH = makeDH(F1, nDH)
 
 ## Run population improvement
 #-----------------------------
-# Year 1 
-ifelse((year == nBurnin+1), count <- 1, 
+# Stage 1
+ifelse((year == nBurnin+1), count <- 1,
                             count <- count + nCyclesPI)
 for(cycle in 1:nCyclesPI){
   cat("   Population improvement cycle", cycle, "/", nCyclesPI,"\n")
@@ -44,10 +44,10 @@ for(cycle in 1:nCyclesPI){
     # Report selection accuracy
     accPI$accPI[count] = cor(Parents@gv, Parents@ebv)
     # F1s to advance to product development
-    F1 = selectInd(Parents, nF1PI, use = "ebv")        
+    F1 = selectInd(Parents, nF1PI, use = "ebv")
     # F1s to advance to next cycle as new parents
-    Parents = selectInd(Parents, nParents, use = "ebv")   
-    
+    Parents = selectInd(Parents, nParents, use = "ebv")
+
     ## 2. Make parental crosses
     Parents = randCross(Parents, nCrossPI)
   } else {
@@ -57,8 +57,8 @@ for(cycle in 1:nCyclesPI){
     # Report selection accuracy
     accPI$accPI[count+cycle-1] = cor(Parents@gv, Parents@ebv)
     # F1s to advance to next cycle as new parents
-    Parents = selectInd(Parents, nParents, use = "ebv")  
-    
+    Parents = selectInd(Parents, nParents, use = "ebv")
+
     ## 2. Make parental crosses
     Parents = randCross(Parents, nCrossPI)
   }
