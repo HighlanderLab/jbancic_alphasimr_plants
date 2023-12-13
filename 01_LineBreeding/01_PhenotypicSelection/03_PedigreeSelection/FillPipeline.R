@@ -2,13 +2,13 @@
 ## Fill breeding pipeline
 ##-----------------------------------------------------------------------
 ##Set initial yield trials with unique individuals
-for(stage in 1:9){
-  cat("FillPipeline stage:",stage,"of 9\n")
-  if(stage < 10){
+for(cohort in 1:9){
+  cat("FillPipeline stage:",cohort,"of 9\n")
+  if(cohort < 10){
     ##Stage 1
     F1 = randCross(Parents, nCrosses)
   }
-  if(stage < 9){
+  if(cohort < 9){
     ##Stage 2
     F2 = vector("list",nCrosses) #Keep crosses seperate
     for(i in 1:nCrosses){ #Loop over crosses
@@ -16,7 +16,7 @@ for(stage in 1:9){
       F2[[i]] = selectInd(F2_i, nInd = nSelF2)
     }
   }
-  if(stage < 8){
+  if(cohort < 8){
     ##Stage 3
     F3 = vector("list",nCrosses) #Selected plants from each cross
     for(i in 1:nCrosses){ #Loop over crosses
@@ -37,7 +37,7 @@ for(stage in 1:9){
       F3[[i]] = mergePops(F3rows)
     }
   }
-  if(stage < 7){
+  if(cohort < 7){
     ##Stage 4
     ## Grow selected plants in F4 rows
     F4 = vector("list",nCrosses) #Selected plants from each cross
@@ -59,7 +59,7 @@ for(stage in 1:9){
       F4[[i]] = mergePops(F4rows)
     }
   }
-  if(stage < 6){
+  if(cohort < 6){
     ##Stage 5
     ## Grow selected plants in F5 rows
     F5 = vector("list",nCrosses) #Selected plants from each cross
@@ -81,7 +81,7 @@ for(stage in 1:9){
       F5[[i]] = mergePops(F5rows)
     }
   }
-  if(stage < 5){
+  if(cohort < 5){
     ##Stage 6
     ## Grow selected plants in F6 rows
     F6 = vector("list",nCrosses) #Selected plants from each cross
@@ -103,20 +103,20 @@ for(stage in 1:9){
     F6 = mergePops(F6)
     F6 = setPheno(F6, h2=h2, reps = repF6)
   }
-  if(stage < 4){
+  if(cohort < 4){
     ##Stage 7
     ## Test newly derived lines in PYT
     PYT = selectInd(F6, nPYT)
     PYT = setPheno(PYT, h2 = h2, reps = repPYT)
 
   }
-  if(stage < 3){
+  if(cohort < 3){
     ##Stage 8
     ##AYT
     AYT = selectInd(PYT, nAYT)
     AYT = setPheno(AYT, h2 = h2, reps = repAYT)
   }
-  if(stage < 2){
+  if(cohort < 2){
     ##Stage 9
     ##EYT
     EYT = selectInd(AYT, nEYT)
