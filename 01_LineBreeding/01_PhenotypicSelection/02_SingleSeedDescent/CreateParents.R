@@ -3,9 +3,9 @@
 #-----------------------------------------------------------------------
 
 # Generate initial haplotypes
-founderPop = runMacs(nInd     = nParents, 
+founderPop = runMacs(nInd     = nParents,
                      segSites = nQtl + nSnp,
-                     inbred   = TRUE, 
+                     inbred   = TRUE,
                      species  = "WHEAT")
 SP = SimParam$new(founderPop)
 
@@ -22,15 +22,16 @@ SP$addTraitAG(nQtlPerChr = nQtl,
               varEnv     = initVarEnv,
               varGxE     = initVarGE)
 
-# Collect pedigree 
+# Collect pedigree to conduct the Single-Hill method
 SP$setTrackPed(TRUE)
 SP$setSexes("yes_sys")
 
 # Create founder parents
 Parents = newPop(founderPop)
 
-# Add phenotype reflecting 2 years of evaluation in EYT
-Parents = setPheno(Parents, varE = varE, reps = repEYT*2)
+
+# Add phenotype reflecting evaluation in EYT
+Parents = setPheno(Parents, varE = varE, reps = repEYT)
 rm(founderPop)
 
 

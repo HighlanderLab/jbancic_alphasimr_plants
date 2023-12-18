@@ -24,7 +24,7 @@ SP$addTraitADG(nQtlPerChr = nQtl,
                var        = initVarG,
                varGxE     = initVarGE)
 
-# Collect pedigree 
+# Collect pedigree
 SP$setTrackPed(TRUE)
 SP$setSexes("yes_sys")
 
@@ -32,5 +32,5 @@ SP$setSexes("yes_sys")
 Parents = newPop(founderPop)
 
 # Set a phenotype to founder parents
-Parents = setPheno(Parents, varE = VarE, reps = repECT*2)
+Parents = setPheno(Parents, varE = VarE, reps = repECT)
 rm(founderPop)

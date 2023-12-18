@@ -13,7 +13,7 @@ startTP = 18   # Year to start training population
 nChr = 15       # Number of chromosomes
 nQtl = 300      # Number of QTL per chromosome
 nSnp = 400      # Number of SNP per chromosome
-nGenSplit = 100 # Heterotic pool split 
+nGenSplit = 100 # Heterotic pool split
 
 #-- Initial inbred parents mean and variance
 initMeanG  = 70 # bushels per acre
@@ -21,13 +21,13 @@ initVarG   = 20 # bushels per acre
 # Degree of dominance
 MeanDD = 0.92   # mean
 VarDD  = 0.3    # variance
-# Error variances 
+# Error variances
 initVarGE = 40   # Genotype-by-year interaction
 VarE = 270  # Yield trial error variance, bushels per acre
             # Relates to error variance for an entry mean
 
 #-- Breeding program details
-nParents = 50  # Simulates an equal number of landraces
+nParents = 50  # Number of parents to start a breeding cycle
 nCrosses = 80  # Number of crosses per year
 famMax   = 15  # The maximum number of DH lines per cross
 nDH      = 50  # DH lines produced per cross

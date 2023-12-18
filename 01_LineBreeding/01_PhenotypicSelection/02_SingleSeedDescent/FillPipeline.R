@@ -10,17 +10,15 @@ for(cohort in 1:11){
   }
   if(cohort < 10){
     #Stage 2
-    S0 = self(F1, nSelf)
+    S0 = self(F1, nProgeny)
   }
   if(cohort < 9){
     ##Stage 3
-    S1 = self(S0, nSelf)
+    S1 = self(S0)
   }
   if(cohort < 8){
     ##Stage 4
-    S2 = self(S1) ##PG How many seeds per selfing. I have stopped
-    ##keeping more than 1 after S1, since homozygosity will already
-    ##have declined
+    S2 = self(S1)
   }
   if(cohort < 7){
     ##Stage 5

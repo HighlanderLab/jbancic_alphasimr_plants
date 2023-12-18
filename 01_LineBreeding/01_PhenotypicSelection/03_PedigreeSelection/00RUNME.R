@@ -36,7 +36,6 @@ for(REP in 1:nReps) {
                       meanG    = numeric(nCycles),
                       varG     = numeric(nCycles),
                       accSel   = numeric(nCycles))
-  ##PG: Accuracy not currently being filled in
 
   ##-- Create initial parents
   source("CreateParents.R")
