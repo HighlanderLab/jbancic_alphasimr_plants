@@ -1,4 +1,4 @@
-## Simulation Repository
+## Simulation of plant breeding programs in AlphaSimR
 
 This repository contains code for simulating self-pollinating, clonal, and hybrid breeding programs, as well as demonstrating various breeding techniques and showcasing features from the publication by Bancic et al. 2024 (DOI: currently under revision in The Plant Genome).
 
