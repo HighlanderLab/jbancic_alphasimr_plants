@@ -1,6 +1,11 @@
-# This script demonstrates implementation of different
-# GS models in AlphaSimR. Models are demonstrated using 
-# high and low density SNP chip. 
+## -------------------------------------------------------------------
+## R Script: Genomic models in AlphaSimR
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates the implementation of different
+## genomic models in AlphaSimR. Models are demonstrated 
+## using high and low density SNP chip.
+## -------------------------------------------------------------------
 
 ##-- Load packages
 rm(list = ls())
@@ -32,6 +37,12 @@ SP$addTraitAD(nQtlPerChr = 200,
 SP$addSnpChip(nSnpPerChr = 300, name = "LowDensity")
 SP$addSnpChip(nSnpPerChr = 800, name = "HighDensity")
 
+# Check that there is no overlap between SNPs and QTLs
+snpMap = getSnpMap(snpChip = 1)
+qtlMap = getQtlMap(trait = 1)
+sum(snpMap$id %in% qtlMap$id)
+rm(snpMap,qtlMap)
+
 # Create new population
 pop = newPop(founderPop)
 
@@ -41,6 +52,8 @@ male = pop[31:60]
 
 # Create hybrid population
 pop = hybridCross(female, male)
+
+# Set phenotypes with a narrow-sense heritability of 0.3
 pop = setPheno(pop, h2 = 0.3)
 
 # Store model results
@@ -82,7 +95,7 @@ round(df,3)
 # RR-BLUP with additive and dominance effects
 ###################################################
 # Run model with low denisty chip
-gsModel_AD = RRBLUP_D(pop, snpChip = 1, maxIter = 100)
+gsModel_AD = RRBLUP_D(pop, snpChip = 1)
 # Check accuracy for entire population and 
 # separate populations
 pop = setEBV(pop, gsModel_AD) 
@@ -95,6 +108,12 @@ male = setEBV(male, gsModel_AD)
 df[3,3] = cor(male@gv,male@ebv) 
 round(df,3)
 
+# Equivalent to...
+addEff <- gsModel_AD@gv[[1]]@addEff
+domEff <- gsModel_AD@gv[[1]]@domEff
+M <- pullSnpGeno(pop)
+ebv <- M %*% addEff + (1-abs(M-1)) %*% domEff
+cor(pop@ebv, ebv)
 
 # RR-BLUP with population specific additive (GCA) effects 
 ########################################################

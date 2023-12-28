@@ -1,6 +1,12 @@
-# This script demonstrates how to use the miscelaneous slot in 
-# AlphaSimR. The slot is designed to be used as part of 
-# selection criteria
+## -------------------------------------------------------------------
+## R Script: Use of miscellaneous slot in AlphaSimR
+## -------------------------------------------------------------------
+## Description:
+## This script illustrates the usage of the miscellaneous slot in 
+## AlphaSimR. The slot is specifically designed for storing extra 
+## information about each individual in the population, which can 
+## be leveraged as part of customized selection criteria.
+## -------------------------------------------------------------------
 
 # Load packages
 rm(list = ls())

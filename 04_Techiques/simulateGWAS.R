@@ -1,6 +1,12 @@
-# This script demonstrates how to simulate a population for a GWAS study
-# The simulation starts of by creating a single homogeneous population
-# which then undergoes a few rounds of selection to induce stratification
+## -------------------------------------------------------------------
+## R Script: Performing association study with simulated population
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates how to simulate a population for a GWAS 
+## study. The simulation starts of by creating a single homogeneous 
+## population which then undergoes a few rounds of selection 
+## to induce stratification.
+## -------------------------------------------------------------------
 
 # Load packages
 rm(list = ls())

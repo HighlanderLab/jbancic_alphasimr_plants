@@ -1,4 +1,9 @@
-# This script demonstrates editing of a single locus
+## -------------------------------------------------------------------
+## R Script: Genome editing in AlphaSimR
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates editing of a single locus in AlphaSimR.
+## -------------------------------------------------------------------
 
 # Load packages
 rm(list = ls())
@@ -28,7 +33,6 @@ meanG(pop)
 genMap = pullQtlHaplo(pop)
 
 
-
 ## Option 1: Edit single locus in an individual
 #####################################################################
 # To change a single locus you can do the following which changes 
@@ -36,17 +40,16 @@ genMap = pullQtlHaplo(pop)
 genMap["1_1",1] = (genMap["1_1",1] + 1) %% 2
 
 
-
 ## Option 2: Edit single locus in the entire population
 #####################################################################
-# Edit QTL with largest additive effect using internal function
+# Edit QTL with the largest additive effect using internal function
 pop2 = editGenomeTopQtl(pop, ind = 100, nQtl = 1)
 # Check genetic mean
 meanG(pop2)
 
 # Manually edit the first QTL on the first homologue to be 1
 for(i in 1:pop@nInd) {
-  genMap[paste0(i,"_1"),colnames(genMap)[1]] <- 1
+  genMap[paste0(i,"_1"),colnames(genMap)[1]] = 1
 }
 # Re-asign haplotypes
 pop3 = setMarkerHaplo(pop, genMap)
