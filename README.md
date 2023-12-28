@@ -6,7 +6,7 @@ This repository contains code for simulating self-pollinating, clonal, and hybri
 
 **LineBreeding.Rmd:** Walk-through R code to follow along with the Results section of the manuscript. \
 
-#### Directory 01_LineBreeding
+### Directory 01_LineBreeding
 
 Contains codes for simulating wheat line breeding programs adapted from Gaynor et al. 2017.
 
@@ -20,7 +20,7 @@ Contents: \
 - **02\_GenomicSelection/:** Simulates a line breeding program with conventional genomic selection implementation. \
 - **03\_TwoPartGS/:** Simulates a line breeding program with a two-part strategy genomic selection. \
 
-#### Directory 02_ClonalBreeding
+### Directory 02_ClonalBreeding
 
 Contains codes for simulating tea clonal breeding programs adapted from Lubanga et al. 2017.
 
@@ -29,7 +29,7 @@ Contents: \
 - **02\_PedigreeSelection/:** Simulates a clonal breeding program with pedigree-assisted selection. \
 - **03\_GenomicSelection/:** Simulates a clonal breeding program with conventional genomic selection implementation. \
 
-#### Directory 03_HybridBreeding
+### Directory 03_HybridBreeding
 
 Contains codes for simulating maize hybrid breeding programs adapted from Powell et al. 2021.
 
@@ -38,7 +38,7 @@ Contents: \
 - **02\_GenomicSelection/:** Simulates a maize hybrid breeding program with genomic selection. \
 - **03\_TwoPartGS/:** Simulates a maize hybrid breeding program with a two-part strategy genomic selection. \
 
-#### Directory 04_Techniques
+### Directory 04_Techniques
 
 Contains codes for simulating breeding techniques and AlphaSimR features.
 
