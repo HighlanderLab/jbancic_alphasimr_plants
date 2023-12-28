@@ -1,11 +1,15 @@
-# Load packages
-rm(list = ls())
-require(readr)
-require(reshape2)
-require(ggplot2)
-require(ggpubr)
 
-# Specify ggplot theme options
+# ---- Clean environment and load packages ----
+
+rm(list = ls())
+# install.packages(pkgs = c("readr", "reshape2", "ggplot2", "ggpubr"))
+library(package = "readr")
+library(package = "reshape2")
+library(package = "ggplot2")
+library(package = "ggpubr")
+
+# ---- Specify ggplot theme options ----
+
 theme_optns <- theme_bw(base_size = 16, base_family = "sans") +
   theme(panel.background = element_blank(),
         # legend.title = element_blank(),
@@ -19,8 +23,8 @@ theme_optns <- theme_bw(base_size = 16, base_family = "sans") +
         axis.text.x  = element_text(hjust = .9, angle = 45),
         strip.text   = element_text(face = "bold", size = 18, colour = 'black'))
 
+# ---- Read in and organise results ----
 
-#Read in results
 nReps = 10
 df.pheno <- read_csv("Results_LinePheno.csv")
 df.GS    <- read_csv("Results_LineGS_const.csv")
@@ -28,7 +32,7 @@ df.GSun  <- read_csv("Results_LineGS_unconst.csv")
 temp <- rbind(df.pheno,df.GS,df.GSun)
 rm(df.pheno,df.GS,df.GSun)
 
-# Melt variables
+# Organise data
 colnames(temp)[c(1,3)] <- c("Year","Scenario")
 temp <- melt(temp,
              id.vars = c("Year", "rep", "Scenario"),
@@ -41,7 +45,10 @@ temp$Scenario <- recode_factor(temp$Scenario,
                                `LineGS_unconst` = "GS-unconstrained")
 temp0 <- temp
 
-# Plot genetic gain of each replicate in the burnin phase
+# ---- Plot results ----
+
+#### Plot genetic gain of each replicate in the burnin phase ####
+
 temp$paste <- factor(paste0(temp$rep,temp$Scenario))
 mean <- temp %>%
   group_by(Year, Scenario, variable) %>%
@@ -51,18 +58,19 @@ mean <- temp %>%
 mean$paste <- factor(paste0(mean$rep,mean$Scenario))
 (a <- temp %>%
     filter((variable %in% c("meanG"))) %>%
-    droplevels() %>% 
+    droplevels() %>%
     ggplot(aes(x = Year, y = value, group = paste)) +
     geom_line(aes(color = Scenario), linewidth = 0.6, alpha = 0.2) +
     geom_line(data = mean, aes(group = paste), linewidth = 0.8) +
     ylim(-0.1,5) +
     xlim(0,20) +
     ggtitle("Burn-in phase") +
-    ylab("Genetic gain") + 
+    ylab("Genetic gain") +
     theme_optns +
     guides(color = guide_legend(override.aes = list(linewidth = 1, alpha = 1))))
 
-# Plot genetic gain of each replicate in the future phase
+#### Plot genetic gain of each replicate in the future phase ####
+
 # First center data to year 20
 for(i in 1:10){
   mean = temp$value[temp$rep == i & temp$Year == 20 & temp$variable == "meanG"]
@@ -72,15 +80,15 @@ for(i in 1:10){
 # Plot
 (b1 <- temp %>%
     filter((variable %in% c("meanG"))) %>%
-    droplevels() %>% 
+    droplevels() %>%
     ggplot(aes(x = Year, y = value, group = paste)) +
     geom_line(aes(color = Scenario), linewidth = 0.6, alpha = 0.2) +
     # scale_color_manual(values = c("blue","red","orange")) +
     ylim(0,5) +
     xlim(20,40) +
     ggtitle("Future phase") +
-    ylab("Genetic gain") + 
-    theme_optns) 
+    ylab("Genetic gain") +
+    theme_optns)
 
 # Calculate means
 temp <- temp %>%
@@ -92,37 +100,36 @@ temp <- temp %>%
 temp$paste <- factor(temp$Scenario)
 
 # Genetic gain in future phase
-(b2 <- b1 + 
-    geom_line(data = temp %>% filter((variable %in% c("meanG"))) %>% droplevels(), 
-              aes(x = Year, y = value, color = Scenario), linewidth = 0.8)) 
+(b2 <- b1 +
+    geom_line(data = temp %>% filter((variable %in% c("meanG"))) %>% droplevels(),
+              aes(x = Year, y = value, color = Scenario), linewidth = 0.8))
 
 # Genetic variance
 (c <- temp %>%
     filter((variable %in% c("varG"))) %>%
-    droplevels() %>% 
+    droplevels() %>%
     ggplot(aes(x = Year, y = value)) +
     geom_line(aes(color = Scenario), linewidth = 0.8) +
-    ylab("Genetic variance") + 
+    ylab("Genetic variance") +
     theme_optns)
 
 # Selection accuracy
 (d <- temp %>%
     filter((variable %in% c("accSel"))) %>%
-    droplevels() %>% 
+    droplevels() %>%
     ggplot(aes(x = Year, y = value)) +
     geom_line(aes(color = Scenario), linewidth = 0.8) +
-    ylab("Accuracy") + 
-    theme_optns) 
+    ylab("Accuracy") +
+    theme_optns)
 
-# Merge plots and save
-(p <- ggarrange(a, b2, c, d, nrow = 2, ncol = 2, 
+#### Merge plots and save ####
+
+(p <- ggarrange(a, b2, c, d, nrow = 2, ncol = 2,
                 common.legend = T, legend = "bottom", align = "hv", heights = c(1,1,1,1)))
 ggsave(plot = p, filename ="05_Figure.png", width = 4.5, height = 5, scale = 2)
 
+# ---- Pair-wise comparison test ----
 
-########################################################################
-# Simple pair-wise comparison test
-#########################################################################
 # Comparison constrained GS to Pheno
 t.test(temp0[with(temp0,Scenario == "Pheno" & Year == 40 & variable == "meanG"),]$value,
        temp0[with(temp0,Scenario == "GS-constrained" & Year == 40 & variable == "meanG"),]$value,

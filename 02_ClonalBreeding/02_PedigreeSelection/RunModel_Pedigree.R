@@ -1,7 +1,6 @@
-#-----------------------------------------------------------------------
 # Run pedigree BLUP model using ASReml
-#-----------------------------------------------------------------------
-# Pedigree BLUP is used to predict breeding values of Seedlings in 
+
+# Pedigree BLUP is used to predict breeding values of Seedlings in
 # order to skip HPT stages
 
 # Prepare prediction dataset for seedlings
@@ -25,7 +24,7 @@ ped_temp$Year  = as.factor(ped_temp$Year)
 ped_temp$Stage = as.factor(ped_temp$Stage)
 
 asreml.options(trace=FALSE)
-pedModel <- asreml(fixed = Pheno ~ 1 + Year, 
+pedModel <- asreml(fixed = Pheno ~ 1 + Year,
                    random = ~ vm(Ind, A),
                    # residual = ~ dsum(~id(units) | Year),
                    residual = ~ units,
@@ -40,4 +39,3 @@ rm(ped_temp)
 
 # Assign estimated breeding values to Seedling
 EBV = pedModel$coef$random
-

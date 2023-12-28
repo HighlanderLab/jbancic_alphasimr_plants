@@ -2,7 +2,7 @@
 calcFst <- function(pop1, pop2) {
   # Pop 1 expected heterozygosity
   M = pullQtlGeno(pop1)
-  p1 = colMeans(M)/2 
+  p1 = colMeans(M)/2
   He_pop1 = mean(2*p1*(1-p1))
   # Pop 2 expected heterozygosity
   M  = pullQtlGeno(pop2)
@@ -18,7 +18,7 @@ calcFst <- function(pop1, pop2) {
 }
 
 # This function calculates heterozygosity and inbreeding
-calc_Het <- function(pop) {
+calcHet <- function(pop) {
   geno = pullQtlGeno(pop)
   Het = mean(rowMeans(1-abs(geno-1)))
   Inb = 1 - Het
@@ -30,9 +30,9 @@ maxAvoidPlan = function(nInd, nProgeny = 1L){
   crossPlan = matrix(1:nInd, ncol=2, byrow=TRUE)
   tmp = c(seq(1, nInd, by=2),
           seq(2, nInd, by=2))
-  crossPlan = cbind(rep(tmp[crossPlan[,1]], 
+  crossPlan = cbind(rep(tmp[crossPlan[,1]],
                         each=nProgeny),
-                    rep(tmp[crossPlan[,2]], 
+                    rep(tmp[crossPlan[,2]],
                         each=nProgeny))
   return(crossPlan)
 }
@@ -41,7 +41,7 @@ maxAvoidPlan = function(nInd, nProgeny = 1L){
 circularPlan = function(nInd, nProgeny = 1) {
   crossPlan = rep(1:nInd, each = 2)
   crossPlan = c(crossPlan[length(crossPlan)], crossPlan[-(length(crossPlan))])
-  crossPlan = matrix(crossPlan, 
+  crossPlan = matrix(crossPlan,
                      ncol = 2, byrow = TRUE)
   crossPlan = crossPlan[rep(1:nrow(crossPlan), each = nProgeny),]
   return(crossPlan)

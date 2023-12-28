@@ -1,25 +1,33 @@
-# This script shows examples how different mating designs 
-# can be specified in AlphaSimR. 
+# This script shows examples how different mating designs can be
+# simulated using AlphaSimR.
 
-##-- Load packages
+# ---- Clean environment and load packages ----
+
 rm(list = ls())
-require("AlphaSimR")
-source("Functions.R")
+# install.packages(pkgs = "AlphaSimR")
+library(package = "AlphaSimR")
+source(file = "functions.R")
 
-##-- Create founder haplotypes
-founderPop = runMacs(nInd     = 100,
-                     segSites = 1000,
-                     inbred   = TRUE,
-                     species  = "MAIZE")
+# ---- Setup simulation ----
+
+founderPop = runMacs(
+  nInd     = 100,
+  segSites = 1000,
+  inbred   = TRUE,
+  species  = "MAIZE"
+)
+
 # Set simulation parameters
 SP = SimParam$new(founderPop)
 
 # Add trait with dominance
-SP$addTraitAD(nQtlPerChr = 1000,
-              mean   = 5,
-              var    = 1,
-              meanDD = 0.92,
-              varDD  = 0.2)
+SP$addTraitAD(
+  nQtlPerChr = 1000,
+  mean   = 5,
+  var    = 1,
+  meanDD = 0.92,
+  varDD  = 0.2
+)
 
 # Create a single population
 pop = newPop(founderPop)
@@ -31,101 +39,113 @@ popB = pop[11:20]
 testerA = popA[1:2]
 testerB = popB[1:2]
 
+# ---- Crosses within a single population ----
 
-
-## Crosses within a single population
-######################################################################
-##-- Random biparental/paired cross
+#### Random biparental/paired cross ####
 newPop = randCross(pop, nCrosses = 10, nProgeny = 100)
 table(newPop@father, newPop@mother) # visualise
 # Compare genetic mean and variance
-meanG(pop); meanG(newPop)
-varG(pop); varG(newPop)
+meanG(pop)
+meanG(newPop)
+varG(pop)
+varG(newPop)
 
-
-##-- Full diallel with reciprocal crosses and selfs (n x n)
+#### Full diallel with reciprocal crosses and selfs (n x n) ####
 crossPlan = expand.grid(1:nInd(popA), 1:nInd(popA))
 newPop = makeCross2(popA, popA, crossPlan, nProgeny = 10)
 table(newPop@father, newPop@mother) # visualise
 # Compare genetic mean and variance
-meanG(pop); meanG(newPop)
-varG(pop); varG(newPop)
+meanG(pop)
+meanG(newPop)
+varG(pop)
+varG(newPop)
 
-
-##-- Half diallel without reciprocal crosses and selfs (n(n-1)/2)
+#### Half diallel without reciprocal crosses and selfs (n(n-1)/2) ####
 crossPlan = expand.grid(1:5, 6:10)
 newPop = makeCross2(popA, popA, crossPlan, nProgeny = 40)
 table(newPop@father, newPop@mother) # visualise
 # Compare genetic mean and variance
-meanG(pop); meanG(newPop)
-varG(pop); varG(newPop)
+meanG(pop)
+meanG(newPop)
+varG(pop)
+varG(newPop)
 
-
-##-- Specified crosses
+#### Specified crosses ####
 crossPlan = cbind(1, 2:20)
 newPop = makeCross(pop, crossPlan, nProgeny = 50)
 table(newPop@father, newPop@mother) # visualise
 # Compare genetic mean and variance
-meanG(pop); meanG(newPop)
-varG(pop); varG(newPop)
+meanG(pop)
+meanG(newPop)
+varG(pop)
+varG(newPop)
 
-
-##-- Specified crosses with maximum avoidance
+#### Specified crosses with maximum avoidance ####
 crossPlan = maxAvoidPlan(nInd = 20, nProgeny = 100)
 newPop = makeCross(pop, crossPlan)
 table(newPop@father, newPop@mother) # visualise
 # Compare genetic mean and variance
-meanG(pop); meanG(newPop)
-varG(pop); varG(newPop)
+meanG(pop)
+meanG(newPop)
+varG(pop)
+varG(newPop)
 
-
-##-- Develop Multiparent Generation Intercross (MAGIC) population
-newPop <- pop[1:8]
+#### Develop Multiparent Generation Intercross (MAGIC) population ####
+newPop = pop[1:8]
 # 2-way crosses
-crossPlan = cbind(c(1,3,5,7),
-                  c(2,4,6,8))
+crossPlan = cbind(c(1, 3, 5, 7),
+                  c(2, 4, 6, 8))
 newPop = makeCross(pop, crossPlan)
 table(newPop@father, newPop@mother) # visualise
 # 4-way crosses
-crossPlan = cbind(c(1,3),
-                  c(2,4))
+crossPlan = cbind(c(1, 3),
+                  c(2, 4))
 newPop = makeCross(newPop, crossPlan)
 table(newPop@father, newPop@mother) # visualise
 # 8-way crosses
-crossPlan = cbind(1,2)
+crossPlan = cbind(1, 2)
 newPop = makeCross(newPop, crossPlan, nProgeny = 1000)
 table(newPop@father, newPop@mother) # visualise
 # Create inbred lines from the final cross
-for(i in 1:6){
+for (i in 1:6) {
   newPop = self(newPop, nProgeny = 1)
 }
 newPop = setPheno(newPop, h2 = 0.5)
 # Check inbreeding
-1-mean(rowMeans(1-abs(pullQtlGeno(pop)-1)))
+1 - mean(rowMeans(1 - abs(pullQtlGeno(pop) - 1)))
 # Compare genetic mean and variance
-meanG(pop[1:8]); meanG(newPop)
-varG(pop[1:8]); varG(newPop)
-varP(pop[1:8]); varP(newPop)
+meanG(pop[1:8])
+meanG(newPop)
+varG(pop[1:8])
+varG(newPop)
+varP(pop[1:8])
+varP(newPop)
 
-#-- Visualise MAGIC with PCA
-geno = pullQtlGeno(c(pop[1:8],newPop))
-PCA  = dudi.pca(df = geno, center = T, scale = F, scannf = FALSE, nf = 5)
-(VAF = 100 * PCA$eig[1:5]/sum(PCA$eig)) # variance explained
-df.PCA = data.frame("Pop" = c(rep("Parents",8),rep("MAGIC",1000)),
-                    "PC1" = PCA$l1$RS1,
-                    "PC2" = PCA$l1$RS2)
+# Visualise MAGIC with PCA
+geno = pullQtlGeno(c(pop[1:8], newPop))
+PCA  = dudi.pca(
+  df = geno,
+  center = T,
+  scale = F,
+  scannf = FALSE,
+  nf = 5
+)
+(VAF = 100 * PCA$eig[1:5] / sum(PCA$eig)) # variance explained
+df.PCA = data.frame(
+  "Pop" = c(rep("Parents", 8), rep("MAGIC", 1000)),
+  "PC1" = PCA$l1$RS1,
+  "PC2" = PCA$l1$RS2
+)
 # Plot
 ggplot(df.PCA, aes(x = PC1, y = PC2)) +
   geom_point(aes(colour = factor(Pop))) +
   ggtitle("Population structure") +
-  xlab(paste("Pcomp1: ",round(VAF[1],2),"%",sep="")) + 
-  ylab(paste("Pcomp2: ",round(VAF[2],2),"%",sep= ""))
+  xlab(paste("Pcomp1: ", round(VAF[1], 2), "%", sep = "")) +
+  ylab(paste("Pcomp2: ", round(VAF[2], 2), "%", sep = ""))
 
+# ---- Crosses among two populations ----
 
-
-## Crosses among two populations
-######################################################################
-##-- Testcross/Topcross/North Carolina 1 
+#### Testcross/Topcross/North Carolina 1 ####
 crossPlan = expand.grid(1:nInd(popA), 1:nInd(testerB))
 newPop = makeCross2(popA, popB, crossPlan, nProgeny = 1)
 table(newPop@father, newPop@mother) # visualise
@@ -133,24 +153,22 @@ table(newPop@father, newPop@mother) # visualise
 newPop = hybridCross(females = popA, males =  testerB)
 table(newPop@father, newPop@mother) # visualise
 # Check heterosis
-calcHeterosis(popA,popB,newPop)
+calcHeterosis(popA, popB, newPop)
 
-
-##-- Factorial/North Carolina 2 (half diallel)
+#### Factorial/North Carolina 2 (half diallel) ####
 crossPlan = expand.grid(1:nInd(popA), 1:nInd(popB))
 # with(crossPlan, table(Var1,Var2))
 newPop = makeCross2(popA, popB, crossPlan, nProgeny = 1)
 table(newPop@father, newPop@mother) # visualise
 # Check heterosis
-calcHeterosis(popA,popB,newPop)
+calcHeterosis(popA, popB, newPop)
 
-
-##-- Specified full diallel between two populations
+#### Specified full diallel between two populations ####
 crossPlan = expand.grid(1:nInd(popA), 1:nInd(popB))
-with(crossPlan, table(Var1,Var2))
+with(crossPlan, table(Var1, Var2))
 newPop1 = makeCross2(popA, popA, crossPlan, nProgeny = 1)
 newPop2 = makeCross2(popB, popB, crossPlan, nProgeny = 1)
-newPop = c(newPop1,newPop2)
+newPop = c(newPop1, newPop2)
 table(newPop@father, newPop@mother) # visualise
 # Check heterosis
-calcHeterosis(popA,popB,newPop)
+calcHeterosis(popA, popB, newPop)

@@ -1,85 +1,74 @@
-## -------------------------------------------------------------------------------
-##
-## Script name: Two-part wheat line breeding program
-##
-## Authors: Chris Gaynor, Jon Bancic, Philip Greenspoon
-##
-## Date Created: 2023-01-23
-##
-## Email:
-##
-## -------------------------------------------------------------------------------
-##
-## Description:
-## Uses two-part strategy with rapid cycling of parents in population improvement 
-## and conventional breeding for product development. Applies GS to advance 
-## individuals from DH to make PYT as well as in population improvement. 
-##
-## -------------------------------------------------------------------------------
+# Script name: Two-part wheat line breeding program
+#
+# Authors: Initially developed by Chris Gaynor; exanded/polished for this
+# publication by Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# Uses two-part strategy with rapid cycling of parents in population improvement
+# and conventional breeding for product development. Applies GS to advance
+# individuals from DH to make PYT as well as in population improvement.
 
-##-- Clean up the environment and directory
+# ---- Clean environment and load packages ----
 rm(list = ls())
-# file.remove(file.edit(grep))
+# install.packages(pkgs = "AlphaSimR")
+library(package = "AlphaSimR")
 
-##-- Load packages
-require("AlphaSimR")
+# ---- Load global parameters ----
+source(file = "GlobalParameters.R")
 scenarioName = "LineGSTP"
 
-##-- Load global parameters
-source("GlobalParameters.R")
-
-##-- Create list to store results from reps
+# ---- Create list to store results from reps ----
 results = list()
 results_accPI = list()
 
 for(REP in 1:nReps){
   cat("Working on REP:", REP,"\n")
 
-  ##-- Create a data frame to track key parameters
+  # ---- Create a data frame to track key parameters ----
   output = data.frame(year     = 1:nCycles,
                       rep      = rep(REP, nCycles),
                       scenario = "",
                       meanG = numeric(nCycles),
                       varG  = numeric(nCycles),
                       accSel  = numeric(nCycles))
-  ##-- Create initial parents
-  source("CreateParents.R")
 
-  ##-- Fill breeding pipeline with unique individuals from initial parents
-  source("FillPipeline.R")
+  # ---- Create initial parents ----
+  source(file = "CreateParents.R")
 
-  ##-- Simulate year effects
+  # ---- Fill breeding pipeline with unique individuals from initial parents ----
+  source(file = "FillPipeline.R")
+
+  # ---- Simulate year effects ----
   P = runif(nCycles)
 
-  ## -------------------------------------------------------------------------------
-  ##-- Burn-in phase
+  # ---- Burn-in phase: Phenotypic selection program ----
   cat("--> Working on Burn-in \n")
   for(year in 1:nBurnin) {
-    cat(" Working on burnin year:",year,"\n")
-    source("UpdateParents.R") # Pick new parents
-    source("AdvanceYear.R")   # Advance yield trials by a year
-    source("StoreTrainPop.R") # Store training population
+    cat(" Working on burn-in year:",year,"\n")
+    source(file = "UpdateParents.R") # Pick new parents
+    source(file = "AdvanceYear.R")   # Advance yield trials by a year
+    source(file = "StoreTrainPop.R") # Store training population
     # Report results
     output$meanG[year] = meanG(DH)
     output$varG[year]  = varG(DH)
   }
 
-  ## -------------------------------------------------------------------------------
-  ##-- Future phase: Genomic selection program
+  # ---- Future phase: Genomic selection program ----
   cat("--> Working on Two-part line breeding program \n")
   # New parameters for population improvement
   nCyclesPI = 2    # Number of rapid cycles per year
   nParents  = 50   # Number of parents
   nCrossPI  = 100  # Number of crosses per cycle
-  nF1PI = 100      # Number of F1-PI to advance to PD 
+  nF1PI = 100      # Number of F1-PI to advance to PD
   # Create a data frame to track selection accuracy in PI
   accPI = data.frame(accPI = numeric(nFuture*nCyclesPI))
-  
+
   for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat(" Working on future year:",year,"\n")
-    source("RunGSModels.R")      # Run genomic model
-    source("AdvanceYear_GSTP.R")   # Advance yield trials by a year
-    source("StoreTrainPop.R")    # Store training population
+    source(file = "RunGSModels.R")      # Run genomic model
+    source(file = "AdvanceYear_GSTP.R")   # Advance yield trials by a year
+    source(file = "StoreTrainPop.R")    # Store training population
     # Report results
     output$meanG[year] = meanG(DH)
     output$varG[year]  = varG(DH)

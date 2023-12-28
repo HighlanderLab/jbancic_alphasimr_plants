@@ -1,7 +1,6 @@
-#-----------------------------------------------------------------------
 # Fill breeding pipeline
-#-----------------------------------------------------------------------
-#Set initial yield trials with unique individuals
+
+# Set initial yield trials with unique individuals
 
 # Sample year effects
 P = runif(16)

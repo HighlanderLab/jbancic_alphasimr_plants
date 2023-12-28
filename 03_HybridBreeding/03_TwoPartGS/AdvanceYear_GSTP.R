@@ -1,15 +1,14 @@
-#-----------------------------------------------------------------------
 # Advance year
-#-----------------------------------------------------------------------
+
 cat("  Advancing year \n")
 # Advance breeding program by 1 year
 # Works backwards through pipeline to avoid copying data
 
 cat("   Product development \n")
-## Stage 7
-#Release hybrid
+# Stage 7
+# Release hybrid
 
-## Stage 6
+# Stage 6
 MaleHybridYT5 = selectInd(MaleHybridYT4, nYT5)
 FemaleHybridYT5 = selectInd(FemaleHybridYT4, nYT5)
 
@@ -21,7 +20,7 @@ MaleInbredYT5 =
 FemaleInbredYT5 =
   FemaleInbredYT4[FemaleInbredYT4@id%in%FemaleHybridYT5@mother]
 
-## Stage 5
+# Stage 5
 MaleHybridYT4 = selectInd(MaleHybridYT3, nYT4)
 FemaleHybridYT4 = selectInd(FemaleHybridYT3, nYT4)
 
@@ -33,7 +32,7 @@ MaleInbredYT4 =
 FemaleInbredYT4 =
   FemaleInbredYT3[FemaleInbredYT3@id%in%FemaleHybridYT4@mother]
 
-## Stage 4
+# Stage 4
 MaleInbredYT3 = selectInd(MaleYT2, nInbred3)
 FemaleInbredYT3 = selectInd(FemaleYT2, nInbred3)
 
@@ -43,7 +42,7 @@ FemaleHybridYT3 = hybridCross(FemaleInbredYT3, MaleElite)
 MaleHybridYT3 = setPheno(MaleHybridYT3, reps = repYT3, p = p)
 FemaleHybridYT3 = setPheno(FemaleHybridYT3, reps = repYT3, p = p)
 
-## Stage 3 - apply genomic selection
+# Stage 3 - apply genomic selection
 # Predict GCA
 if (exists("gsModel")) {
   MaleYT1 = setEBV(MaleYT1, gsModel)
@@ -63,7 +62,7 @@ FemaleYT2 = selectInd(FemaleYT1, nInbred2, use = "ebv")
 MaleYT2 = setPhenoGCA(MaleYT2, FemaleTester2, reps = repYT2, inbred = T, p = p)
 FemaleYT2 = setPhenoGCA(FemaleYT2, MaleTester2, reps = repYT2, inbred = T, p = p)
 
-## Stage 2 - apply genomic selection
+# Stage 2 - apply genomic selection
 MaleDH = makeDH(MaleF1, nDH)
 FemaleDH = makeDH(FemaleF1, nDH)
 
@@ -82,20 +81,18 @@ FemaleDH = selectInd(selectWithinFam(FemaleDH, famMax, use = "ebv"), nInbred2, u
 MaleYT1 = setPhenoGCA(MaleDH, FemaleTester1, reps = repYT1, inbred = T, p = p)
 FemaleYT1 = setPhenoGCA(FemaleDH, MaleTester1, reps = repYT1, inbred = T, p = p)
 
-## Run population improvement
-#-----------------------------
 # Stage 1
-ifelse((year == nBurnin+1), count <- 1, count <- count + nCyclesPI)
+# Run population improvement
+count = ifelse((year == nBurnin+1), 1, count + nCyclesPI)
 for(cycle in 1:nCyclesPI){
   cat("   Population improvement cycle", cycle, "/", nCyclesPI,"\n")
   if(cycle == 1){
-    ##-- Cycle 1
     if (year == (nBurnin + 1)) {
       # Create F1s by random crossing parents from Burn-in
       MaleParents = randCross(MaleParents, nCrossMalePI)
       FemaleParents = randCross(FemaleParents, nCrossFemalePI)
     }
-    ## 1. Select best F1s using GS
+    # 1. Select best F1s using GS
     if (exists("gsModel")) {
       MaleParents = setEBV(MaleParents, gsModel)
       FemaleParents = setEBV(FemaleParents, gsModel)
@@ -113,12 +110,11 @@ for(cycle in 1:nCyclesPI){
     MaleParents = selectInd(MaleParents, nParents, use = "ebv")
     FemaleParents = selectInd(FemaleParents, nParents, use = "ebv")
 
-    ## 2. Make parental crosses
+    # 2. Make parental crosses
     MaleParents = randCross(MaleParents, nCrossMalePI)
     FemaleParents = randCross(FemaleParents, nCrossFemalePI)
   } else {
-    ##-- Cycle > 1
-    ## 1. Select best F1s using GS
+    # 1. Select best F1s using GS
     if (exists("gsModel")) {
       MaleParents = setEBV(MaleParents, gsModel)
       FemaleParents = setEBV(FemaleParents, gsModel)
@@ -133,7 +129,7 @@ for(cycle in 1:nCyclesPI){
     MaleParents = selectInd(MaleParents, nParents, use = "ebv")
     FemaleParents = selectInd(FemaleParents, nParents, use = "ebv")
 
-    ## 2. Make parental crosses
+    # 2. Make parental crosses
     MaleParents = randCross(MaleParents, nCrossMalePI)
     FemaleParents = randCross(FemaleParents, nCrossFemalePI)
   }

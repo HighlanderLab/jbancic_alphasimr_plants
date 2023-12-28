@@ -1,7 +1,6 @@
-#-----------------------------------------------------------------------
 # Fill breeding pipeline
-#-----------------------------------------------------------------------
-#Set initial yield trials with unique individuals
+
+# Set initial yield trials with unique individuals
 for(cohort in 1:2){
   cat("  FillPipeline stage:",cohort,"of 2\n")
   if(cohort < 3){

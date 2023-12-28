@@ -1,5 +1,5 @@
-## This function is used to calculate between family accuracies
-##' @param pop an object of Pop-class
+# This function is used to calculate between family accuracies
+#' @param pop an object of Pop-class
 accuracy_family <- function(pop){
   mother <- pop@mother
   father <- pop@father
@@ -15,19 +15,10 @@ accuracy_family <- function(pop){
     families_i <- pop@mother == mother_i & pop@father == father_i
     tmp <- pop[families_i]
     families[[i]] <- tmp
-    ##PG: Do we want group level heritability so there is measurment
-    ##error?
+    # PG: Do we want group level heritability so there is measurement error?
   }
   phenotypes <- unlist(lapply(families, meanP))
   gvs <- unlist(lapply(families,meanG))
-  ##PG: sometimes the gvs are all identical throwing an NA for the correlatioon.
+  # PG: sometimes the gvs are all identical throwing an NA for the correlation.
   cor(gvs,phenotypes)
-}
-
-# This function calculates heterozygosity and inbreeding
-calc_Het <- function(pop) {
-  geno = pullQtlGeno(pop)
-  Het = mean(rowMeans(1-abs(geno-1)))
-  Inb = 1 - Het
-  return(data.frame(Het, Inb))
 }

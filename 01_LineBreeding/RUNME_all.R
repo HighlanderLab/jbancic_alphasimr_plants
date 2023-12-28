@@ -1,74 +1,63 @@
-## -------------------------------------------------------------------------------
-##
-## Script name: Run wheat breeding programs
-##
-## Authors: Chris Gaynor, Jon Bancic, Philip Greenspoon
-##
-## Date Created: 2023-01-23
-##
-## Email:
-##
-## -------------------------------------------------------------------------------
-##
-## Description:
-## This script runs both phenotypic and genomic selection program one after
-## another.
-##
-## ------------------------------------------------------------------------------- 
+# Script name: Run wheat breeding programs
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script runs both phenotypic and genomic selection program one after
+# another.
 
-##-- Clean up the environment and directory
+# ---- Clean environment and load packages ----
 rm(list = ls())
-# file.remove(file.edit(grep))
+# install.packages(pkgs = "AlphaSimR")
+library(package = "AlphaSimR")
 
-##-- Load packages
-require("AlphaSimR")
-
-# Number of simulation replications
+# ---- Number of simulation replications ----
 nReps = 10
 
 for(REP in 1:nReps){
   cat("Working on REP:", REP,"\n")
-  
-  ##-- Load global parameters
-  source("02_GenomicSelection/GlobalParameters.R")
 
-  ##-- Create initial parents and set testers
-  source("02_GenomicSelection/CreateParents.R")
+  # ---- Load global parameters ----
+  source(file = "02_GenomicSelection/GlobalParameters.R")
 
-  ##-- Fill breeding pipeline with unique individuals from initial parents
-  source("02_GenomicSelection/FillPipeline.R")
-  
-  ##-- Create a data frame to track key parameters
+  # ---- Create initial parents ----
+  source(file = "02_GenomicSelection/CreateParents.R")
+
+  # ---- Fill breeding pipeline with unique individuals from initial parents ----
+  source(file = "02_GenomicSelection/FillPipeline.R")
+
+  # ---- Create a data frame to track key parameters----
   output = data.frame(year     = 1:nCycles,
                       rep      = rep(REP, nCycles),
                       scenario = "",
                       meanG  = numeric(nCycles),
                       varG   = numeric(nCycles),
                       accSel = numeric(nCycles))
-  
-  ## -------------------------------------------------------------------------------
-  ##-- Burn-in phase
-  cat("--> Working on Burn-in \n")
+
+  # ---- Burn-in phase: Phenotypic selection program ----
+  # NOTE: some scripts below are for phenoypic selection, but saved in genomic
+  # selection folder!
+  cat("--> Working on Burn-in with Phenotypic selection program \n")
   for(year in 1:nBurnin) {
-    cat(" Working on burnin year:",year,"\n")
-    source("02_GenomicSelection/UpdateParents.R") # Pick new parents
-    source("02_GenomicSelection/AdvanceYear.R")   # Advance yield trials by a year
-    source("02_GenomicSelection/StoreTrainPop.R") # Store training population
+    cat(" Working on burn-in year:",year,"\n")
+    source(file = "02_GenomicSelection/UpdateParents.R") # Pick new parents
+    source(file = "02_GenomicSelection/AdvanceYear.R")   # Advance yield trials by a year
+    source(file = "02_GenomicSelection/StoreTrainPop.R") # Store training population
     # Report results
     output$meanG[year] = meanG(DH)
     output$varG[year]  = varG(DH)
   }
   # Save burn-in to load later for subsequent scenarios
   save.image("tmp.RData")
-  
-  ## -------------------------------------------------------------------------------
-  ##-- Future phase: Phenotypic program
+
+  # ---- Future phase: Phenotypic selectionprogram ----
   cat("--> Working on Phenotypic selection program \n")
-  for(year in (nBurnin+1):(nBurnin+nFuture)) { 
+  for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat(" Working on future year:",year,"\n")
-    source("02_GenomicSelection/UpdateParents.R") # Pick new parents
-    source("02_GenomicSelection/AdvanceYear.R")   # Advance yield trials by a year
-    source("02_GenomicSelection/StoreTrainPop.R") # Store training population
+    source(file = "02_GenomicSelection/UpdateParents.R") # Pick new parents
+    source(file = "02_GenomicSelection/AdvanceYear.R")   # Advance yield trials by a year
+    source(file = "02_GenomicSelection/StoreTrainPop.R") # Store training population
     # Report results
     output$meanG[year] = meanG(DH)
     output$varG[year]  = varG(DH)
@@ -77,19 +66,18 @@ for(REP in 1:nReps){
   cat(" Saving results \n")
   Scenario  <- output$scenario <- "LinePheno"
   file.name <- paste0("Results_",Scenario,".csv")
-  write.table(output, file.name, sep = ",", 
+  write.table(output, file.name, sep = ",",
               col.names = !file.exists(file.name), row.names = F, append = T)
-  
-  ## -------------------------------------------------------------------------------
-  ##-- Future phase: Genomic selection program with unconstrained costs
+
+  # ---- Future phase: Genomic selection program with unconstrained costs ----
   cat("--> Working on cost-unconstrained Genomic selection program \n")
   load("tmp.RData")
-  for(year in (nBurnin+1):(nBurnin+nFuture)) { 
+  for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat(" Working on future year:",year,"\n")
-    source("02_GenomicSelection/RunGSModels.R")      # Run genomic model
-    source("02_GenomicSelection/UpdateParents_GS.R") # Pick new parents
-    source("02_GenomicSelection/AdvanceYear_GS.R")   # Advance yield trials by a year
-    source("02_GenomicSelection/StoreTrainPop.R")    # Store training population
+    source(file = "02_GenomicSelection/RunGSModels.R")      # Run genomic model
+    source(file = "02_GenomicSelection/UpdateParents_GS.R") # Pick new parents
+    source(file = "02_GenomicSelection/AdvanceYear_GS.R")   # Advance yield trials by a year
+    source(file = "02_GenomicSelection/StoreTrainPop.R")    # Store training population
     # Report results
     output$meanG[year] = meanG(DH)
     output$varG[year]  = varG(DH)
@@ -98,23 +86,22 @@ for(REP in 1:nReps){
   cat(" Saving results \n")
   Scenario  <- output$scenario <- "LineGS_unconst"
   file.name <- paste0("Results_",Scenario,".csv")
-  write.table(output, file.name, sep = ",", 
+  write.table(output, file.name, sep = ",",
               col.names = !file.exists(file.name), row.names = F, append = T)
-  
-  ## -------------------------------------------------------------------------------
-  ##-- Future phase: Genomic selection program with constrained costs
+
+  # ---- Future phase: Genomic selection program with constrained costs ----
   cat("--> Working on cost-constrained Genomic selection program \n")
   load("tmp.RData")
-  # Reduce number of DHs produced per cross 
+  # Reduce number of DHs produced per cross
   # to offset costs of genotyping
   nDH <- 75
-    
-  for(year in (nBurnin+1):(nBurnin+nFuture)) { 
+
+  for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat(" Working on future year:",year,"\n")
-    source("02_GenomicSelection/RunGSModels.R")      # Run genomic model
-    source("02_GenomicSelection/UpdateParents_GS.R") # Pick new parents
-    source("02_GenomicSelection/AdvanceYear_GS.R")   # Advance yield trials by a year
-    source("02_GenomicSelection/StoreTrainPop.R")    # Store training population
+    source(file = "02_GenomicSelection/RunGSModels.R")      # Run genomic model
+    source(file = "02_GenomicSelection/UpdateParents_GS.R") # Pick new parents
+    source(file = "02_GenomicSelection/AdvanceYear_GS.R")   # Advance yield trials by a year
+    source(file = "02_GenomicSelection/StoreTrainPop.R")    # Store training population
     # Report results
     output$meanG[year] = meanG(DH)
     output$varG[year]  = varG(DH)
@@ -123,37 +110,36 @@ for(REP in 1:nReps){
   cat(" Saving results \n")
   Scenario  <- output$scenario <- "LineGS_const"
   file.name <- paste0("Results_",Scenario,".csv")
-  write.table(output, file.name, sep = ",", 
+  write.table(output, file.name, sep = ",",
               col.names = !file.exists(file.name), row.names = F, append = T)
-  
-  ## -------------------------------------------------------------------------------
-  ##-- Future phase: Two-Part genomic selection program 
+
+  # ---- Future phase: Two-Part genomic selection program ----
   cat("--> Working on Two-part genomic selection program \n")
   load("tmp.RData")
-  
+
   # New parameters for population improvement
   nCyclesPI = 2    # Number of rapid cycles per year
   nParents  = 50   # Number of parents
   nCrossPI  = 100  # Number of crosses per cycle
-  nF1PI = 100      # Number of F1-PI to advance to PD 
+  nF1PI = 100      # Number of F1-PI to advance to PD
   # Create a data frame to track selection accuracy in PI
   accPI = data.frame(accPI = numeric(nFuture*nCyclesPI))
-  
+
   for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat(" Working on future year:",year,"\n")
-    source("03_TwoPartGS/RunGSModels.R")      # Run genomic model
-    source("03_TwoPartGS/AdvanceYear_GSTP.R")   # Advance yield trials by a year
-    source("03_TwoPartGS/StoreTrainPop.R")    # Store training population
+    source(file = "03_TwoPartGS/RunGSModels.R")      # Run genomic model
+    source(file = "03_TwoPartGS/AdvanceYear_GSTP.R")   # Advance yield trials by a year
+    source(file = "03_TwoPartGS/StoreTrainPop.R")    # Store training population
     # Report results
     output$meanG[year] = meanG(DH)
     output$varG[year]  = varG(DH)
   }
-  
+
   # Save results
   cat(" Saving results \n")
   Scenario  <- output$scenario <- "LineGSTP"
   file.name <- paste0("Results_",Scenario,".csv")
-  write.table(output, file.name, sep = ",", 
+  write.table(output, file.name, sep = ",",
               col.names = !file.exists(file.name), row.names = F, append = T)
 }
 
@@ -161,4 +147,4 @@ for(REP in 1:nReps){
 file.remove("tmp.RData")
 
 # Analyze results
-source("ANALYZERESULTS_all.R")
+source(file = "ANALYZERESULTS_all.R")

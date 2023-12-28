@@ -1,20 +1,18 @@
-#-----------------------------------------------------------------------
 # Create founders
-#-----------------------------------------------------------------------
 
-## Create founder population
+# Create founder population
 founderPop = runMacs2(nInd     = nParents,
                       nChr     = nChr,
                       segSites = nQtl+nSnp,
                       genLen   = genLen,
                       mutRate  = mutRate)
 
-## Set simulation parameters
+# Set simulation parameters
 SP = SimParam$new(founderPop)
 
 # Add SNP chip
 SP$restrSegSites(nQtl,nSnp)
-if(nSnp > 0){
+if (nSnp > 0) {
   SP$addSnpChip(nSnp)
 }
 
@@ -26,7 +24,6 @@ SP$addTraitADG(nQtlPerChr = nQtl,
 
 # Collect pedigree
 SP$setTrackPed(TRUE)
-SP$setSexes("yes_sys")
 
 # Create founder parents
 Parents = newPop(founderPop)
