@@ -1,5 +1,5 @@
 ## -------------------------------------------------------------------
-## R Script: Speed breeding
+## R Script: Trait introgression with MAS
 ## -------------------------------------------------------------------
 ## Description:
 ## This script models a simple trait introgression scheme
