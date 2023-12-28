@@ -1,6 +1,11 @@
-# This script demonstrates how to specify your own demographic history 
-# Parameters are chosen hypothetically but would normally be obtained 
-# from existing literature. 
+## -------------------------------------------------------------------
+## R Script: Specifying species demography in AlphaSimR
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates how to specify your own demographic history 
+## of a hypothetical species. Parameters are chosen hypothetically but 
+## would normally be obtained from existing literature. 
+## -------------------------------------------------------------------
 
 ##-- Load packages
 rm(list = ls())

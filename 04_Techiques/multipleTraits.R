@@ -1,9 +1,14 @@
-# This script first demonstrates how to simulate (i) two correlated 
-# traits with the same genetic architecture or (ii) two traits with 
-# different genetic architecture and no QTLs in common in AlphaSimR
-#
-# The script also demonstrates how to perform naive or Hazel-Smith
-# index selection with pre-assigned weights
+## -------------------------------------------------------------------
+## R Script: Simulation of multiple traits in AlphaSimR
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates how to simulate (i) two correlated traits 
+## with the same genetic architecture or (ii) two traits with distinct 
+## genetic architecture and no shared QTLs in AlphaSimR.
+##
+## The script also demonstrates performing naive or Hazel-Smith
+## index selection with pre-assigned weights in AlphaSimR.
+## -------------------------------------------------------------------
 
 # Load packages
 rm(list = ls())
@@ -56,18 +61,21 @@ SP$addTraitAD(nQtlPerChr = 100,
               meanDD = 0.9, 
               varDD  = 0.1)
 
-# Remove QTLs used by trait 1 --- TO ADD ONCE FIXED
-
+# Prevent QTL from first trait being reused
+qtlMap = getQtlMap(trait = 1)
+SP$restrSegSites(excludeQtl = qtlMap$id)
 
 # Add second additive oligogenic trait 
 SP$addTraitA(nQtlPerChr = 2,
              mean = 0,
              var  = 1)
 
+# Check that there is no overlap
+qtlMap2 = getQtlMap(trait = 2)
+sum(qtlMap$id %in% qtlMap2$id)
+
 # Create population 
 pop = newPop(founderPop)
-
-# Check that no QTLs are in common
 
 # Check genetic values and mean
 gv(pop); meanG(pop)

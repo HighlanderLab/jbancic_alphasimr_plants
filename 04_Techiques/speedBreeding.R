@@ -1,4 +1,10 @@
-# This script demonstrates editing of a single or mu
+## -------------------------------------------------------------------
+## R Script: Speed breeding
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates how to code speed breeding process in 
+## AlphaSimR as an example.
+## -------------------------------------------------------------------
 
 # Load packages
 rm(list = ls())

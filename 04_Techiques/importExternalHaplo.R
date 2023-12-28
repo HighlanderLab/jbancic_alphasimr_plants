@@ -1,5 +1,10 @@
-# This script models demonstrates how to import external 
-# marker data into AlphaSimR.
+## -------------------------------------------------------------------
+## R Script: Importing External Haplotypes in AlphaSimR
+## --------------------------------------------------------------
+## Description:
+## This script demonstrates the process of importing external 
+## marker data into AlphaSimR for haplotype analysis.
+## --------------------------------------------------------------
 
 # Load packages
 rm(list = ls())
