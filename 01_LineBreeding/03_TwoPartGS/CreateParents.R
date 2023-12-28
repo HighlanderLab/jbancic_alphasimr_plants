@@ -30,6 +30,7 @@ SP$setSexes("yes_sys")
 # Create founder parents
 Parents = newPop(founderPop)
 
-# Add phenotype reflecting 2 years of evaluation in EYT
-Parents = setPheno(Parents, varE = varE, reps = repEYT*2)
+# Add phenotype reflecting evaluation in EYT
+Parents = setPheno(Parents, varE = varE, reps = repEYT)
+
 rm(founderPop)

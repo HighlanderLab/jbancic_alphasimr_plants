@@ -14,14 +14,16 @@ nSnp = 0    # Number of SNP per chromosome
 nChromosomes = 1 #Number of chromosomes
 
 #-- Initial parents mean and variance
-initMeanG  = 0
+initMeanG  = 1
 initVarG   = 1
 initVarEnv = 1e-6 # Virtually zero for consistency with 2-Part paper
 initVarGE  = 2
-h2 = 0.05
+varE       = 4 # Yield trial error variance, bushels per acre
+               # Relates to error variance for an entry mean
+## h2 = 0.05
 
 #-- Breeding program details
-nParents = 20 # Simulates an equal number of landraces
+nParents = 20 # Number of parents to start a breeding cycle
 nCrosses = 40 # Number of crosses per year
 
 ##Number of progeny per selfed individual in each stage
@@ -44,7 +46,7 @@ nRowF5 = 10
 nRowF6 = 4
 
 ## Effective replication of yield trials
-repF6  = 4/9
-repPYT = 1   #h2 =
-repAYT = 4   #h2 =
-repEYT = 8   #h2 =
+repF6  = 4/9 # h2 = 0.1
+repPYT = 1   #h2 = 0.2
+repAYT = 4   #h2 = 0.5
+repEYT = 8   #h2 = 0.7

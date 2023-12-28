@@ -41,12 +41,12 @@ S3 = self(S2)
 S2 = self(S1)
 
 #Stage 3
-# Create segregating population
 # Take single seed from each plant
-S1 = self(S0, nSelf)
+S1 = self(S0)
 
 #Stage 2
-S0 = self(F1, nSelf)
+# Create segregating population
+S0 = self(F1, nProgeny)
 
 #Stage 1
 F1 = randCross(Parents, nCrosses)

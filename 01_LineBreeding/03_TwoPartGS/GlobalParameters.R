@@ -15,7 +15,7 @@ nQtl = 1000 # Number of QTL per chromosome
 nSnp = 400  # Number of SNP per chromosome
 
 #-- Initial parents mean and variance
-initMeanG  = 0
+initMeanG  = 1
 initVarG   = 1
 initVarEnv = 1e-6 # Virtually zero for consistency with 2-Part paper
 initVarGE  = 2
@@ -23,7 +23,7 @@ varE       = 4 # Yield trial error variance, bushels per acre
 # Relates to error variance for an entry mean
 
 #-- Breeding program details
-nParents = 50  # Simulates an equal number of landraces
+nParents = 50  # Number of parents to start a breeding cycle
 nCrosses = 100 # Number of crosses per year
 nDH      = 100 # DH lines produced per cross
 famMax   = 10  # The maximum number of DH lines per cross to enter PYT

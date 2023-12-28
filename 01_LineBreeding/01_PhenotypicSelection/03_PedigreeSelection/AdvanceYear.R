@@ -9,16 +9,16 @@
 
 ##Stage 9
 EYT = selectInd(AYT, nEYT)
-EYT = setPheno(EYT, h2 = h2, reps = repEYT)
+EYT = setPheno(EYT, varE = varE, reps = repEYT)
 
 #Stage 8
 AYT = selectInd(PYT, nAYT)
-AYT = setPheno(AYT, h2 = h2, reps = repAYT)
+AYT = setPheno(AYT, varE = varE, reps = repAYT)
 
 #Stage 7
 output$accSel[year] = accuracy_family(F6)
 PYT = selectInd(F6, nPYT)
-PYT = setPheno(PYT, h2 = h2, reps = repPYT)
+PYT = setPheno(PYT, varE = varE, reps = repPYT)
 
 ##Stage 6
 F6 = vector("list",nCrosses) #Selected plants from each cross
@@ -38,7 +38,7 @@ for(i in 1:nCrosses){ #Loop over crosses
   F6[[i]] = mergePops(F6lines)
 }
 F6 = mergePops(F6)
-F6 = setPheno(F6, h2=h2, reps = repF6)
+F6 = setPheno(F6, varE = varE, reps = repF6)
 
 ##Stage 5
 ## Grow selected plants in F5 rows
@@ -56,6 +56,7 @@ for(i in 1:nCrosses){ #Loop over crosses
   F5rows = F5rows[take]
   ## Select "nSelF5" plants per F5 row
   for(j in 1:nRowF5){
+    F5rows[[j]] = setPheno(F5rows[[j]], varE = varE, reps = 1)
     F5rows[[j]] = selectInd(F5rows[[j]],nSelF5)
   }
   F5[[i]] = mergePops(F5rows)
@@ -77,6 +78,7 @@ for(i in 1:nCrosses){ #Loop over crosses
   F4rows = F4rows[take]
   ## Select "nSelF4" plants per F4 row
   for(j in 1:nRowF4){
+    F4rows[[j]] = setPheno(F4rows[[j]], varE = varE, reps = 1)
     F4rows[[j]] = selectInd(F4rows[[j]],nSelF4)
   }
   F4[[i]] = mergePops(F4rows)
@@ -97,6 +99,7 @@ for(i in 1:nCrosses){ #Loop over crosses
   F3rows = F3rows[take]
   ## Select "nSelF3" plants per selected F3 row
   for(j in 1:nRowF3){
+    F3rows[[j]] = setPheno(F3rows[[j]], varE = varE, reps = 1)
     F3rows[[j]] = selectInd(F3rows[[j]],nSelF3)
   }
   F3[[i]] = mergePops(F3rows)
@@ -106,6 +109,7 @@ for(i in 1:nCrosses){ #Loop over crosses
 F2 = vector("list",nCrosses) #Keep crosses seperate
 for(i in 1:nCrosses){ #Loop over crosses
   F2_i = self(F1[i], nProgeny = nF2)
+  F2_i = setPheno(F2_i, varE = varE, reps = 1)
   F2[[i]] = selectInd(F2_i, nInd = nSelF2)
 }
 
