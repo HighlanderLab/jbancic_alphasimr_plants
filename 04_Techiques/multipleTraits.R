@@ -1,15 +1,20 @@
-# This script first demonstrates how to simulate multiplt traits with
-# AlphaSimR:
-# i) two correlated traits with the same genetic architecture and
-#   fully shared QTL and
-# ii) two traits with different genetic architecture and no shared
-#   QTLs.
-#
-# The script also demonstrates how to perform naive or Hazel-Smith
-# index selection with pre-assigned weights
-
-# WARNING: Simulating traits with no shared QTL had a bug that was
-# fixed in AlphaSimR version 1.5.3.
+## -------------------------------------------------------------------
+## R Script: Simulation of multiple traits in AlphaSimR
+## -------------------------------------------------------------------
+## Description:
+## This script first demonstrates how to simulate multiplt traits with
+## AlphaSimR:
+## i) two correlated traits with the same genetic architecture and
+##   fully shared QTL and
+## ii) two traits with different genetic architecture and no shared
+##   QTLs.
+##
+## The script also demonstrates how to perform naive or Hazel-Smith
+## index selection with pre-assigned weights
+##
+## WARNING: Simulating traits with no shared QTL had a bug that was
+## fixed in AlphaSimR version 1.5.3.
+## -------------------------------------------------------------------
 
 # ---- Clean environment and load packages ----
 
@@ -73,8 +78,9 @@ SP$addTraitAD(
   varDD  = 0.1
 )
 
-# Remove QTLs used by trait 1 --- TO ADD ONCE FIXED
-# TODO
+# Prevent QTL from first trait being reused
+qtlMap = getQtlMap(trait = 1)
+SP$restrSegSites(excludeQtl = qtlMap$id)
 
 # Add second additive oligogenic trait
 SP$addTraitA(nQtlPerChr = 2,
@@ -85,7 +91,8 @@ SP$addTraitA(nQtlPerChr = 2,
 pop = newPop(founderPop)
 
 # Check that no QTLs are in common
-# TODO
+qtlMap2 = getQtlMap(trait = 2)
+sum(qtlMap$id %in% qtlMap2$id)
 
 # Check genetic values and mean
 gv(pop)

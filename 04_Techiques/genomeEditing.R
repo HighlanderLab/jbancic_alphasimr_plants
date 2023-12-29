@@ -1,5 +1,9 @@
-# This script demonstrates genome editing of a single locus using
-# AlphaSimR.
+## -------------------------------------------------------------------
+## R Script: Genome editing in AlphaSimR
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates editing of a single locus in AlphaSimR.
+## -------------------------------------------------------------------
 
 # ---- Clean environment and load packages ----
 

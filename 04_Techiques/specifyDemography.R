@@ -1,7 +1,12 @@
-# This script demonstrates how to specify your own demographic history
-# when using MaCS simulator of founders' genomes with AlphaSimR.
-# Parameters are chosen hypothetically and would normally be obtained
-# from literature.
+## -------------------------------------------------------------------
+## R Script: Specifying species demography in AlphaSimR
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates how to specify your own demographic history
+## when using MaCS simulator of founders' genomes with AlphaSimR.
+## Parameters are chosen hypothetically and would normally be obtained
+## from literature.
+## -------------------------------------------------------------------
 
 # ---- Clean environment and load packages ----
 

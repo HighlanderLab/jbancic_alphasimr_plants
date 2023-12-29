@@ -1,24 +1,29 @@
-# This script models a simple trait introgression scheme
-# using AlphaSimR.
-#
-# The scheme models a species with 2 chromosomes having
-# a genetic length of 1 Morgan.
-#
-# Genetic markers spaced 10 cM apart will be used to track
-# IBD between an inbred donor line and an inbred recurrent
-# parent. The recurrent parent will have the '1' allele at
-# all loci and the donor parent will have the '0' allele.
-#
-# A single locus representing a trait being introgressed
-# will be added to the middle of the first chromosome. The
-# donor parent will have the '1' allele at this locus and
-# the recurrent parent will have the '0' allele.
-#
-# The simulation will model three rounds of backcrossing
-# followed by selfing to obtain homozygous lines for the
-# trait being introgressed. Only plants containing the
-# trait in the heterozygous state are advanced after
-# backcrossing.
+## -------------------------------------------------------------------
+## R Script: Speed breeding
+## -------------------------------------------------------------------
+## Description:
+## This script models a simple trait introgression scheme
+## using AlphaSimR.
+## 
+## The scheme models a species with 2 chromosomes having
+## a genetic length of 1 Morgan.
+## 
+## Genetic markers spaced 10 cM apart will be used to track
+## IBD between an inbred donor line and an inbred recurrent
+## parent. The recurrent parent will have the '1' allele at
+## all loci and the donor parent will have the '0' allele.
+## 
+## A single locus representing a trait being introgressed
+## will be added to the middle of the first chromosome. The
+## donor parent will have the '1' allele at this locus and
+## the recurrent parent will have the '0' allele.
+## 
+## The simulation will model three rounds of backcrossing
+## followed by selfing to obtain homozygous lines for the
+## trait being introgressed. Only plants containing the
+## trait in the heterozygous state are advanced after
+## backcrossing.
+## -------------------------------------------------------------------
 
 # ---- Clean environment and load packages ----
 

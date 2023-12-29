@@ -1,7 +1,12 @@
-# This script demonstrates how to simulate a population for a GWAS
-# using AlphaSimR. The simulation starts of by creating a single
-# homogeneous population, which then undergoes a few rounds of
-# selection to induce stratification.
+## -------------------------------------------------------------------
+## R Script: Performing association study with simulated population
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates how to simulate a population for a GWAS 
+## study. The simulation starts of by creating a single homogeneous 
+## population which then undergoes a few rounds of selection 
+## to induce stratification.
+## -------------------------------------------------------------------
 
 # ---- Clean environment and load packages ----
 
@@ -70,7 +75,6 @@ df.PCA = data.frame(
 # Plot
 ggplot(df.PCA, aes(x = PC1, y = PC2)) +
   geom_point(aes(colour = factor(Pop))) +
-  geom_point() +
   ggtitle("Population structure") +
   xlab(paste("Pcomp1: ", round(VAF[1], 2), "%", sep = "")) +
   ylab(paste("Pcomp2: ", round(VAF[2], 2), "%", sep = ""))
@@ -96,7 +100,7 @@ colnames(geno)[-c(1:3)] = 1:pop@nInd
 # Run three GWAS models
 model1 = GWAS(pheno[, -3], geno, plot = F)
 model2 = GWAS(pheno[, -3], geno, n.PC = 3, plot = F)
-model3 = GWAS(pheno,      geno, fixed = "subPop", plot = F)
+model3 = GWAS(pheno,       geno, fixed = "subPop", plot = F)
 
 # Obtain p values
 model1$Trait1 = 10 ^ (-model1$Trait1)

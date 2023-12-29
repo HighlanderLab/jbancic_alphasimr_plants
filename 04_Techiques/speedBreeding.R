@@ -1,5 +1,10 @@
-# This script demonstrates speed breeding of plants in a glasshouse
-# using AlphaSimR.
+## -------------------------------------------------------------------
+## R Script: Speed breeding
+## -------------------------------------------------------------------
+## Description:
+## This script demonstrates speed breeding of plants in a glasshouse
+## using AlphaSimR.
+## -------------------------------------------------------------------
 
 # ---- Clean environment and load packages ----
 
