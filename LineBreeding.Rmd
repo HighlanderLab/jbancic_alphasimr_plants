@@ -27,8 +27,6 @@ library(package = "AlphaSimR")
 We define global parameters that are used throughout a simulation. Such parameter values can be chosen based on estimates from prior analyses of real data or long-term trends, trial and error, or practical experience. For definitions of the parameters see Table 3 in the main text. Note that in the script files, this step is included with `source(file = "GlobalParameters.R")`, but here, for illustrative purposes, we include all code into a single continuous script. We also define a scenario name so we can track multiple possible scenarios.
 
 ```{r}
-scenarioName = "LinePheno_DH"
-
 # ---- Number of simulation replications and breeding cycles ----
 nReps   = 1
 nBurnin = 1
@@ -60,6 +58,8 @@ repHDRW  = 4/9
 repPYT   = 1
 repAYT   = 4
 repEYT   = 8
+
+scenarioName = "LinePheno_DH"
 ```
 
 We create a list to store results from replications.
@@ -149,37 +149,37 @@ Note that in the script files this step is included with `source(file = "FillPip
  
 ```{r}
 # Set initial yield trials with unique individuals
-for(cohort in 1:7){
-  cat("  FillPipeline stage:",cohort,"of 7\n")
-  if(cohort<7){
+for (cohort in 1:7) {
+  cat("  Fill pipeline stage:", cohort, "of 7\n")
+  if (cohort < 7) {
     # Stage 1
     F1 = randCross(Parents, nCrosses)
   }
-  if(cohort<6){
+  if (cohort < 6) {
     # Stage 2
     DH = makeDH(F1, nDH)
   }
-  if(cohort<5){
+  if (cohort < 5) {
     # Stage 3
     HDRW = setPheno(DH, varE = varE, reps = repHDRW)
   }
-  if(cohort<4){
+  if (cohort < 4) {
     # Stage 4
     PYT = selectWithinFam(HDRW, famMax)
     PYT = selectInd(PYT, nPYT)
     PYT = setPheno(PYT, varE = varE, reps = repPYT)
   }
-  if(cohort<3){
+  if (cohort < 3) {
     # Stage 5
     AYT = selectInd(PYT, nAYT)
     AYT = setPheno(AYT, varE = varE, reps = repAYT)
   }
-  if(cohort<2){
+  if (cohort < 2) {
     # Stage 6
     EYT = selectInd(AYT, nEYT)
     EYT = setPheno(EYT, varE = varE, reps = repEYT)
   }
-  if(cohort<1){
+  if (cohort < 1) {
     # Stage 7
   }
 }
@@ -236,7 +236,6 @@ AYT = selectInd(PYT, nAYT)
 AYT = setPheno(AYT, varE = varE, reps = repAYT)
 
 # Stage 4
-output$accSel[year] = cor(HDRW@gv, HDRW@pheno)
 PYT = selectWithinFam(HDRW, famMax)
 PYT = selectInd(PYT, nPYT)
 PYT = setPheno(PYT, varE = varE, reps = repPYT)
@@ -251,7 +250,9 @@ DH = makeDH(F1, nDH)
 F1 = randCross(Parents, nCrosses)
 ```
 
-An important note! We work backwards through the pipeline to avoid copying a population before performing operations on it. This is an important point because failing to do so is a common source of coding bugs with AlphaSimR. To explain further, consider what would happen if we went forwards through the pipeline instead. An incorrect first attempt at doing so might be to start with:
+### Backward vs forward pipeline pass
+
+An important note! We work backward through the pipeline to avoid copying a population before performing operations on it. This is an important point because failing to do so is a common source of errors in simulating breeding programs with AlphaSimR. To explain further, consider what would happen if we went forward through the pipeline instead.
 
 ```{r, eval = FALSE}
 # Stage 1
@@ -261,21 +262,25 @@ F1 = randCross(Parents, nCrosses)
 DH = makeDH(F1, nDH)
 ```
 
-But by making a new F1 (or DH), we have erased the F1 (or DH) from the previous year, which we require to make the DH (or HDRW) for this year, so instead we would need to save the F1 (or DH), as in the following, but this is inefficient both in terms of memory use and code presentation:
+While the above might look reasonable and is syntactically valid R and AlphaSimR code, note that by making a new F1, we have erased the F1 from the previous year, which we require to make the DH for this year. The above code effectively fast-tracks the crossing of parents to create F1 and creation of DH from the F1 in one time step. If we continue in this way, we would fast-track cohorts through all the stage of the breeding pipeline in one time step, which is biologically and logistically impossible.
+
+A correct way to work forward through the pipeline would be to duplicate populations at each stage, as in the following, but this is inefficient both in terms of computer memory and code presentation.
 
 ```{r, eval = FALSE}
 # Stage 1
-F1_save = F1
+F1_saved_for_DH = F1
 F1 = randCross(Parents, nCrosses)
 
 # Stage 2
-DH_save = DH
-DH = makeDH(F1_save, nDH)
+DH_saved_for_HDRW = DH
+DH = makeDH(F1_saved_for_DH, nDH)
 ```
 
-And we would have to go through a similar process for all the stages. We avoid this process by running backwards through the pipeline instead, as shown above in previous code chunks.
+We avoid this needles duplication of populations (with a forward pass through the pipeline) by running backward through the pipeline, as shown above in previous code chunks.
 
-Finally, for each year we save results in the `output` data frame. We save mean genetic value and variance of genetic values from individuals in the DH stage, while for accuracy of selection we calculate it first at the HDRW stage where first phenotypes are available. Note that heritability of these phenotypes is very low, representing breeder's visual selection.
+### Saving simulation summaries
+
+Finally, for each year we save results in the `output` data frame. Note that results could here invilve complete simulated populations, associated data, or just data summaries as shown here. Here, we save mean of genetic values and variance of genetic values for individuals in the DH stage, while for accuracy of selection we calculate it at the HDRW stage where first phenotypes are available. Note that heritability of these phenotypes is very low, representing breeder's visual selection.
 
 ```{r}
 output$meanG[year]  = meanG(DH)
@@ -283,4 +288,6 @@ output$varG[year]   = varG(DH)
 output$accSel[year] = cor(HDRW@pheno, HDRW@gv)
 ```
 
-This completes simulation of a single year of the burn-in for a single replicate. Explore additional material available in R scripts.
+## Wrap-up
+
+The above completed simulation of a single year of the burn-in of a wheat breeding program for a single replicate. Explore additional material available in R scripts with multi-year, multi-rep, and multi-scenario examples.
