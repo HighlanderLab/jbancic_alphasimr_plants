@@ -2,14 +2,14 @@
 # ---- Clean environment and load packages ----
 
 rm(list = ls())
-# install.packages(pkgs = c("readr", "reshape2", "ggplot2", "ggpubr"))
+# install.packages(pkgs = c("dplyr", "readr", "reshape2", "ggplot2", "ggpubr"))
+library(package = "dplyr")
 library(package = "readr")
 library(package = "reshape2")
 library(package = "ggplot2")
 library(package = "ggpubr")
 
 # ---- Specify ggplot theme options ----
-
 theme_optns <- theme_bw(base_size = 16, base_family = "sans") +
   theme(panel.background = element_blank(),
         # legend.title = element_blank(),
@@ -22,6 +22,7 @@ theme_optns <- theme_bw(base_size = 16, base_family = "sans") +
         # axis.title.x = element_blank(),
         axis.text.x  = element_text(hjust = .9, angle = 45),
         strip.text   = element_text(face = "bold", size = 18, colour = 'black'))
+
 
 # ---- Read in and organise results ----
 
@@ -40,93 +41,100 @@ temp <- melt(temp,
 
 # Rename Scenarios
 temp$Scenario <- recode_factor(temp$Scenario,
+                               `Burn-in`        = "Pheno burn-in",
                                `LinePheno`      = "Pheno",
                                `LineGS_const`   = "GS-constrained",
                                `LineGS_unconst` = "GS-unconstrained")
-temp0 <- temp
+temp0 <- temp # save for later t-tests
 
 # ---- Plot results ----
 
 #### Plot genetic gain of each replicate in the burnin phase ####
 
 temp$paste <- factor(paste0(temp$rep,temp$Scenario))
-mean <- temp %>%
+# Create a mean line
+df.mean <- temp %>%
   group_by(Year, Scenario, variable) %>%
   summarise(value = mean(value)) %>%
   filter((variable %in% c("meanG"))) %>%
   droplevels
-mean$paste <- factor(paste0(mean$rep,mean$Scenario))
-(a <- temp %>%
+df.mean$paste <- factor(paste0(df.mean$Scenario))
+(a1 <- temp %>%
     filter((variable %in% c("meanG"))) %>%
-    droplevels() %>%
+    filter(Year < 21) %>%
+    droplevels() %>% 
     ggplot(aes(x = Year, y = value, group = paste)) +
     geom_line(aes(color = Scenario), linewidth = 0.6, alpha = 0.2) +
-    geom_line(data = mean, aes(group = paste), linewidth = 0.8) +
-    ylim(-0.1,5) +
-    xlim(0,20) +
-    ggtitle("Burn-in phase") +
-    ylab("Genetic gain") +
+    geom_line(data = df.mean[df.mean$Year < 22,], aes(x = Year, y = value), linewidth = 0.8) +
+    # ylim(-0.1,5) +
+    xlim(0,40) +
+    # ggtitle("Burn-in phase") +
+    ylab("Genetic gain") + 
     theme_optns +
     guides(color = guide_legend(override.aes = list(linewidth = 1, alpha = 1))))
 
 #### Plot genetic gain of each replicate in the future phase ####
 
 # First center data to year 20
-for(i in 1:10){
+mean_burnin20 <- df.mean$value[df.mean$Year == 20]
+for(i in 1:nReps){
   mean = temp$value[temp$rep == i & temp$Year == 20 & temp$variable == "meanG"]
   center = temp$value[temp$rep == i & temp$variable == "meanG"] - mean
-  temp$value[temp$rep == i & temp$variable == "meanG"] = center
+  temp$value[temp$rep == i & temp$variable == "meanG"] = center + mean_burnin20
 }
-# Plot
-(b1 <- temp %>%
-    filter((variable %in% c("meanG"))) %>%
-    droplevels() %>%
-    ggplot(aes(x = Year, y = value, group = paste)) +
-    geom_line(aes(color = Scenario), linewidth = 0.6, alpha = 0.2) +
-    # scale_color_manual(values = c("blue","red","orange")) +
-    ylim(0,5) +
-    xlim(20,40) +
-    ggtitle("Future phase") +
-    ylab("Genetic gain") +
-    theme_optns)
+# Plot centered future genetic gain for separate reps
+df.center <- temp %>% 
+  filter((variable %in% c("meanG"))) %>%
+  filter(Year > 20) %>%
+  droplevels()
+(a2 <- a1 + 
+    geom_line(data = df.center, 
+              aes(x = Year, y = value, color = Scenario), linewidth = 0.6, alpha = 0.2) +
+    geom_line(data = df.mean[df.mean$Year > 20,], aes(colour = paste), linewidth = 0.8)) 
 
-# Calculate means
+##-- Calculate means for variance and accuracy 
 temp <- temp %>%
   group_by(Year, Scenario, variable) %>%
   summarise(value = mean(value)) %>%
   droplevels
-
-# Plot multiple reps
-temp$paste <- factor(temp$Scenario)
-
-# Genetic gain in future phase
-(b2 <- b1 +
-    geom_line(data = temp %>% filter((variable %in% c("meanG"))) %>% droplevels(),
-              aes(x = Year, y = value, color = Scenario), linewidth = 0.8))
+# Black line for burnin
+temp2 <- temp %>%
+  filter((Scenario %in% c("Pheno"))) %>%
+  filter(Year < 21) %>%
+  droplevels()
 
 # Genetic variance
-(c <- temp %>%
+(b <- temp %>%
     filter((variable %in% c("varG"))) %>%
-    droplevels() %>%
+    droplevels() %>% 
     ggplot(aes(x = Year, y = value)) +
     geom_line(aes(color = Scenario), linewidth = 0.8) +
-    ylab("Genetic variance") +
+    geom_line(data = temp2[temp2$variable == "varG",],
+              aes(x = Year, y = value), color = "black", linewidth = 0.8) +
+    ylab("Genetic variance") + 
     theme_optns)
 
 # Selection accuracy
-(d <- temp %>%
+(c <- temp %>%
     filter((variable %in% c("accSel"))) %>%
-    droplevels() %>%
+    droplevels() %>% 
     ggplot(aes(x = Year, y = value)) +
     geom_line(aes(color = Scenario), linewidth = 0.8) +
-    ylab("Accuracy") +
-    theme_optns)
+    geom_line(data = temp2[temp2$variable == "accSel",],
+              aes(x = Year, y = value), color = "black", linewidth = 0.8) +
+    ylab("Accuracy") + 
+    theme_optns) 
 
 #### Merge plots and save ####
 
-(p <- ggarrange(a, b2, c, d, nrow = 2, ncol = 2,
-                common.legend = T, legend = "bottom", align = "hv", heights = c(1,1,1,1)))
-ggsave(plot = p, filename ="05_Figure.png", width = 4.5, height = 5, scale = 2)
+(p1 <- ggarrange(a2, nrow = 1, ncol = 1, 
+                 common.legend = T, legend = "none", align = "hv"))
+(p2 <- ggarrange(b, c, nrow = 2, ncol = 1, 
+                 common.legend = T, legend = "right", align = "hv"))
+(p <- ggarrange(p1, p2, nrow = 1, ncol = 2, 
+                common.legend = T, widths = c(1,1)))
+ggsave(plot = p, filename ="06_Figure.png", width = 4.5, height = 2.5, scale = 2.5)
+
 
 # ---- Pair-wise comparison test ----
 
