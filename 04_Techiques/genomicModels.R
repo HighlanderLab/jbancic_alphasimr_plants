@@ -1,11 +1,12 @@
-## -------------------------------------------------------------------
-## R Script: Genomic models in AlphaSimR
-## -------------------------------------------------------------------
-## Description:
-## This script demonstrates the implementation of different
-## genomic models in AlphaSimR. Models are demonstrated 
-## using high and low density SNP chip.
-## -------------------------------------------------------------------
+# Script name: Genomic models in AlphaSimR
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script demonstrates the implementation of different
+# genomic models in AlphaSimR. Models are demonstrated 
+# using high and low density SNP chip.
 
 # ---- Clean environment and load packages ----
 

@@ -1,10 +1,11 @@
-## -------------------------------------------------------------------
-## R Script: Simulation of mating designs in AlphaSimR
-## --------------------------------------------------------------
-## Description:
-## This script provides practical examples of specifying various 
-## mating designs within AlphaSimR.
-## -------------------------------------------------------------------
+# Script name: Simulation of mating designs in AlphaSimR
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script provides practical examples of specifying various 
+# mating designs within AlphaSimR.
 
 # ---- Clean environment and load packages ----
 

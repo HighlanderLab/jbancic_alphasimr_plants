@@ -1,11 +1,12 @@
-## -------------------------------------------------------------------
-## R Script: Setting heritability in AlphaSimR
-## -------------------------------------------------------------------
-## Description:
-## This script demonstrates three ways for setting error variance
-## of a phenotype. This is shown using a trait with additive
-## and dominance effects.
-## -------------------------------------------------------------------
+# Script name: Setting heritability in AlphaSimR
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script demonstrates three ways for setting error variance
+# of a phenotype. This is shown using a trait with additive
+# and dominance effects.
 
 # ---- Clean environment and load packages ----
 

@@ -1,20 +1,21 @@
-## -------------------------------------------------------------------
-## R Script: Simulation of multiple traits in AlphaSimR
-## -------------------------------------------------------------------
-## Description:
-## This script first demonstrates how to simulate multiplt traits with
-## AlphaSimR:
-## i) two correlated traits with the same genetic architecture and
-##   fully shared QTL and
-## ii) two traits with different genetic architecture and no shared
-##   QTLs.
-##
-## The script also demonstrates how to perform naive or Hazel-Smith
-## index selection with pre-assigned weights
-##
-## WARNING: Simulating traits with no shared QTL had a bug that was
-## fixed in AlphaSimR version 1.5.3.
-## -------------------------------------------------------------------
+# Script name: Simulation of multiple traits in AlphaSimR
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script first demonstrates how to simulate multiplt traits with
+# AlphaSimR:
+# i) two correlated traits with the same genetic architecture and
+#   fully shared QTL and
+# ii) two traits with different genetic architecture and no shared
+#   QTLs.
+#
+# The script also demonstrates how to perform naive or Hazel-Smith
+# index selection with pre-assigned weights
+#
+# WARNING: Simulating traits with no shared QTL had a bug that was
+# fixed in AlphaSimR version 1.5.3.
 
 # ---- Clean environment and load packages ----
 

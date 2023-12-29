@@ -1,10 +1,11 @@
-## -------------------------------------------------------------------
-## R Script: Speed breeding
-## -------------------------------------------------------------------
-## Description:
-## This script demonstrates speed breeding of plants in a glasshouse
-## using AlphaSimR.
-## -------------------------------------------------------------------
+# Script name: Speed breeding
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script demonstrates speed breeding of plants in a glasshouse
+# using AlphaSimR.
 
 # ---- Clean environment and load packages ----
 

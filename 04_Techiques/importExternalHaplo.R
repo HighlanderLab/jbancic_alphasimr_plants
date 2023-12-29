@@ -1,10 +1,12 @@
-## -------------------------------------------------------------------
-## R Script: Importing External Haplotypes in AlphaSimR
-## --------------------------------------------------------------
-## Description:
-## This script demonstrates the process of importing external 
-## marker data into AlphaSimR for haplotype analysis.
-## --------------------------------------------------------------
+# Script name: Importing External Haplotypes in AlphaSimR
+#
+# Authors: Initially developed by Chris Gaynor; exanded/polished for this
+# publication by Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script demonstrates the process of importing external 
+# marker data into AlphaSimR for haplotype analysis.
 
 # ---- Clean environment and load packages ----
 

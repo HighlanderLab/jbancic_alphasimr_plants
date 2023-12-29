@@ -1,12 +1,13 @@
-## -------------------------------------------------------------------
-## R Script: Performing association study with simulated population
-## -------------------------------------------------------------------
-## Description:
-## This script demonstrates how to simulate a population for a GWAS 
-## study. The simulation starts of by creating a single homogeneous 
-## population which then undergoes a few rounds of selection 
-## to induce stratification.
-## -------------------------------------------------------------------
+# Script name: Performing association study with simulated population
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script demonstrates how to simulate a population for a GWAS 
+# study. The simulation starts of by creating a single homogeneous 
+# population which then undergoes a few rounds of selection 
+# to induce stratification.
 
 # ---- Clean environment and load packages ----
 

@@ -1,17 +1,17 @@
-## -------------------------------------------------------------------
-## R Script: Use of miscellaneous slot in AlphaSimR
-## -------------------------------------------------------------------
-## Description:
-## This script demonstrates how to use the miscellaneous slot in
-## AlphaSimR populations. Here, the slot is designed to be used as part
-## of selection criteria.
-##
-## WARNING: Organisation of the misc slot has changed with AlphaSimR
-## version 1.5.4. Prior to this version, misc slot was a list of length
-## equal to the number of individuals (nInd). Since version 1.5.4, misc
-## slot is a list of length equal to the number of nodes, with each node
-## containing an object with nInd elements.
-## -------------------------------------------------------------------
+# Script name: Use of miscellaneous slot in AlphaSimR
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script demonstrates how to use the miscellaneous slot in
+# AlphaSimR populations. Here, the slot is designed to be used as part
+# of selection criteria.
+#
+# WARNING: Organisation of the misc slot has changed with AlphaSimR
+# version 1.5.4. Prior to this version, misc slot was a list of length
+# equal to the number of individuals (nInd). Since version 1.5.4, misc
+# slot is a list of length equal to the number of nodes, with each node
 
 # ---- Clean environment and load packages ----
 

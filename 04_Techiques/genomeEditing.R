@@ -1,9 +1,10 @@
-## -------------------------------------------------------------------
-## R Script: Genome editing in AlphaSimR
-## -------------------------------------------------------------------
-## Description:
-## This script demonstrates editing of a single locus in AlphaSimR.
-## -------------------------------------------------------------------
+# Script name: Genome editing in AlphaSimR
+#
+# Authors: Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# This script demonstrates editing of a single locus in AlphaSimR.
 
 # ---- Clean environment and load packages ----
 
