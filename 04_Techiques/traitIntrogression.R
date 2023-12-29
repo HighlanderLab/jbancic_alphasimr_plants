@@ -1,5 +1,5 @@
 ## -------------------------------------------------------------------
-## R Script: Trait introgression with MAS
+## R Script: Speed breeding
 ## -------------------------------------------------------------------
 ## Description:
 ## This script models a simple trait introgression scheme
@@ -25,29 +25,35 @@
 ## backcrossing.
 ## -------------------------------------------------------------------
 
-# Load packages
+# ---- Clean environment and load packages ----
+
 rm(list = ls())
-library(AlphaSimR)
+# install.packages(pkgs = "AlphaSimR")
+library(package = AlphaSimR)
+
+# ---- Setup simulation ----
 
 # Create a genetic map with 2 chromosomes.
 # Each chromosome has a genetic length of 1 with markers
 # spaced 10 cM apart (11 markers per chromosome).
 genMap = data.frame(
-  markerName = paste0("M", 1:(2*11)),
-  chromosome = rep(1:2, each=11),
-  position = rep(seq(from=0, to=1, by=0.1), times=2)
+  markerName = paste0("M", 1:(2 * 11)),
+  chromosome = rep(1:2, each = 11),
+  position = rep(seq(from = 0, to = 1, by = 0.1), times = 2)
 )
 
 # Create genotypes for parents
-geno = rbind(rep(2, 2*11),
-             rep(0, 2*11))
+geno = rbind(rep(2, 2 * 11),
+             rep(0, 2 * 11))
 colnames(geno) = genMap$markerName
 
 # Create pedigree with just IDs
 # RP stands for recurrent parent
-ped = data.frame(id = c("RP", "Donor"),
-                 mother = c(0,0),
-                 father = c(0,0))
+ped = data.frame(
+  id = c("RP", "Donor"),
+  mother = c(0, 0),
+  father = c(0, 0)
+)
 
 # Create initial founder population
 founderPop = importInbredGeno(geno = geno,
@@ -57,43 +63,47 @@ founderPop = importInbredGeno(geno = geno,
 # Add the trait being introgressed
 # The RP has genotype 0 (c(0,0) haplotypes)
 # The donor has genotype 2 (c(1,1) haplotypes)
-founderPop = addSegSite(founderPop, 
-                        siteName = "Trait",
-                        chr = 1,
-                        mapPos = 0.5, 
-                        haplo = matrix(c(0, 0, 
-                                         1, 1), ncol=1))
+founderPop = addSegSite(
+  founderPop,
+  siteName = "Trait",
+  chr = 1,
+  mapPos = 0.5,
+  haplo = matrix(c(0, 0,
+                   1, 1), ncol = 1)
+)
 
 # Initialize the simulation parameters
 SP = SimParam$new(founderPop)
 
 # Exclude "Trait" as an eligible SNP marker
-SP$restrSegSites(excludeSnp="Trait")
+SP$restrSegSites(excludeSnp = "Trait")
 
 # Add a SNP chip for the remaining sites
-SP$addSnpChip(nSnpPerChr=11)
+SP$addSnpChip(nSnpPerChr = 11)
+
+# ---- Parents and Introgression via backcrossing ----
 
 # Create separate population for the recurrent and donor parents
 RP = newPop(founderPop[1])
 Donor = newPop(founderPop[2])
 
 # Create an F1 plant, only one needed because parents are fully inbred
-F1 = randCross2(RP, Donor, nCrosses=1)
+F1 = randCross2(RP, Donor, nCrosses = 1)
 
 # Create BC1F1 by backcrossing to the recurrent parent
-BC1F1 = randCross2(F1, RP, nCrosses=1000)
+BC1F1 = randCross2(F1, RP, nCrosses = 1000)
 
 # Select BC1F1 for presence of trait
 take = pullMarkerGeno(BC1F1, "Trait") == 1
 BC1F1 = BC1F1[take]
 
 # Create BC2F1 generation and select for trait
-BC2F1 = randCross2(BC1F1, RP, nCrosses=1000)
+BC2F1 = randCross2(BC1F1, RP, nCrosses = 1000)
 take = pullMarkerGeno(BC2F1, "Trait") == 1
 BC2F1 = BC2F1[take]
 
 # Create BC3F1 generation and select for trait
-BC3F1 = randCross2(BC2F1, RP, nCrosses=1000)
+BC3F1 = randCross2(BC2F1, RP, nCrosses = 1000)
 take = pullMarkerGeno(BC3F1, "Trait") == 1
 BC3F1 = BC3F1[take]
 
@@ -104,18 +114,17 @@ BC3F2 = self(BC3F1)
 take = pullMarkerGeno(BC3F2, "Trait") == 2
 BC3F2 = BC3F2[take]
 
+# ---- IBD analysis ----
+
 # Pull SNP genotypes and divide by 2 to show IBD
 IBD = pullSnpGeno(BC3F2) / 2
 
 # Show IBD distribution as percentage by individuals
 IBD_ind = rowMeans(IBD) * 100
-hist(IBD_ind, xlab="Percent IBD", main="Distribution of IBD in BC3F2")
+hist(IBD_ind, xlab = "Percent IBD", main = "Distribution of IBD in BC3F2")
 
 # Show IBD distribution by marker
 # Could be made much prettier using ggplot2
 # Note that M6 co-localizes with the trait, so it will
 # have zero IBD with the recurrent parent.
-boxplot(IBD, main="Distribution of IBD by marker in BC3F2")
-
-
-
+boxplot(IBD, main = "Distribution of IBD by marker in BC3F2")

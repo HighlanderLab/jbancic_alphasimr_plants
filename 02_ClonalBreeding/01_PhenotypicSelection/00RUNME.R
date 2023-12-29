@@ -1,35 +1,27 @@
-## -------------------------------------------------------------------------------
-##
-## Script name: Pedigree tea clonal breeding program
-##
-## Authors: Nelson Lubanga, Jon Bancic
-##
-## Date Created: 2023-12-06
-##
-## Email:
-##
-## -------------------------------------------------------------------------------
-##
-## Description:
-## Tea breeding program was adapted from Lubanga et al. 2023.
-## -------------------------------------------------------------------------------
-rm(list = ls())
+# Script name: Phenotypic tea clonal breeding program
+#
+# Authors: Initially developed by Nelson Lubanga, Gregor Gorjanc, Jon Bancic;
+# exanded/polished for this publication by Jon Bancic, Philip Greenspoon,
+# Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-12-06
 
-##-- Load packages
-require("AlphaSimR")
+# ---- Clean environment and load packages ----
+rm(list = ls())
+# install.packages(pkgs = "AlphaSimR")
+library(package = "AlphaSimR")
+
+# ---- Load global parameters ----
+source(file = "GlobalParameters.R")
 scenarioName = "ClonalPheno"
 
-##-- Load global parameters
-source("GlobalParameters.R")
-
-##-- Create list to store results from reps
+# ---- Create list to store results from reps ----
 results = list()
 
-#create vectors for storing the summary data
 for(REP in 1:nReps){
   cat("Working on REP:", REP,"\n")
-  
-  ##-- Create a data frame to track key parameters
+
+  # ---- Create a data frame to track key parameters ----
   output = data.frame(year     = 1:nCycles,
                       rep      = rep(REP, nCycles),
                       scenario = rep(scenarioName, nCycles),
@@ -37,37 +29,35 @@ for(REP in 1:nReps){
                       varG     = numeric(nCycles),
                       accSel   = numeric(nCycles))
 
-  ##-- Create initial parents
-  source("CreateParents.R")
+  # ---- Create initial parents ----
+  source(file = "CreateParents.R")
 
-  ##-- Fill breeding pipeline with unique individuals from initial parents
-  source("FillPipeline.R")
+  # ---- Fill breeding pipeline with unique individuals from initial parents ----
+  source(file = "FillPipeline.R")
 
-  ##-- Simulate year effects
+  # ---- Simulate year effects ----
   P = runif(nCycles)
-  
-  ##-- Burn-in phase
-  for(year in 1:nBurnin)
-  { 
+
+  # ---- Burn-in phase ----
+  for(year in 1:nBurnin) {
     cat("  Working on burnin year:",year,"\n")
-    source("UpdateParents.R")  # Pick parents
-    source("AdvanceYear.R")    # Advances yield trials by a year and collects records
+    source(file = "UpdateParents.R")  # Pick parents
+    source(file = "AdvanceYear.R")    # Advances yield trials by a year and collects records
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)
   }
-  
-  ##-- Future phase
-  for(year in (nBurnin+1):(nBurnin+nFuture))
-  { 
+
+  # ---- Future phase ----
+  for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat("  Working on future year:",year,"\n")
-    source("UpdateParents.R")  # Pick parents
-    source("AdvanceYear.R")    # Advances yield trials by a year and collects records
+    source(file = "UpdateParents.R")  # Pick parents
+    source(file = "AdvanceYear.R")    # Advances yield trials by a year and collects records
     # Report results
     output$meanG[year] = meanG(Seedlings)
     output$varG[year]  = varG(Seedlings)
   }
-  
+
   # Save results from current replicate
   results = append(results, list(output))
 }

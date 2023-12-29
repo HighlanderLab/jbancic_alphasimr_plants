@@ -1,6 +1,4 @@
-#-----------------------------------------------------------------------
 # Create founders
-#-----------------------------------------------------------------------
 
 # Generate initial haplotypes
 founderPop = runMacs(nInd     = nParents,
@@ -11,7 +9,7 @@ SP = SimParam$new(founderPop)
 
 # Add SNP chip
 SP$restrSegSites(nQtl, nSnp)
-if(nSnp > 0){
+if (nSnp > 0) {
   SP$addSnpChip(nSnp)
 }
 
@@ -22,11 +20,8 @@ SP$addTraitAG(nQtlPerChr = nQtl,
 
 # Collect pedigree
 SP$setTrackPed(TRUE)
-SP$setSexes("yes_sys")
 
 # Create founder parents
 Parents = newPop(founderPop)
 
 rm(founderPop)
-
-

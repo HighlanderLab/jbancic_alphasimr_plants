@@ -1,6 +1,4 @@
-#-----------------------------------------------------------------------
 # Fill breeding pipeline
-#-----------------------------------------------------------------------
 #Set initial yield trials with unique individuals
 
 # Sample year effects

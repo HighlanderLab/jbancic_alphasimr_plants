@@ -1,6 +1,4 @@
-#-----------------------------------------------------------------------
 # Update parents
-#-----------------------------------------------------------------------
 
 # Replace 10 oldest inbred parents with 10 new genomically-predicted
 # inbreds from DH stage

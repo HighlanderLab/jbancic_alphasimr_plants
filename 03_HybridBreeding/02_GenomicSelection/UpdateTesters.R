@@ -1,8 +1,6 @@
-#-----------------------------------------------------------------------
 # Update testers
-#-----------------------------------------------------------------------
 
-#Replace oldest hybrid parent with parent of best hybrid from YT6
+# Replace oldest hybrid parent with parent of best hybrid from YT6
 bestMaleInbred = MaleHybridYT5@mother[
   order(MaleHybridYT5@pheno[,1],decreasing=TRUE)[1]
   ]
@@ -13,7 +11,7 @@ bestFemaleInbred = FemaleHybridYT5@mother[
   ]
 FemaleElite = c(FemaleElite[-1],FemaleInbredYT5[bestFemaleInbred])
 
-#Update testers
+# Update testers
 MaleTester1 = MaleElite[1:nTester1]
 FemaleTester1 = FemaleElite[1:nTester1]
 

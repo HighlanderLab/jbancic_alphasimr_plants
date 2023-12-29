@@ -1,39 +1,29 @@
-## -------------------------------------------------------------------------------
-##
-## Script name: Genomic selection hybrid maize breeding program
-##
-## Authors: Chris Gaynor, Jon Bancic, Philip Greenspoon
-##
-## Date Created: 2023-01-23
-##
-## Email:
-##
-## -------------------------------------------------------------------------------
-##
-## Description:
-## Applies GS to advance individuals in DH and YT1 as well as to select new 
-## parents from DH stage.
-##
-## ------------------------------------------------------------------------------- 
+# Script name: Genomic selection hybrid maize breeding program
+#
+# Authors: Initially developed by Chris Gaynor; exanded/polished for this
+# publication by Jon Bancic, Philip Greenspoon, Chris Gaynor, Gregor Gorjanc
+#
+# Date Created: 2023-01-23
+#
+# Applies GS to advance individuals in DH and YT1 as well as to select new
+# parents from DH stage.
 
-##-- Clean up the environment and directory
+# ---- Clean environment and load packages ----
 rm(list = ls())
-# file.remove(file.edit(grep))
+# install.packages(pkgs = "AlphaSimR")
+library(package = "AlphaSimR")
 
-##-- Load packages
-require("AlphaSimR")
+# ---- Load global parameters ----
+source(file = "GlobalParameters.R")
 scenarioName = "HybridGS"
 
-##-- Load global parameters
-source("GlobalParameters.R")
-
-##-- Create list to store results from reps
+# ---- Create list to store results from reps ----
 results = list()
 
 for(REP in 1:nReps){
   cat("Working on REP:", REP,"\n")
-  
-  ##-- Create a data frame to track key parameters
+
+  # ---- Create a data frame to track key parameters ----
   output = data.frame(year     = 1:nCycles,
                       rep      = rep(REP, nCycles),
                       scenario = "",
@@ -43,25 +33,24 @@ for(REP in 1:nReps){
                       varG_hybrid  = numeric(nCycles),
                       acc_sel = numeric(nCycles),
                       cor = numeric(nCycles))
-  
-  ##-- Create initial parents and set testers
-  source("CreateParents.R")
-  
-  ##-- Fill breeding pipeline with unique individuals from initial parents
-  source("FillPipeline.R")
-  
-  ##-- Simulate year effects
+
+  # ---- Create initial parents and set testers ----
+  source(file = "CreateParents.R")
+
+  # ---- Fill breeding pipeline with unique individuals from initial parents ----
+  source(file = "FillPipeline.R")
+
+  # ---- Simulate year effects ----
   P = runif(nCycles)
-  
-  ## -------------------------------------------------------------------------------
-  ##-- Burn-in phase 
+
+  # ---- Burn-in phase----
   cat("--> Working on Burn-in \n")
-  for(year in 1:nBurnin) { 
+  for(year in 1:nBurnin) {
     cat(" Working on burnin year:",year,"\n")
-    source("UpdateParents.R") # Pick new parents
-    source("UpdateTesters.R") # Pick new testers
-    source("AdvanceYear.R")   # Advance yield trials by a year
-    source("StoreTrainPop.R") # Store training population
+    source(file = "UpdateParents.R") # Pick new parents
+    source(file = "UpdateTesters.R") # Pick new testers
+    source(file = "AdvanceYear.R")   # Advance yield trials by a year
+    source(file = "StoreTrainPop.R") # Store training population
     # Report results
     output$meanG_inbred[year] = (meanG(MaleInbredYT3) + meanG(FemaleInbredYT3))/2
     output$varG_inbred[year]  = (varG(MaleInbredYT3) + varG(FemaleInbredYT3))/2
@@ -72,17 +61,16 @@ for(REP in 1:nReps){
     output$cor[year] = cor(c(tmp$GCAf[,2],tmp$GCAm[,2]),
                            c(FemaleInbredYT3@gv[,1],MaleInbredYT3@gv[,1]))
   }
-  
-  ## -------------------------------------------------------------------------------
-  ##-- Future phase: Genomic selection program 
+
+  # ---- Future phase: Genomic selection program ----
   cat("--> Working on Genomic hybrid program \n")
-  for(year in (nBurnin+1):(nBurnin+nFuture)) { 
+  for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat(" Working on future year:",year,"\n")
-    source("RunGSModels.R")      # Run genomic model
-    source("UpdateParents_GS.R") # Pick new parents
-    source("UpdateTesters.R")    # Pick new testers
-    source("AdvanceYear_GS.R")   # Advance yield trials by a year
-    source("StoreTrainPop.R")    # Store training population
+    source(file = "RunGSModels.R")      # Run genomic model
+    source(file = "UpdateParents_GS.R") # Pick new parents
+    source(file = "UpdateTesters.R")    # Pick new testers
+    source(file = "AdvanceYear_GS.R")   # Advance yield trials by a year
+    source(file = "StoreTrainPop.R")    # Store training population
     # Report results
     output$meanG_inbred[year] = (meanG(MaleInbredYT3) + meanG(FemaleInbredYT3))/2
     output$varG_inbred[year]  = (varG(MaleInbredYT3) + varG(FemaleInbredYT3))/2
@@ -93,7 +81,7 @@ for(REP in 1:nReps){
     output$cor[year] = cor(c(tmp$GCAf[,2],tmp$GCAm[,2]),
                            c(FemaleInbredYT3@gv[,1],MaleInbredYT3@gv[,1]))
   }
-  
+
   # Save results from current replicate
   results = append(results, list(output))
 }

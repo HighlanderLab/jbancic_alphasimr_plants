@@ -1,30 +1,29 @@
-#-----------------------------------------------------------------------
 # Create founders
-#-----------------------------------------------------------------------
+
 cat("Making initial parents \n")
 
-## Create founder population
+# Create founder population
 founderPop = runMacs(nInd = nParents*2,
                      nChr = nChr,
                      segSites = nQtl+nSnp,
-                     inbred = TRUE, 
-                     split = nGenSplit, 
+                     inbred = TRUE,
+                     split = nGenSplit,
                      species = "MAIZE")
 
-## Set simulation parameters
+# Set simulation parameters
 SP = SimParam$new(founderPop)
 
 # Add SNP chip
 SP$restrSegSites(nQtl,nSnp)
-if(nSnp > 0){
+if (nSnp > 0) {
   SP$addSnpChip(nSnp)
 }
 
 # Add traits: trait represents yield
 SP$addTraitADG(nQtlPerChr = nQtl,
                mean   = initMeanG,
-               var    = initVarG, 
-               meanDD = MeanDD, 
+               var    = initVarG,
+               meanDD = MeanDD,
                varDD  = VarDD,
                varGxE = initVarGE)
 # Set permanent yield trial error variance

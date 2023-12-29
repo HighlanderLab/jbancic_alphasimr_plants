@@ -6,16 +6,17 @@
 ## marker data into AlphaSimR for haplotype analysis.
 ## --------------------------------------------------------------
 
-# Load packages
-rm(list = ls())
-library(AlphaSimR)
+# ---- Clean environment and load packages ----
 
-# Step 1 ----
-# Load in founder haplotypes.
+rm(list = ls())
+# install.packages(pkgs = "AlphaSimR")
+library(package = "AlphaSimR")
+
+# ---- Step 1: Load in founder haplotypes ----
 # This requires a genetic map and phased genotypes
 
 # Load the genetic map in the below format
-# Format: Marker name, Chromosome, Position (in Morgans) 
+# Format: Marker name, Chromosome, Position (in Morgans)
 # Modeling 10 chromosomes with 10 loci each
 # Loci are equally space along 1 Morgan chromosomes
 genMap = data.frame(
@@ -29,11 +30,14 @@ genMap = data.frame(
 # There will need to be 20 rows (# of individuals times 2, since each has 2 haplotypes)
 # Each individual will have 100 loci based on the map above
 # Generating just random 0s and 1s
-haplo = matrix(data = sample(0:1, size = 2*10*100, replace = TRUE), 
-               nrow = 2*10, ncol = 100)
+haplo = matrix(
+  data = sample(0:1, size = 2 * 10 * 100, replace = TRUE),
+  nrow = 2 * 10,
+  ncol = 100
+)
 
 # Assign marker names to the haplotypes
-# These can be in any order, because the software will order them based 
+# These can be in any order, because the software will order them based
 # on the genetic map automatically
 colnames(haplo) = genMap$marker
 
@@ -45,31 +49,36 @@ ped = data.frame(id = letters[1:10],
 
 # Create the founder population
 # Uses the data structures loaded above
-founderPop = importHaplo(haplo  = haplo,
-                         genMap = genMap,
-                         ploidy = 2,
-                         ped    = ped)
+founderPop = importHaplo(
+  haplo  = haplo,
+  genMap = genMap,
+  ploidy = 2,
+  ped    = ped
+)
 
-# Step 2 ----
-# Set simulation parameters
+# ---- Step 2: Set simulation parameters ----
 # Initialize parameters with founder haplotypes
+
 SP = SimParam$new(founderPop)
 
 # Load your own QTL effects (optional)
-# This is useful if you want to model known QTL, estimated effects from GS, or
-# you just want to create your own distribution for effects.
-# The marker names most match the names given in the map above.
-# You can model additive effects, dominance effects, and an intercept.
+# This is useful if you want to model known QTL, estimated effects
+# from a genomic prediction model, or you just want to create your
+# own distribution for effects. The marker names most match the names
+# given in the map above. You can model additive effects, dominance
+# effects, and an intercept.
 qtlEffects = data.frame(marker = c("x1", "x11"),
                         aditiveEffect = c(1, -1))
 
-# Import in SimParam
-SP$importTrait(markerNames = qtlEffects$marker,
-               addEff = qtlEffects$aditiveEffect,
-               name = "Your_Trait")
+# Import into SimParam
+SP$importTrait(
+  markerNames = qtlEffects$marker,
+  addEff = qtlEffects$aditiveEffect,
+  name = "Your_Trait"
+)
 
-# Step 3 ----
-# Create a population from the founder haplotypes
+# ---- Step 3: Create a population from the founder haplotypes ----
+
 pop = newPop(founderPop)
 
 # The population now works like any other AlphaSimR population

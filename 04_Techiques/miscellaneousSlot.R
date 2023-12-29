@@ -2,76 +2,88 @@
 ## R Script: Use of miscellaneous slot in AlphaSimR
 ## -------------------------------------------------------------------
 ## Description:
-## This script illustrates the usage of the miscellaneous slot in 
-## AlphaSimR. The slot is specifically designed for storing extra 
-## information about each individual in the population, which can 
-## be leveraged as part of customized selection criteria.
+## This script demonstrates how to use the miscellaneous slot in
+## AlphaSimR populations. Here, the slot is designed to be used as part
+## of selection criteria.
+##
+## WARNING: Organisation of the misc slot has changed with AlphaSimR
+## version 1.5.4. Prior to this version, misc slot was a list of length
+## equal to the number of individuals (nInd). Since version 1.5.4, misc
+## slot is a list of length equal to the number of nodes, with each node
+## containing an object with nInd elements.
 ## -------------------------------------------------------------------
 
-# Load packages
+# ---- Clean environment and load packages ----
+
 rm(list = ls())
-require("AlphaSimR")
+# install.packages(pkgs = "AlphaSimR")
+(AlphaSimRVersion = packageVersion(pkg = "AlphaSimR"))
+library(package = "AlphaSimR")
+
+# ---- Setup simulation ----
 
 # Create founder haplotypes
-founderPop = runMacs(nInd     = 10,
-                     nChr     = 1,
-                     segSites = 100,
-                     inbred   = TRUE,
-                     species  = "GENERIC")
+founderPop = runMacs(
+  nInd     = 10,
+  nChr     = 1,
+  segSites = 100,
+  inbred   = TRUE,
+  species  = "GENERIC"
+)
 
+# ---- Add two correlated additive traits with same genetic architecture ----
 
-##-- Add two correlated additive traits with same genetic architecture
-######################################################################
 # Set simulation parameters
 SP = SimParam$new(founderPop)
 
 # Specify correlation between traits
-(traitCor = matrix(c(1,0.5,
-                     0.5,1), ncol = 2, byrow = T))
+traitCor = matrix(c(1.0, 0.5,
+                    0.5, 1.0), ncol = 2, byrow = T)
+traitCor
 
 # Create two traits
-SP$addTraitA(nQtlPerChr = 100,
-             mean = c(0,0),
-             var  = c(1,1),
-             corA = traitCor)
+SP$addTraitA(
+  nQtlPerChr = 100,
+  mean = c(0, 0),
+  var  = c(1, 1),
+  corA = traitCor
+)
 
-# Create population 
+# Create population
 pop = newPop(founderPop)
-pop = setPheno(pop, h2 = c(0.5,0.5))
+pop = setPheno(pop, h2 = c(0.5, 0.5))
 
-#-- Assign selection index values to the miscellaneous slot
-#####################################################################
+# ---- Assign selection index values to the miscellaneous slot ----
+
 # Set weights for each trait
-weights = c(1,0.5)
+weights = c(1, 0.5)
 
 # Naive selection index
-selIndex = pheno(pop) %*% weights
+selIndex = c(pheno(pop) %*% weights)
 
 # Assign index values to miscellaneous slot
-pop = setMisc(pop, "selIndex", selIndex)
+if (AlphaSimRVersion < "1.5.4") {
+  pop = setMisc(pop, "selIndex", selIndex)
+} else {
+  pop@misc$selIndex = selIndex
+}
 
 # Function to obtain nice table of miscellaneous slot values
-getMiscSlot <- function(pop) {
-  require(dplyr)
-  return(bind_rows(pop@misc))
+if (AlphaSimRVersion < "1.5.4") {
+  getSelIndex <- function(pop) {
+    sapply(getMisc(pop, "selIndex"), FUN = function(z) z)
+  }
+} else {
+  getSelIndex <- function(pop) {
+    pop@misc$selIndex
+  }
 }
 
 # Check miscellaneous slot
-getMiscSlot(pop)
+getSelIndex(pop)
 
-# Function to perform selection based on miscellaneous slot
-selectIndMisc <-  function(pop, nInd, use = "selIndex", selectTop = TRUE) {
-  match.arg(arg = use, 
-            choices = names(pop@misc[[1]]))
-  response = matrix(unlist(getMisc(pop, use)), nrow = pop@nInd)
-  if (is.matrix(response)) {
-    stopifnot(ncol(response) == 1)
-  }
-  take = order(response, decreasing = selectTop)
-  return(pop[take[1:nInd]])
-}
-
-# Perform selection using miscellaneous slot
-selectIndMisc(pop, 1, use = "selIndex")@id
-
+# Order individuals using selection index stored in miscellaneous slot
+popOrd = pop[order(getSelIndex(pop), decreasing = TRUE)]
+data.frame(id = popOrd@id,
+           selIndex = getSelIndex(popOrd))
 

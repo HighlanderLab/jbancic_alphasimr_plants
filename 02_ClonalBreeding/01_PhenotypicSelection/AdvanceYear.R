@@ -1,6 +1,5 @@
-#-----------------------------------------------------------------------
 # Advance year
-#-----------------------------------------------------------------------
+
 # Advance breeding program by 1 year
 # Works backwards through pipeline to avoid copying data
 

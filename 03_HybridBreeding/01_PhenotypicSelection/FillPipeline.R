@@ -1,6 +1,5 @@
-#-----------------------------------------------------------------------
 # Fill breeding pipeline
-#-----------------------------------------------------------------------
+
 #Set initial yield trials with unique individuals
 
 P = runif(6) # p-values for GxY effect
@@ -8,11 +7,11 @@ P = runif(6) # p-values for GxY effect
 for(cohort in 1:6){
   cat("FillPipeline year:", cohort, "of 6\n")
 
-  #Stage 1
+  # Stage 1
   MaleF1   = randCross(MaleParents, nCrosses)
   FemaleF1 = randCross(FemaleParents, nCrosses)
 
-  #Stage 2
+  # Stage 2
   if(cohort<6){
     p = P[6-cohort]
 
@@ -25,7 +24,7 @@ for(cohort in 1:6){
                             reps = repYT1, inbred = T, p = p)
   }
 
-  #Stage 3
+  # Stage 3
   if(cohort<5){
     p = P[5-cohort]
 
@@ -38,7 +37,7 @@ for(cohort in 1:6){
                             reps = repYT2, inbred = T, p = p)
   }
 
-  #Stage 4
+  # Stage 4
   if(cohort<4){
     p = P[4-cohort]
 
@@ -54,7 +53,7 @@ for(cohort in 1:6){
                                reps = repYT3, p = p)
   }
 
-  #Stage 5
+  # Stage 5
   if(cohort<3){
     p = P[3-cohort]
 
@@ -72,7 +71,7 @@ for(cohort in 1:6){
       FemaleInbredYT3[FemaleInbredYT3@id%in%FemaleHybridYT4@mother]
   }
 
-  #Stage 6
+  # Stage 6
   if(cohort<2){
     p = P[2-cohort]
 
@@ -90,5 +89,5 @@ for(cohort in 1:6){
       FemaleInbredYT4[FemaleInbredYT4@id%in%FemaleHybridYT5@mother]
   }
 
-  #Stage 7, release
+  # Stage 7, release
 }

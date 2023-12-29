@@ -20,11 +20,3 @@ accuracy_family <- function(pop){
   gvs <- unlist(lapply(families,meanG))
   cor(gvs,phenotypes)
 }
-
-# This function calculates heterozygosity and inbreeding
-calc_Het <- function(pop) {
-  geno = pullQtlGeno(pop)
-  Het = mean(rowMeans(1-abs(geno-1)))
-  Inb = 1 - Het
-  return(data.frame(Het, Inb))
-}

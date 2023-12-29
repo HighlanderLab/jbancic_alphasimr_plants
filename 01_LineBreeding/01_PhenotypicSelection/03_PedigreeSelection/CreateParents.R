@@ -1,6 +1,4 @@
-#-----------------------------------------------------------------------
 # Create founders
-#-----------------------------------------------------------------------
 
 # Generate initial haplotypes
 founderPop = runMacs(nInd     = nParents,
@@ -9,7 +7,6 @@ founderPop = runMacs(nInd     = nParents,
                      inbred   = TRUE,
                      species  = "WHEAT")
 SP = SimParam$new(founderPop)
-
 
 # Add SNP chip
 SP$restrSegSites(nQtl, nSnp)
@@ -25,14 +22,10 @@ SP$addTraitAG(nQtlPerChr = nQtl,
               varGxE     = initVarGE)
 
 SP$setTrackPed(TRUE)
-SP$setSexes("yes_sys")
 
 # Create founder parents
 Parents = newPop(founderPop)
 
 # Add phenotype reflecting evaluation in EYT
 Parents = setPheno(Parents, varE = varE, reps = repEYT)
-
 rm(founderPop)
-
-
