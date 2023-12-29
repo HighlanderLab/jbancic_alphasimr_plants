@@ -1,4 +1,4 @@
-# jbancic_alphasimr_plants
+# Plant breeding simulations with AlphaSimR
 
 ## Introduction
 
