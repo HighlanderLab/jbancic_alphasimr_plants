@@ -51,7 +51,7 @@ for(REP in 1:nReps){
   # Save burn-in to load later for subsequent scenarios
   save.image("tmp.RData")
 
-  # ---- Future phase: Phenotypic selectionprogram ----
+  # ---- Future phase: Phenotypic selection program ----
   cat("--> Working on Phenotypic selection program \n")
   for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat(" Working on future year:",year,"\n")
@@ -146,5 +146,4 @@ for(REP in 1:nReps){
 # Remove temporary file
 file.remove("tmp.RData")
 
-# Analyze results
-source(file = "ANALYZERESULTS_all.R")
+# Summarize results using PaperPlot.R script

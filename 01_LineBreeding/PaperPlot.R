@@ -1,3 +1,5 @@
+# This script summarizes results from RUNME_all.R script
+# and produces Figure 6 in the manuscript.
 
 # ---- Clean environment and load packages ----
 
@@ -39,7 +41,9 @@ temp <- melt(temp,
              id.vars = c("Year", "rep", "Scenario"),
              measure.vars = c("meanG","varG","accSel"))
 
+
 # Rename Scenarios
+# temp[temp$Year < 21,]$Scenario = "Burn-in"
 temp$Scenario <- recode_factor(temp$Scenario,
                                `Burn-in`        = "Pheno burn-in",
                                `LinePheno`      = "Pheno",
@@ -141,12 +145,12 @@ ggsave(plot = p, filename ="06_Figure.png", width = 4.5, height = 2.5, scale = 2
 # Comparison constrained GS to Pheno
 t.test(temp0[with(temp0,Scenario == "Pheno" & Year == 40 & variable == "meanG"),]$value,
        temp0[with(temp0,Scenario == "GS-constrained" & Year == 40 & variable == "meanG"),]$value,
-       paired = T)[3] # 0.0004196465
+       paired = T)[3] # 0.03960644
 
 # Comparison unconstrained GS to Pheno
 t.test(temp0[with(temp0,Scenario == "Pheno" & Year == 40 & variable == "meanG"),]$value,
        temp0[with(temp0,Scenario == "GS-unconstrained" & Year == 40 & variable == "meanG"),]$value,
-       paired = T)[3] # 6.652575e-05
+       paired = T)[3] # 0.0001225286
 
 # Comparison constrained GS to unconstrained GS
 t.test(temp0[with(temp0,Scenario == "GS-constrained" & Year == 40 & variable == "meanG"),]$value,
