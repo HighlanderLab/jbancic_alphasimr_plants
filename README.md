@@ -4,14 +4,14 @@
 
 This repository contains R scripts that demonstrate simulations of plant breeding programs and techniques using AlphaSimR https://cran.r-project.org/package=AlphaSimR. These scripts and the process of simulating plant breeding programs are described in:
 
-Bancic et al. (2023) bioRxiv TODO
+Bancic et al. (2023) bioRxiv https://www.biorxiv.org/content/10.1101/2023.12.30.573724v1
 
     @article{BancicEtAl2023,
       title = {Plant breeding simulations with AlphaSimR},
       author = {Bančič, Jon and Greenspoon, Philip and Gaynor, R Chris and Gorjanc, Gregor},
       journal = {bioRxiv},
       year = {2023},
-      doi = {TODO}
+      doi = {10.1101/2023.12.30.573724}
     }
 
 If you have no prior experience with AlphaSimR, we suggest you complete the free online course "Breeding Programme Modelling with AlphaSimR" at https://www.edx.org/course/breeding-programme-modelling-with-alphasimr. The course is continually open, so that you can enrol when it's convenient for you.
