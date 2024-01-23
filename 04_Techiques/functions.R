@@ -58,3 +58,43 @@ calcHeterosis <- function(popA, popB, hybPop) {
                     "Heterosis" = heterosis,
                     "Percent heterosis" = perHeterosis))
 }
+
+# This function calculates mean and variance within and across families
+calcVar <- function(pop){
+  mother <- pop@mother
+  father <- pop@father
+  df <- data.frame(
+    mother = mother,
+    father = father
+  )
+  df <- unique(df)
+  families <- vector(mode = "list", length = nrow(df))
+  for (i in 1:nrow(df)) {
+    mother_i <- df$mother[i]
+    father_i <- df$father[i]
+    families_i <- pop@mother == mother_i & pop@father == father_i
+    tmp <- pop[families_i]
+    families[[i]] <- tmp
+  }
+  avgFam <- mean(sapply(1:nrow(df), function(x) families[[x]]@nInd))
+  if (avgFam == 1) {
+    stop("Families only have a single progeny")
+  }
+  totMean <- meanG(pop)
+  wFamMean <- mean(unlist(lapply(families, meanG)))
+  totVar <- varG(pop)
+  wFamVar <- mean(unlist(lapply(families, varG)))
+  cat("\n=====================================")
+  cat("\n>  Summary of means and variances")
+  cat("\n=====================================")
+  cat("\nWhole population")
+  cat("\n Population size          :", pop@nInd)
+  cat("\n Genetic mean             :", round(totMean,2))
+  cat("\n Genetic variance         :", round(totVar,2))
+  cat("\nWithin family")
+  cat("\n Number of families       :", nrow(df))
+  cat("\n Average progeny          :", round(avgFam,2))
+  cat("\n Average genetic mean     :", round(wFamMean,2))
+  cat("\n Average genetic variance :", round(wFamVar,2))
+  cat("\n=====================================\n") 
+}

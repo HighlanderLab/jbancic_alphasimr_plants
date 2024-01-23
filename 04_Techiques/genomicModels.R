@@ -5,14 +5,17 @@
 # Date Created: 2023-01-23
 #
 # This script demonstrates the implementation of different
-# genomic models in AlphaSimR. Models are demonstrated 
-# using high and low density SNP chip.
+# genomic models integrated in AlphaSimR. Models are 
+# demonstrated using high and low density SNP chip.
+# Additionally, we also demonstrate the use of an external
+# software to perfrom a genomic BLUP.
 
 # ---- Clean environment and load packages ----
 
 rm(list = ls())
-# install.packages(pkgs = "AlphaSimR")
+# install.packages(pkgs = c("AlphaSimR", "rrBLUP")
 library(package = "AlphaSimR")
+library(package = "rrBLUP")
 source(file = "functions.R")
 
 # ---- Setup simulation ----
@@ -70,6 +73,7 @@ df = data.frame(matrix(NA, 3, 5))
 colnames(df) = c("Add_L", "Add_H", "AddDom", "GCA", "SCA")
 rownames(df) = c("pop", "female", "male")
 
+
 # ---- RR-BLUP with additve effects only ----
 
 # Run model with low density chip
@@ -99,6 +103,15 @@ male = setEBV(male, gsModel_A2)
 df[3, 2] = cor(male@gv, male@ebv)
 round(df, 3)
 
+# Alternatively, one can use an external package
+# rrBLUP package is used for demonstration of GBLUP
+y = pop@pheno[,1] 
+G = A.mat(pullSnpGeno(pop, snpChip = 2)-1)
+ans = mixed.solve(y = y, K = G)
+cor(ans$u, pop@ebv) # results equivalent to RRBLUP 
+pop@ebv = as.matrix(ans$u) # assign EBVs to population
+
+
 # ---- RR-BLUP with additive and dominance effects ----
 
 # Run model with low density chip
@@ -115,12 +128,13 @@ male = setEBV(male, gsModel_AD)
 df[3, 3] = cor(male@gv, male@ebv)
 round(df, 3)
 
-# Equivalent to...
+# setEBV is equivalent to the following steps:
 addEff <- gsModel_AD@gv[[1]]@addEff
 domEff <- gsModel_AD@gv[[1]]@domEff
 M <- pullSnpGeno(pop)
 ebv <- M %*% addEff + (1-abs(M-1)) %*% domEff
 cor(pop@ebv, ebv)
+
 
 # ---- RR-BLUP with population specific additive (GCA) effects ----
 
@@ -139,6 +153,7 @@ male = setPhenoGCA(male, female, use = "gv", inbred = TRUE)
 male = setEBV(male, gsModel_GCA, value = "male")
 df[3, 4] = cor(male@gv, male@ebv)
 round(df, 3)
+
 
 # ---- RR-BLUP with population specific GCA and SCA ----
 # GCA - additive effects & SCA - dominance

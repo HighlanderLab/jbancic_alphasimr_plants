@@ -291,3 +291,115 @@ output$accSel[year] = cor(HDRW@pheno, HDRW@gv)
 ## Wrap-up
 
 The above completed simulation of a single year of the burn-in of a wheat breeding program for a single replicate. Explore additional material available in R scripts with multi-year, multi-rep, and multi-scenario examples.
+
+## Full Code
+
+The code below runs through all steps and 20 years of breeding.
+
+```{r}
+# Create founder haplotypes
+founderPop = runMacs(nInd     = nParents, 
+                     segSites = nQtl + nSnp,
+                     inbred   = TRUE, 
+                     species  = "WHEAT")
+
+# Set simulation parameters
+SP = SimParam$new(founderPop)
+
+# Add trait
+SP$addTraitAG(nQtlPerChr = nQtl,
+              mean       = initMeanG,
+              var        = initVarG,
+              varEnv     = initVarEnv,
+              varGxE     = initVarGE)
+
+# Create founder parents
+Parents = newPop(founderPop)
+
+# Fill breeding program pipeline
+for (cohort in 1:7) {
+  cat("  Fill pipeline stage:", cohort, "of 7\n")
+  if (cohort < 7) {
+    # Stage 1
+    F1 = randCross(Parents, nCrosses)
+  }
+  if (cohort < 6) {
+    # Stage 2
+    DH = makeDH(F1, nDH)
+  }
+  if (cohort < 5) {
+    # Stage 3
+    HDRW = setPheno(DH, varE = varE, reps = repHDRW)
+  }
+  if (cohort < 4) {
+    # Stage 4
+    PYT = selectWithinFam(HDRW, famMax)
+    PYT = selectInd(PYT, nPYT)
+    PYT = setPheno(PYT, varE = varE, reps = repPYT)
+  }
+  if (cohort < 3) {
+    # Stage 5
+    AYT = selectInd(PYT, nAYT)
+    AYT = setPheno(AYT, varE = varE, reps = repAYT)
+  }
+  if (cohort < 2) {
+    # Stage 6
+    EYT = selectInd(AYT, nEYT)
+    EYT = setPheno(EYT, varE = varE, reps = repEYT)
+  }
+  if (cohort < 1) {
+    # Stage 7
+  }
+}
+
+# Create results output data frame
+output = data.frame(year     = 1:20,
+                    rep      = rep(1, 20),
+                    scenario = rep(scenarioName, 20),
+                    meanG    = numeric(20),
+                    varG     = numeric(20))
+
+# Simulate 20 years of breeding
+for(year in 1:20) {
+  # Stage 7
+  # Release variety
+  
+  # Stage 6
+  EYT = selectInd(AYT, nEYT)
+  EYT = setPheno(EYT, varE = varE, reps = repEYT)
+  
+  # Stage 5
+  AYT = selectInd(PYT, nAYT)
+  AYT = setPheno(AYT, varE = varE, reps = repAYT)
+  
+  # Stage 4
+  PYT = selectWithinFam(HDRW, famMax)
+  PYT = selectInd(PYT, nPYT)
+  PYT = setPheno(PYT, varE = varE, reps = repPYT)
+  
+  # Stage 3
+  HDRW = setPheno(DH, varE = varE, reps = repHDRW)
+  
+  # Stage 2
+  DH = makeDH(F1, nDH)
+  
+  # Stage 1
+  Parents = c(Parents[11:nParents], EYT)
+  F1 = randCross(Parents, nCrosses)
+  
+  # Report results
+  output$meanG[year] = meanG(DH)
+  output$varG[year]  = varG(DH)
+}
+
+# Plot results
+plot(1:20,output$meanG,type="l",
+     main="Genetic gain",xlab="Year",ylab="Yield")
+```
+
+
+
+```{r}
+plot(1:20,output$varG,type="l",
+     main="Genetic variance",xlab="Year",ylab="Variance")
+```

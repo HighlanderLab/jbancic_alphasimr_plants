@@ -5,7 +5,7 @@
 # Date Created: 2023-01-23
 #
 # This script demonstrates how to simulate a population for a GWAS 
-# study. The simulation starts of by creating a single homogeneous 
+# study. The simulation starts off by creating a single homogeneous 
 # population which then undergoes a few rounds of selection 
 # to induce stratification.
 
@@ -65,13 +65,12 @@ pop = setPheno(pop, h2 = 0.4)
 # ---- Visualise two sub-populations with PCA ----
 
 geno = pullQtlGeno(pop)
-PCA  = dudi.pca(df = geno, center = TRUE, scale = FALSE, scannf = FALSE, nf = 5)
+PCA  = dudi.pca(df = geno, center = T, scale = F, scannf = F, nf = 5)
 (VAF = 100 * PCA$eig[1:5] / sum(PCA$eig)) # variance explained
 df.PCA = data.frame(
   "Pop" = c(rep("Pop1", popA@nInd), rep("Pop2", popB@nInd)),
   "PC1" = PCA$l1$RS1,
-  "PC2" = PCA$l1$RS2
-)
+  "PC2" = PCA$l1$RS2)
 
 # Plot
 ggplot(df.PCA, aes(x = PC1, y = PC2)) +

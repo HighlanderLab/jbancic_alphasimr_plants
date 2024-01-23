@@ -4,7 +4,7 @@
 #
 # Date Created: 2023-01-23
 #
-# This script first demonstrates how to simulate multiplt traits with
+# This script first demonstrates how to simulate multiple traits with
 # AlphaSimR:
 # i) two correlated traits with the same genetic architecture and
 #   fully shared QTL and
@@ -28,12 +28,13 @@ library(package = "AlphaSimR")
 
 # Create founder haplotypes
 founderPop = runMacs(
-  nInd     = 100,
+  nInd     = 1000,
   nChr     = 1,
   segSites = 500,
   inbred   = TRUE,
   species  = "WHEAT"
 )
+
 
 # ---- Add two correlated additive traits with fully shared QTL ----
 
@@ -61,6 +62,8 @@ gv(pop)
 meanG(pop)
 # Check correlation between traits
 cov2cor(varG(pop))
+
+
 
 # ---- Add two traits with different genetic architectures and no shared QTLs ----
 
@@ -100,6 +103,7 @@ gv(pop)
 meanG(pop)
 # Check correlation between traits
 cov2cor(varG(pop))
+
 
 # ---- Apply selection index ----
 
