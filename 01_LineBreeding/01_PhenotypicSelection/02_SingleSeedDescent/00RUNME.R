@@ -11,7 +11,7 @@ library(package = "AlphaSimR")
 
 # ---- Load global parameters ----
 source(file = "GlobalParameters.R")
-scenarioName = "LinePheno_selfing"
+scenarioName = "LinePheno_SSD"
 
 # ---- Create list to store results from reps ----
 results = list()

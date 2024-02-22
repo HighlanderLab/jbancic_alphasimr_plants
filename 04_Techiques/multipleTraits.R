@@ -55,13 +55,13 @@ SP$addTraitA(
 )
 
 # Create population
-pop = newPop(founderPop)
+pop_cor = newPop(founderPop)
 
 # Check genetic values and mean
-gv(pop)
-meanG(pop)
+gv(pop_cor)
+meanG(pop_cor)
 # Check correlation between traits
-cov2cor(varG(pop))
+cov2cor(varG(pop_cor))
 
 
 
@@ -140,3 +140,44 @@ pop3 = pop[order(hazelIndex, decreasing = TRUE)][1:10]
 
 # Check correlation between naive and Smith-Hazel index
 cor(naiveIndex, hazelIndex)
+
+
+
+
+# ---- Carry out few rounds of selection ----
+popSel = pop_cor
+
+traitMean = data.frame(t(meanG(popSel)))  
+names(traitMean) = paste0("Trait",1:popSel@nTraits)
+traitCor = cov2cor(varG(popSel))[1,2]
+
+# Perform selection 10 cycles with weights 0.8 and 0.2 assigned to traits
+weights = c(0.8, 0.2)
+for(generation in 1:10){
+  cat("generation ",generation,"\n")
+  # Set phenotype
+  popSel = setPheno(popSel, h2 = c(0.5, 0.5))
+  #-- select candidates using selection index
+  b = smithHazel(econWt = weights, varG = varG(popSel), varP = varP(popSel))
+  popSel <- selectCross(popSel, nInd = 100, nCrosses = 100, nProgeny = 10,
+                        trait = selIndex, b = b, use = "pheno")
+  #-- alternatively, select on first trait only
+  # popSel <- selectCross(popSel, nInd = 100, nCrosses = 100, nProgeny = 10,
+  #                       trait = 1, use = "pheno")
+  # Collect genetic mean for each trait and trait genetic correlation
+  traitMean = rbind(traitMean,meanG(popSel))
+  traitCor = c(traitCor,cov2cor(varG(popSel))[1,2])
+}
+
+# Check genetic mean of traits
+plot(x = 1:10, y = traitMean$Trait1[-1], ylim = c(0,5), 
+     ylab = "Value", xlab = "Breeding Cycle", col = "Blue",
+     type="l", lwd=2, cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+lines(x = 1:10, y = traitMean$Trait2[-1], col = "red", type="l", lwd=2)
+legend(1, 5, legend=c("Trait 1", "Trait 2"),
+       col=c("blue", "red"), lty=1, cex=1.3, lwd=2)
+
+# Check trait correlation
+plot(x = 1:10, y = traitCor[-1], ylim = c(-1,1), 
+     ylab = "Genetic correlation", xlab = "Breeding Cycle", col = "Blue",
+     type="l", lwd=2, cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)

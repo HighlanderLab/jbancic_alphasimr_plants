@@ -1,23 +1,27 @@
 # install.packages(pkgs = "dplyr")
 library(package = "dplyr")
 
+# Simulation variables
+scenarioName = "LineGS"
+nCycles = 40
+
 # Read in results
-df  <- bind_rows(readRDS("LineGS.rds"))
+df <- bind_rows(readRDS(paste0(scenarioName,".rds")))
 
 # Plot results
 png("Results.png", height = 600, width = 300)
 par(mfrow=c(3,1))
 
 # Genetic Gain
-plot(-19:20,rowMeans(matrix(df$meanG,ncol = max(df$rep))),type="l",
+plot(1:nCycles,rowMeans(matrix(df$meanG,ncol = max(df$rep))),type="l",
      main="Genetic gain",xlab="Year",ylab="Yield")
 
 # Variance
-plot(-19:20,rowMeans(matrix(df$varG,ncol = max(df$rep))),type="l",
+plot(1:nCycles,rowMeans(matrix(df$varG,ncol = max(df$rep))),type="l",
      main="Genetic variance",xlab="Year",ylab="Variance")
 
 # Selection accuracy
-plot(-19:20,rowMeans(matrix(df$accSel,ncol = max(df$rep))),type="l",
-     main="Selection accuracy",xlab="Year",ylab="Correlation")
+plot(1:nCycles,rowMeans(matrix(df$accSel,ncol = max(df$rep))),type="l",
+     main="Selection accuracy",xlab="Year",ylab="Accuracy")
 
 dev.off()
