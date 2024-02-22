@@ -1,10 +1,6 @@
 # install.packages(pkgs = "dplyr")
 library(package = "dplyr")
 
-# Simulation variables
-scenarioName = "ClonalPedigree"
-nCycles = 80
-
 # Read in results
 df <- bind_rows(readRDS(paste0(scenarioName,".rds")))
 

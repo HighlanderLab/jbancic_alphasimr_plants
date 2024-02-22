@@ -101,3 +101,6 @@ for(REP in 1:nReps){
 # Save results
 saveRDS(results, file = paste0(scenarioName,".rds"))
 saveRDS(results_accPI, file = paste0(scenarioName,"_accPI.rds"))
+
+# ---- Analyze results ----
+source(file = "ANALYZERESULTS.R")

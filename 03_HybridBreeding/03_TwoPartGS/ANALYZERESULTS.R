@@ -1,10 +1,6 @@
 # install.packages(pkgs = "dplyr")
 library(package = "dplyr")
 
-# Simulation variables
-scenarioName = "HybridGSTP"
-nCycles = 40
-
 # Read in results
 df <- bind_rows(readRDS(paste0(scenarioName,".rds")))
 df2 <- bind_rows(readRDS(paste0(scenarioName,"_accPI.rds")))
