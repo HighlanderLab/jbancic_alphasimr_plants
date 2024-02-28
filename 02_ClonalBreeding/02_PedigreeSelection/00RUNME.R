@@ -4,13 +4,19 @@
 # exanded/polished for this publication by Jon Bancic, Philip Greenspoon,
 # Chris Gaynor, Gregor Gorjanc
 #
+# Note: The simulation uses asreml to run a pedigree model by default. 
+# Alternatively, there is code provided that uses internal AlphaSimR solver, 
+# which is significantly slower and not recommended quick testing.
+#
 # Date Created: 2023-12-06
 
 # ---- Clean environment and load packages ----
 rm(list = ls())
-# install.packages(pkgs = c("AlphaSimR", "asreml"))
+# install.packages(pkgs = c("AlphaSimR", "asreml", "pedigree"))
 library(package = "AlphaSimR")
+library(package = "pedigree")
 library(package = "asreml")
+asreml.avail = TRUE # FALSE if asreml unavailable
 
 # ---- Load global parameters ----
 source(file = "GlobalParameters.R")
