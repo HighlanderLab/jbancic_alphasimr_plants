@@ -27,10 +27,13 @@ DH = makeDH(F1, nDH)
 
 # Stage 1
 # Run population improvement
-count = ifelse((year == nBurnin+1), 1, count + nCyclesPI)
+
+if (year == nBurnin + 1) {count = 0}
+
 for(cycle in 1:nCyclesPI){
   cat("   Population improvement cycle", cycle, "/", nCyclesPI,"\n")
   if(cycle == 1){
+    count = count + 1
     if (year == (nBurnin + 1)) {
       # Create F1s by crossing parents from Burn-in
       Parents = randCross(Parents, nCrossPI)
@@ -47,6 +50,7 @@ for(cycle in 1:nCyclesPI){
     # 2. Make parental crosses
     Parents = randCross(Parents, nCrossPI)
   } else {
+    count = count + 1
     # 1. Select best F1s using GS
     Parents = setEBV(Parents, gsModel)
     # Report selection accuracy

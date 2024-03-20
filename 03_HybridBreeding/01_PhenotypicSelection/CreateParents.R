@@ -3,12 +3,12 @@
 cat("Making initial parents \n")
 
 # Create founder population
-founderPop = runMacs(nInd = nParents*2,
-                     nChr = nChr,
-                     segSites = nQtl+nSnp,
-                     inbred = TRUE,
-                     split = nGenSplit,
-                     species = "MAIZE")
+founderPop = runMacs(nInd     = nParents * 2,
+                     nChr     = nChr,
+                     segSites = nQtl + nSnp,
+                     inbred   = TRUE,
+                     split    = nGenSplit,
+                     species  = "MAIZE")
 
 # Set simulation parameters
 SP = SimParam$new(founderPop)

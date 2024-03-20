@@ -1,8 +1,8 @@
 # Create founders
 
 # Generate initial haplotypes
-founderPop = runMacs(nChr = nChr,
-                     nInd     = nParents,
+founderPop = runMacs(nInd     = nParents,
+                     nChr     = nChr,
                      segSites = nQtl + nSnp,
                      inbred   = TRUE,
                      species  = "WHEAT")

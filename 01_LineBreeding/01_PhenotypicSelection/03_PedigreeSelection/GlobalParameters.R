@@ -9,7 +9,7 @@ nCycles = nBurnin + nFuture
 # ---- Genome simulation ----
 nQtl = 1000 # Number of QTL per chromosome
 nSnp = 0    # Number of SNP per chromosome
-nChromosomes = 1 #Number of chromosomes
+nChr = 1    # Number of chromosomes
 
 # ---- Initial parents mean and variance ----
 initMeanG  = 1

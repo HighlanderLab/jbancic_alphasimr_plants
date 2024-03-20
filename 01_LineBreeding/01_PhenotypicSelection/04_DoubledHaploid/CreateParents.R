@@ -2,9 +2,15 @@
 
 # Generate initial haplotypes
 founderPop = runMacs(nInd     = nParents,
+                     nChr     = nChr,
                      segSites = nQtl + nSnp,
                      inbred   = TRUE,
                      species  = "WHEAT")
+# founderPop = quickHaplo(nInd     = nParents,
+#                      nChr     = nChr,
+#                      segSites = nQtl + nSnp,
+#                      inbred   = TRUE)
+
 SP = SimParam$new(founderPop)
 
 # Add SNP chip

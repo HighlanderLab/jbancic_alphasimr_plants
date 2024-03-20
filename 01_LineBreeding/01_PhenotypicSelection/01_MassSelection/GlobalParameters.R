@@ -9,6 +9,7 @@ nCycles = nBurnin + nFuture
 
 # ---- Genome simulation ----
 
+nChr = 1    # Number of QTL
 nQtl = 1000 # Number of QTL per chromosome
 nSnp = 0    # Number of SNP per chromosome
 

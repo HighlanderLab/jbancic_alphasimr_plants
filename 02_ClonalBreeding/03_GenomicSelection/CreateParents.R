@@ -3,7 +3,7 @@
 # Create founder population
 founderPop = runMacs2(nInd     = nParents,
                       nChr     = nChr,
-                      segSites = nQtl+nSnp,
+                      segSites = nQtl + nSnp,
                       genLen   = genLen,
                       mutRate  = mutRate)
 

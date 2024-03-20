@@ -36,35 +36,6 @@ founderPop = runMacs(
 )
 
 
-# ---- Add two correlated additive traits with fully shared QTL ----
-
-# Set simulation parameters
-SP = SimParam$new(founderPop)
-
-# Specify correlation between traits
-traitCor = matrix(c(1.0, 0.5,
-                    0.5, 1.0), ncol = 2, byrow = TRUE)
-traitCor
-
-# Create two traits
-SP$addTraitA(
-  nQtlPerChr = 100,
-  mean = c(0, 0),
-  var  = c(1, 1),
-  corA = traitCor
-)
-
-# Create population
-pop_cor = newPop(founderPop)
-
-# Check genetic values and mean
-gv(pop_cor)
-meanG(pop_cor)
-# Check correlation between traits
-cov2cor(varG(pop_cor))
-
-
-
 # ---- Add two traits with different genetic architectures and no shared QTLs ----
 
 # Bug fixed in AlphaSimR 1.5.3 - check currently installed version
@@ -97,6 +68,34 @@ pop = newPop(founderPop)
 # Check that no QTLs are in common
 qtlMap2 = getQtlMap(trait = 2)
 sum(qtlMap$id %in% qtlMap2$id)
+
+# Check genetic values and mean
+gv(pop)
+meanG(pop)
+# Check correlation between traits
+cov2cor(varG(pop))
+
+
+# ---- Add two correlated additive traits with fully shared QTL ----
+
+# Set simulation parameters
+SP = SimParam$new(founderPop)
+
+# Specify correlation between traits
+traitCor = matrix(c(1.0, 0.5,
+                    0.5, 1.0), ncol = 2, byrow = TRUE)
+traitCor
+
+# Create two traits
+SP$addTraitA(
+  nQtlPerChr = 100,
+  mean = c(0, 0),
+  var  = c(1, 1),
+  corA = traitCor
+)
+
+# Create population
+pop = newPop(founderPop)
 
 # Check genetic values and mean
 gv(pop)
@@ -142,18 +141,17 @@ pop3 = pop[order(hazelIndex, decreasing = TRUE)][1:10]
 cor(naiveIndex, hazelIndex)
 
 
-
-
 # ---- Carry out few rounds of selection ----
-popSel = pop_cor
+popSel = pop
 
 traitMean = data.frame(t(meanG(popSel)))  
 names(traitMean) = paste0("Trait",1:popSel@nTraits)
 traitCor = cov2cor(varG(popSel))[1,2]
 
 # Perform selection 10 cycles with weights 0.8 and 0.2 assigned to traits
+nGen = 10
 weights = c(0.8, 0.2)
-for(generation in 1:10){
+for(generation in 1:nGen){
   cat("generation ",generation,"\n")
   # Set phenotype
   popSel = setPheno(popSel, h2 = c(0.5, 0.5))
@@ -170,14 +168,16 @@ for(generation in 1:10){
 }
 
 # Check genetic mean of traits
-plot(x = 1:10, y = traitMean$Trait1[-1], ylim = c(0,5), 
+par(mfrow = c(2,1))
+plot(x = 1:nGen, y = traitMean$Trait1[-1], ylim = c(0,5), 
      ylab = "Value", xlab = "Breeding Cycle", col = "Blue",
      type="l", lwd=2, cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
-lines(x = 1:10, y = traitMean$Trait2[-1], col = "red", type="l", lwd=2)
+lines(x = 1:nGen, y = traitMean$Trait2[-1], col = "red", type="l", lwd=2)
 legend(1, 5, legend=c("Trait 1", "Trait 2"),
        col=c("blue", "red"), lty=1, cex=1.3, lwd=2)
 
 # Check trait correlation
-plot(x = 1:10, y = traitCor[-1], ylim = c(-1,1), 
+plot(x = 1:nGen, y = traitCor[-1], ylim = c(-1,1), 
      ylab = "Genetic correlation", xlab = "Breeding Cycle", col = "Blue",
      type="l", lwd=2, cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+par(mfrow = c(1,1))
