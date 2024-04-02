@@ -30,10 +30,6 @@ plot_results(1:nCycles, rowMeans(matrix(df$accSel, ncol = max(df$rep))),
 
 # Selection Accuracy in Population Improvement
 plot_results(1:nCycles, rowMeans(matrix(df2$accPI, ncol = max(df$rep))), 
-             "Selection accuracy in Population Improvement", "Year", "Correlation", 
-             extra_plot_func = function() {
-               axis(1, at = seq(0, nCycles, 10), labels = seq(0, 20, 5))
-               abline(v = seq(1, 41, 2), col = "gray80", lty = 2)
-             })
+             "Selection accuracy in Population Improvement", "Cycle", "Correlation")
 
 dev.off()

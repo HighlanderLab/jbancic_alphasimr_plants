@@ -83,10 +83,15 @@ FemaleYT1 = setPhenoGCA(FemaleDH, MaleTester1, reps = repYT1, inbred = T, p = p)
 
 # Stage 1
 # Run population improvement
+
 count = ifelse((year == nBurnin+1), 1, count + nCyclesPI)
+
 for(cycle in 1:nCyclesPI){
   cat("   Population improvement cycle", cycle, "/", nCyclesPI,"\n")
   if(cycle == 1){
+    
+    count = count + 1
+    
     if (year == (nBurnin + 1)) {
       # Create F1s by random crossing parents from Burn-in
       MaleParents = randCross(MaleParents, nCrossMalePI)
@@ -114,6 +119,9 @@ for(cycle in 1:nCyclesPI){
     MaleParents = randCross(MaleParents, nCrossMalePI)
     FemaleParents = randCross(FemaleParents, nCrossFemalePI)
   } else {
+    
+    count = count + 1
+    
     # 1. Select best F1s using GS
     if (exists("gsModel")) {
       MaleParents = setEBV(MaleParents, gsModel)
@@ -123,8 +131,8 @@ for(cycle in 1:nCyclesPI){
       FemaleParents = setEBV(FemaleParents, gsModelF)
     }
     # Report selection accuracy
-    accPI$accPI[count+cycle-1] = c((cor(MaleParents@ebv,MaleParents@gv) +
-                                      cor(FemaleParents@ebv,FemaleParents@gv))/2)
+    accPI$accPI[count] = c((cor(MaleParents@ebv,MaleParents@gv) +
+                              cor(FemaleParents@ebv,FemaleParents@gv))/2)
     # F1s to advance to next cycle as new parents
     MaleParents = selectInd(MaleParents, nParents, use = "ebv")
     FemaleParents = selectInd(FemaleParents, nParents, use = "ebv")
