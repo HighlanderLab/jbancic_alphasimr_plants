@@ -30,31 +30,33 @@ If you have no prior experience with AlphaSimR, we suggest you complete the free
 
   * `03_HybridBreeding` folder contains scripts for simulating a hybrid breeding program - showing a maize example that can be adapted to other outcrossing species. The scripts show a phenotypic selection strategy and two genomic selection strategies (conventional and two-part).
 
-  * `04_Techiques` folder contains scripts for simulating plant breeding programs using various breeding and genetic techniques. The scripts show:
+  * `04_Features` folder contains scripts for simulating plant breeding programs using various breeding and genetic techniques. The scripts show:
   
+    * Mating plans (`matingPlans.R`)
+
+    * Genome-wide association study (`simulateGWAS.R`)
+
+    * Setting heritability (`setHeritability.R`)
+
+    * Multi-trait selection with selection index (`multipleTraits.R`)
+   
+    * Miscellaneous slot to store user-defined information (`miscellaneousSlot.R`)
+   
+    * Simulate genotype by environment interaction (`simulateGxE.R`)
+   
+    * Genomic prediction & selection models (`genomicModels.R`) 
+
     * Trait introgression (`traitIntrogression.R`)
-  
-    * Speed breeding (`speedBreeding.R`)
   
     * Genome editing (`genomeEditing.R`)
     
-    * Multi-trait selection with selection index (`multipleTraits.R`)
-    
-    * Miscellaneous slot to store user-defined information (`miscellaneousSlot.R`)
-    
-    * Mating plans (`matingPlans.R`)
-    
-    * GWAS (`simulateGWAS.R`)
+    * Speed breeding (`speedBreeding.R`)
     
     * Import external haplotypes (`importExternalHaplo.R`)
     
     * Specifying demography for simulating founder genomes (`specifyDemography.R`)
     
-    * Genomic prediction & selection models (`genomicModels.R`)
-    
-    * Setting heritability (`setHeritability.R`)
-    
-    * Functions used across scripts (`functions.R`)
+    * Extra functions used across scripts (`functions.R`)
 
 ## How to work with the provided R scripts
 
