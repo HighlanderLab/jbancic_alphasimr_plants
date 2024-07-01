@@ -29,7 +29,7 @@ plot_results(1:nCycles, rowMeans(matrix(df$varG_inbred, ncol = max(df$rep))),
 
 # Hybrid Variance
 plot_results(1:nCycles, rowMeans(matrix(df$varG_hybrid, ncol = max(df$rep))), 
-             "Hybrid genetic variance", "Year", "Correlation")
+             "Hybrid genetic variance", "Year", "Variance")
 
 # Selection accuracy
 plot_results(1:nCycles, rowMeans(matrix(df$acc_sel, ncol = max(df$rep))), 
@@ -37,6 +37,6 @@ plot_results(1:nCycles, rowMeans(matrix(df$acc_sel, ncol = max(df$rep))),
 
 # Correlation
 plot_results(1:nCycles, rowMeans(matrix(df$cor, ncol = max(df$rep))), 
-             "Inbred vs. hybrid yield cor.", "Year", "Variance")
+             "Inbred vs. hybrid yield cor.", "Year", "Correlation")
 
 dev.off()
