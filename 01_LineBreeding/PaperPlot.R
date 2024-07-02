@@ -10,6 +10,7 @@ library(package = "readr")
 library(package = "reshape2")
 library(package = "ggplot2")
 library(package = "ggpubr")
+library(package = "patchwork")
 
 # ---- Specify ggplot theme options ----
 theme_optns <- theme_bw(base_size = 16, base_family = "sans") +
@@ -157,8 +158,8 @@ p1 <- a2 + inset_element(a3, left = 0.02, bottom = 0.59, right = 0.5, top = 0.99
 (p1 <- ggarrange(p1, nrow = 1, ncol = 1,
                  common.legend = T, legend = "none", align = "hv"))
 (p2 <- ggarrange(b, c, nrow = 2, ncol = 1,
-                 common.legend = T, legend = "right", align = "hv"))
-(p <- ggarrange(p1, p2, nrow = 1, ncol = 2,
+                 common.legend = T, legend = "top", align = "hv"))
+(p <- ggarrange(p1, p2, nrow = 1, ncol = 2, 
                 common.legend = T, widths = c(1,1)))
 ggsave(plot = p, filename ="06_Figure.png", width = 4.2, height = 2.4, scale = 3)
 
