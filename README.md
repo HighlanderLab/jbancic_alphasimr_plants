@@ -14,7 +14,9 @@ Bancic et al. (2023) bioRxiv https://www.biorxiv.org/content/10.1101/2023.12.30.
       doi = {10.1101/2023.12.30.573724}
     }
 
-If you have no prior experience with AlphaSimR, we suggest you complete the free online course "Breeding Programme Modelling with AlphaSimR" at https://www.edx.org/course/breeding-programme-modelling-with-alphasimr. The course is continually open, so that you can enrol when it's convenient for you.
+If you have no prior experience with AlphaSimR, we suggest you complete the free online course "Breeding Programme Modelling with AlphaSimR" at https://www.edx.org/course/breeding-programme-modelling-with-alphasimr. The course is continually open, so you can enroll when it's convenient for you.
+
+If you are interested in animal breeding simulations, see https://github.com/HighlanderLab/xyz_alphasimr_animals (work in progress) ...
 
 ## Repository contents
 
