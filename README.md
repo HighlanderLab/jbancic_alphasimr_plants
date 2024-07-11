@@ -14,6 +14,17 @@ Bancic et al. (2023) bioRxiv https://www.biorxiv.org/content/10.1101/2023.12.30.
       doi = {10.1101/2023.12.30.573724}
     }
 
+If you use this material, please cite the above publication and the original AlphaSimR publication:
+
+    @article{Gaynor2021AlphaSimR,
+      author = {Gaynor, R. Chris and Gorjanc, Gregor and Hickey, John M.},
+      title = {{AlphaSimR}: An {R}-package for Breeding Program Simulations},
+      volume = {11},
+      year = {2021},
+      doi = {10.1093/g3journal/jkaa017},
+      journal = {G3: Genes|Genomes|Genetics}
+    }
+
 If you have no prior experience with AlphaSimR, we suggest you complete the free online course "Breeding Programme Modelling with AlphaSimR" at https://www.edx.org/course/breeding-programme-modelling-with-alphasimr. The course is continually open, so you can enroll when it's convenient for you.
 
 If you are interested in animal breeding simulations, see https://github.com/HighlanderLab/gmafrafortuna_alphasimr_animals (work in progress) ...
