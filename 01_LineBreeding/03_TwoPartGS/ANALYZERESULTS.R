@@ -13,7 +13,7 @@ plot_results <- function(x, y, main, xlab, ylab, ylim = NULL, extra_plot_func = 
 }
 
 # Plot
-png("Results.png", height = 1200, width = 450, res = 150) # Higher resolution
+png("Results.png", height = 1200, width = 600, res = 150) # Higher resolution
 par(mfrow = c(4, 1), mar = c(4, 4, 2, 1), oma = c(0, 0, 2, 0))
 
 # Genetic Gain

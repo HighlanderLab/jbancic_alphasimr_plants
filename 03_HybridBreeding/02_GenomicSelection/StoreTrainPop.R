@@ -21,10 +21,14 @@ if (year > startTP & year < nBurnin+1){
 
 if (year > nBurnin){
   cat("  Maintaining training population \n")
-  HybTrainPop = c(MaleHybridYT3,MaleHybridYT4,MaleHybridYT5,
+  nRemove = c(MaleHybridYT3,MaleHybridYT4,MaleHybridYT5,
+              FemaleHybridYT3,FemaleHybridYT4,FemaleHybridYT5)@nInd
+  HybTrainPop = c(HybTrainPop[-c(1:nRemove)],
+                  MaleHybridYT3,MaleHybridYT4,MaleHybridYT5,
                   FemaleHybridYT3,FemaleHybridYT4,FemaleHybridYT5)
   MaleTrainPop = c(MaleTrainPop[-c(1:c(MaleInbredYT3,MaleInbredYT4,MaleInbredYT5)@nInd)],
                    MaleInbredYT3,MaleInbredYT4,MaleInbredYT5)
   FemaleTrainPop = c(FemaleTrainPop[-c(1:c(FemaleInbredYT3,FemaleInbredYT4,FemaleInbredYT5)@nInd)],
                      FemaleInbredYT3,FemaleInbredYT4,FemaleInbredYT5)
+  rm(nRemove)
 }

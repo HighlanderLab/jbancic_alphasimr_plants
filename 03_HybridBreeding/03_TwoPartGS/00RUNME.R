@@ -56,26 +56,28 @@ for(REP in 1:nReps){
     # Report results
     output$meanG_inbred[year] = (meanG(MaleInbredYT3) + meanG(FemaleInbredYT3))/2
     output$varG_inbred[year]  = (varG(MaleInbredYT3) + varG(FemaleInbredYT3))/2
-    tmp = hybridCross(FemaleInbredYT3, MaleInbredYT3, returnHybridPop=TRUE)
-    output$meanG_hybrid[year] = meanG(tmp)
-    output$varG_hybrid[year]  = varG(tmp)
-    tmp = calcGCA(tmp,use="gv")
-    output$cor[year] = cor(c(tmp$GCAf[,2],tmp$GCAm[,2]),
+    tmpHybrids = hybridCross(FemaleInbredYT3, MaleInbredYT3, returnHybridPop=TRUE)
+    output$meanG_hybrid[year] = meanG(tmpHybrids)
+    output$varG_hybrid[year]  = varG(tmpHybrids)
+    tmpHybrids = calcGCA(tmpHybrids, use = "gv")
+    output$cor[year] = cor(c(tmpHybrids$GCAf[,2],tmpHybrids$GCAm[,2]),
                            c(FemaleInbredYT3@gv[,1],MaleInbredYT3@gv[,1]))
   }
 
   # ---- Future phase: Two-Part Genomic selection program ----
   cat("--> Working on Two-Part Genomic hybrid program \n")
-  # New parameters for population improvement
-  nCyclesPI = 2        # Number of cycles per year
-  nParents  = 50       # Number of parents
+  # Parameters for population improvement
+  nCyclesPI  = 2       # Number of cycles per year 
+  nParentsPI = 30      # Number of selected individuals per cycle
   nCrossMalePI = 100   # Number of male crosses per cycle
   nCrossFemalePI = 100 # Number of female crosses per cycle
+  nProgenyPI = 10      # Number of progeny per cross
+  maxFamPI   = 1       # Maximum number of selected individuals per cross
   nMaleF1PI   = 80     # Number of F1-PI to advance to PD
   nFemaleF1PI = 80     # Number of F1-PI to advance to PD
-  # Create a data frame to track selection accuracy in PI
+  # Create a data frame to track selection accuracy in every PI cycle
   accPI = data.frame(accPI = numeric(nFuture*nCyclesPI))
-
+  
   for(year in (nBurnin+1):(nBurnin+nFuture)) {
     cat(" Working on future year:",year,"\n")
     source(file = "RunGSModels.R")      # Run genomic model
@@ -85,11 +87,11 @@ for(REP in 1:nReps){
     # Report results
     output$meanG_inbred[year] = (meanG(MaleInbredYT3) + meanG(FemaleInbredYT3))/2
     output$varG_inbred[year]  = (varG(MaleInbredYT3) + varG(FemaleInbredYT3))/2
-    tmp = hybridCross(FemaleInbredYT3, MaleInbredYT3, returnHybridPop=TRUE)
-    output$meanG_hybrid[year] = meanG(tmp)
-    output$varG_hybrid[year]  = varG(tmp)
-    tmp = calcGCA(tmp,use="gv")
-    output$cor[year] = cor(c(tmp$GCAf[,2],tmp$GCAm[,2]),
+    tmpHybrids = hybridCross(FemaleInbredYT3, MaleInbredYT3, returnHybridPop=TRUE)
+    output$meanG_hybrid[year] = meanG(tmpHybrids)
+    output$varG_hybrid[year]  = varG(tmpHybrids)
+    tmpHybrids = calcGCA(tmpHybrids, use = "gv")
+    output$cor[year] = cor(c(tmpHybrids$GCAf[,2],tmpHybrids$GCAm[,2]),
                            c(FemaleInbredYT3@gv[,1],MaleInbredYT3@gv[,1]))
   }
 

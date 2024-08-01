@@ -34,11 +34,11 @@ plot_results(1:nCycles, rowMeans(matrix(df$varG_hybrid, ncol = max(df$rep))),
 
 # Selection accuracy in Product Development
 plot_results(1:nCycles, rowMeans(matrix(df$acc_sel, ncol = max(df$rep))), 
-             "Selection accuracy in Product Development", "Year", "Correlation")
+             "Selection accuracy in Product Development", "Year", "Accuracy")
 
 # Selection accuracy in Population Improvement
 plot_results(1:nCycles, rowMeans(matrix(df2$accPI, ncol = max(df$rep))), 
-             "Selection accuracy in Population Improvement", "Cycle", "Correlation", 
+             "Selection accuracy in Population Improvement", "Cycle", "Accuracy", 
              extra_plot_func = function() {
                axis(1, at = seq(0, nCycles, 10), labels = seq(0, 20, 5))
                abline(v = seq(1, 41, 2), col = "gray80", lty = 2)
@@ -46,6 +46,6 @@ plot_results(1:nCycles, rowMeans(matrix(df2$accPI, ncol = max(df$rep))),
 
 # Correlation
 plot_results(1:nCycles, rowMeans(matrix(df$cor, ncol = max(df$rep))), 
-             "Inbred vs. hybrid yield cor.", "Year", "Variance")
+             "Inbred vs. hybrid yield cor.", "Year", "Correlation")
 
 dev.off()

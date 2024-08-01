@@ -18,8 +18,8 @@ AYT = setPheno(AYT, varE = varE, reps = repAYT)
 # NOTE: HDRW removed because phenotyping not needed
 DH = setEBV(DH, gsModel)
 output$accSel[year] = cor(DH@gv, DH@ebv)
-PYT = selectWithinFam(DH, famMax,use = "ebv")
-PYT = selectInd(PYT, nPYT, use="ebv")
+PYT = selectInd(selectWithinFam(DH, famMax,use = "ebv"), 
+                nPYT, use = "ebv")
 PYT = setPheno(PYT, varE = varE, reps = repPYT)
 
 # Stage 2
@@ -38,31 +38,36 @@ for(cycle in 1:nCyclesPI){
     
     if (year == (nBurnin + 1)) {
       # Create F1s by crossing parents from Burn-in
-      Parents = randCross(Parents, nCrossPI)
+      Parents = randCross(Parents, nCrosses)
     }
+    
     # 1. Select best F1s using GS
+    # Predict EBVs
     Parents = setEBV(Parents, gsModel)
-    # Report selection accuracy
+    # Report prediction accuracy
     accPI$accPI[count] = cor(Parents@gv, Parents@ebv)
     # F1s to advance to product development
-    F1 = selectInd(Parents, nF1PI, use = "ebv")
+    F1 = selectInd(selectWithinFam(Parents, nInd = maxFamPI, use = "ebv"), 
+                   nInd = nF1PI, use = "ebv")
     # F1s to advance to next cycle as new parents
-    Parents = selectInd(Parents, nParents, use = "ebv")
+    Parents = selectInd(Parents, nParentsPI, use = "ebv")
 
     # 2. Make parental crosses
-    Parents = randCross(Parents, nCrossPI)
+    Parents = randCross(Parents, nCrossPI, nProgenyPI)
   } else {
     
     count = count + 1
     
     # 1. Select best F1s using GS
+    # Predict EBVs
     Parents = setEBV(Parents, gsModel)
-    # Report selection accuracy
+    # Report prediction accuracy
     accPI$accPI[count] = cor(Parents@gv, Parents@ebv)
     # F1s to advance to next cycle as new parents
-    Parents = selectInd(Parents, nParents, use = "ebv")
-
+    Parents = selectInd(selectWithinFam(Parents, nInd = maxFamPI, use = "ebv"), 
+                        nInd = nParentsPI, use = "ebv")
+    
     # 2. Make parental crosses
-    Parents = randCross(Parents, nCrossPI)
+    Parents = randCross(Parents, nCrossPI, nProgenyPI)
   }
 }

@@ -33,7 +33,7 @@ plot_results(1:nCycles, rowMeans(matrix(df$varG_hybrid, ncol = max(df$rep))),
 
 # Selection accuracy
 plot_results(1:nCycles, rowMeans(matrix(df$acc_sel, ncol = max(df$rep))), 
-             "Selection accuracy", "Year", "Correlation")
+             "Selection accuracy", "Year", "Accuracy")
 
 # Correlation
 plot_results(1:nCycles, rowMeans(matrix(df$cor, ncol = max(df$rep))), 

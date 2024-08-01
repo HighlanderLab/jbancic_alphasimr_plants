@@ -4,13 +4,16 @@ cat("  Advancing year \n")
 # Advance breeding program by 1 year
 # Works backwards through pipeline to avoid copying data
 
+
 # Stage 7
 # Release hybrid
+
 
 # Stage 6
 MaleHybridYT5 = selectInd(MaleHybridYT4, nYT5)
 FemaleHybridYT5 = selectInd(FemaleHybridYT4, nYT5)
 
+# Grow hybrid trials
 MaleHybridYT5 = setPheno(MaleHybridYT5, reps = repYT5, p = p)
 FemaleHybridYT5 = setPheno(FemaleHybridYT5, reps = repYT5, p = p)
 
@@ -19,10 +22,12 @@ MaleInbredYT5 =
 FemaleInbredYT5 =
   FemaleInbredYT4[FemaleInbredYT4@id%in%FemaleHybridYT5@mother]
 
+
 # Stage 5
 MaleHybridYT4 = selectInd(MaleHybridYT3, nYT4)
 FemaleHybridYT4 = selectInd(FemaleHybridYT3, nYT4)
 
+# Grow hybrid trials
 MaleHybridYT4 = setPheno(MaleHybridYT4, reps = repYT4, p = p)
 FemaleHybridYT4 = setPheno(FemaleHybridYT4, reps = repYT4, p = p)
 
@@ -31,6 +36,7 @@ MaleInbredYT4 =
 FemaleInbredYT4 =
   FemaleInbredYT3[FemaleInbredYT3@id%in%FemaleHybridYT4@mother]
 
+
 # Stage 4
 MaleInbredYT3 = selectInd(MaleYT2, nInbred3)
 FemaleInbredYT3 = selectInd(FemaleYT2, nInbred3)
@@ -38,34 +44,25 @@ FemaleInbredYT3 = selectInd(FemaleYT2, nInbred3)
 MaleHybridYT3 = hybridCross(MaleInbredYT3, FemaleElite)
 FemaleHybridYT3 = hybridCross(FemaleInbredYT3, MaleElite)
 
+# Grow hybrid trials
 MaleHybridYT3 = setPheno(MaleHybridYT3, reps = repYT3, p = p)
 FemaleHybridYT3 = setPheno(FemaleHybridYT3, reps = repYT3, p = p)
 
-# Stage 3 - apply genomic selection
-# Predict GCA
-if (exists("gsModel")) {
-  MaleYT1 = setEBV(MaleYT1, gsModel)
-  FemaleYT1 = setEBV(FemaleYT1, gsModel)
-} else {
-  MaleYT1 = setEBV(MaleYT1, gsModelM)
-  FemaleYT1 = setEBV(FemaleYT1, gsModelF)
-}
 
-# Report selection accuracy
-output$acc_sel[year]  = c((cor(MaleYT1@ebv,MaleYT1@gv) +
-                             cor(FemaleYT1@ebv,FemaleYT1@gv))/2)
-# Select using EBVs
-MaleYT2 = selectInd(MaleYT1, nInbred2, use = "ebv")
-FemaleYT2 = selectInd(FemaleYT1, nInbred2, use = "ebv")
+# Stage 3 
+MaleYT2 = selectInd(MaleYT1, nInbred2)
+FemaleYT2 = selectInd(FemaleYT1, nInbred2)
 
+# Grow testcross trials
 MaleYT2 = setPhenoGCA(MaleYT2, FemaleTester2, reps = repYT2, inbred = T, p = p)
 FemaleYT2 = setPhenoGCA(FemaleYT2, MaleTester2, reps = repYT2, inbred = T, p = p)
 
-# Stage 2 - apply genomic selection
+
+# Stage 2 
 MaleDH = makeDH(MaleF1, nDH)
 FemaleDH = makeDH(FemaleF1, nDH)
 
-# Predict GCA of DHs
+# Apply genomic selection - predict GCA of DHs
 if (exists("gsModel")) {
   MaleDH = setEBV(MaleDH, gsModel)
   FemaleDH = setEBV(FemaleDH, gsModel)
@@ -73,13 +70,23 @@ if (exists("gsModel")) {
   MaleDH = setEBV(MaleDH, gsModelM)
   FemaleDH = setEBV(FemaleDH, gsModelF)
 }
-# Select using EBVs
-MaleDH = selectInd(selectWithinFam(MaleDH, famMax, use = "ebv"), nInbred2, use = "ebv")
-FemaleDH = selectInd(selectWithinFam(FemaleDH, famMax, use = "ebv"), nInbred2, use = "ebv")
 
+# Report average prediction accuracy across two pools
+output$acc_sel[year]  = c((cor(MaleDH@ebv,MaleDH@gv) +
+                             cor(FemaleDH@ebv,FemaleDH@gv))/2)
+
+# Make selection on EBVs
+MaleDH = selectInd(selectWithinFam(MaleDH, famMax, use = "ebv"), 
+                   nInbred2, use = "ebv")
+FemaleDH = selectInd(selectWithinFam(FemaleDH, famMax, use = "ebv"), 
+                     nInbred2, use = "ebv")
+
+# Grow testcross trials
 MaleYT1 = setPhenoGCA(MaleDH, FemaleTester1, reps = repYT1, inbred = T, p = p)
 FemaleYT1 = setPhenoGCA(FemaleDH, MaleTester1, reps = repYT1, inbred = T, p = p)
 
-# Stage 1
+
+# Stage 1 
+# Make random crosses
 MaleF1 = randCross(MaleParents, nCrosses)
 FemaleF1 = randCross(FemaleParents, nCrosses)

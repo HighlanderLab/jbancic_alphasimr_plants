@@ -5,7 +5,7 @@ nReps   = 1    # Number of simulation replicates
 nBurnin = 20   # Number of years in burnin phase
 nFuture = 20   # Number of years in future phase
 nCycles = nBurnin + nFuture
-startTP = 16   # Year to start training population
+startTP = 18   # Year to start training population
 
 # ---- Genome simulation ----
 nChr = 15       # Number of chromosomes
@@ -14,13 +14,13 @@ nSnp = 400      # Number of SNP per chromosome
 nGenSplit = 100 # Heterotic pool split
 
 # ---- Initial inbred parents mean and variance ----
-initMeanG = 70 # bushels per acre
-initVarG  = 20 # bushels per acre
+initMeanG  = 70 # bushels per acre
+initVarG   = 20 # bushels per acre
 # Degree of dominance
 MeanDD = 0.92   # mean
 VarDD  = 0.3    # variance
 # Error variances
-initVarGE = 40   # Genotype-by-year interaction
+initVarGE = 40  # Genotype-by-year interaction
 VarE = 270  # Yield trial error variance, bushels per acre
             # Relates to error variance for an entry mean
 
@@ -37,9 +37,9 @@ repYT3 = 4    #h2 = 0.20
 repYT4 = 8    #h2 = 0.34
 repYT5 = 100  #h2 = 0.86
 
-# --- Selection on GCA ----
+#  ----Selection on GCA ----
 # Number of inbreds per heterotic pool per stage
-nInbred1 = nCrosses*nDH # Do not change
+nInbred1 = nCrosses*nDH #Do not change
 nInbred2 = 400
 nInbred3 = 40
 
@@ -49,15 +49,16 @@ nTester1 = 1
 nTester2 = 3
 
 # Yield trial entries
-nYT1 = nInbred1*nTester1 # Do not change
-nYT2 = nInbred2*nTester2 # Do not change
+nYT1 = nInbred1*nTester1 #Do not change
+nYT2 = nInbred2*nTester2 #Do not change
 
-# ---- Selection on SCA ----
+#  ---- Selection on SCA ----
 
 # Elite parents per heterotic pool
 nElite = 5
 
 # Elite YT size
-nYT3 = nInbred3*nElite # Do not change
+nYT3 = nInbred3*nElite #Do not change
 nYT4 = 20
 nYT5 = 4
+
