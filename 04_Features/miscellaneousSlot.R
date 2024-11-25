@@ -12,6 +12,7 @@
 # version 1.5.4. Prior to this version, misc slot was a list of length
 # equal to the number of individuals (nInd). Since version 1.5.4, misc
 # slot is a list of length equal to the number of nodes, with each node
+# of length equal to the number of individuals.
 
 # ---- Clean environment and load packages ----
 
