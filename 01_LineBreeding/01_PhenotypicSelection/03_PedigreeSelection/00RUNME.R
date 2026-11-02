@@ -34,6 +34,9 @@ for(REP in 1:nReps) {
   # ---- Fill breeding pipeline with unique individuals from initial parents ----
   source(file = "FillPipeline.R")
 
+  # ---- Simulate year effects ----
+  P = runif(nCycles)
+
   # ---- Burn-in phase ----
   for(year in 1:nBurnin) {
     cat("  Working on burn-in year:",year,"\n")

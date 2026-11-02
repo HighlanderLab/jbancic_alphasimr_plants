@@ -18,21 +18,20 @@ initVarEnv = 1e-6 # Virtually zero for consistency with 2-Part paper
 initVarGE  = 2
 varE       = 4 # Yield trial error variance, bushels per acre
                # Relates to error variance for an entry mean
-## h2 = 0.05
 
 # ---- Breeding program details ----
 nParents = 20 # Number of parents to start a breeding cycle
 nCrosses = 40 # Number of crosses per year
 
 # Number of progeny per selfed individual in each stage
-nF2 = 100
+nF2 = 250
 plantsPerRow = 20
 
 # Number of individuals to select in each stage
 nPYT = 100 # Entries per preliminary yield trial
 nAYT = 50  # Entries per advanced yield trial
 nEYT = 10  # Entries per elite yield trial
-nSelF2 = 10
+nSelF2 = 25
 nSelF3 = 4
 nSelF4 = 4
 nSelF5 = 4
@@ -44,6 +43,7 @@ nRowF5 = 10
 nRowF6 = 4
 
 # Effective replication of yield trials
+repRow = 4/19 # h2 = 0.05
 repF6  = 4/9 # h2 = 0.1
 repPYT = 1   #h2 = 0.2
 repAYT = 4   #h2 = 0.5
