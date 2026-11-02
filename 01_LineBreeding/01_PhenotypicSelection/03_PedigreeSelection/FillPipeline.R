@@ -1,5 +1,8 @@
 # Fill breeding pipeline
 
+# p values for GxY effect
+P = runif(9)
+
 # Set initial yield trials with unique individuals
 for(cohort in 1:9){
   cat("FillPipeline stage:",cohort,"of 9\n")
@@ -9,15 +12,17 @@ for(cohort in 1:9){
   }
   if(cohort < 9){
     # Stage 2
+    p = P[9-cohort]
     F2 = vector("list",nCrosses) # Keep crosses seperate
     for(i in 1:nCrosses){ # Loop over crosses
       F2_i = self(F1[i], nProgeny = nF2)
-      F2_i = setPheno(F2_i, varE = varE, reps = repRow)
+      F2_i = setPheno(F2_i, varE = varE, reps = repRow, p = p)
       F2[[i]] = selectInd(F2_i, nInd = nSelF2)
     }
   }
   if(cohort < 8){
     # Stage 3
+    p = P[8-cohort]
     F3 = vector("list",nCrosses) # Selected plants from each cross
     for(i in 1:nCrosses){ # Loop over crosses
       n = nInd(F2[[i]]) # Number of rows per cross
@@ -25,7 +30,7 @@ for(cohort in 1:9){
       F3pheno = numeric(n) # Row phenotypes
       for(j in 1:n){
         F3rows[[j]] = self(F2[[i]][j],plantsPerRow)
-        F3rows[[j]] = setPheno(F3rows[[j]], varE = varE, reps = repRow)
+        F3rows[[j]] = setPheno(F3rows[[j]], varE = varE, reps = repRow, p = p)
         F3pheno[j] = meanP(F3rows[[j]])
       }
       # Select "nRowF3" F3 rows per cross
@@ -40,6 +45,7 @@ for(cohort in 1:9){
   }
   if(cohort < 7){
     # Stage 4
+    p = P[7-cohort]
     # Grow selected plants in F4 rows
     F4 = vector("list",nCrosses) # Selected plants from each cross
     for(i in 1:nCrosses){ # Loop over crosses
@@ -48,7 +54,7 @@ for(cohort in 1:9){
       F4pheno = numeric(n) # Row phenotypes
       for(j in 1:n){
         F4rows[[j]] = self(F3[[i]][j],plantsPerRow)
-        F4rows[[j]] = setPheno(F4rows[[j]], varE = varE, reps = repRow)
+        F4rows[[j]] = setPheno(F4rows[[j]], varE = varE, reps = repRow, p = p)
         F4pheno[j] = meanP(F4rows[[j]])
       }
       # Select "nRowF4" F4 rows per cross
@@ -63,6 +69,7 @@ for(cohort in 1:9){
   }
   if(cohort < 6){
     # Stage 5
+    p = P[6-cohort]
     # Grow selected plants in F5 rows
     F5 = vector("list",nCrosses) # Selected plants from each cross
     for(i in 1:nCrosses){ # Loop over crosses
@@ -71,7 +78,7 @@ for(cohort in 1:9){
       F5pheno = numeric(n) # Row phenotypes
       for(j in 1:n){
         F5rows[[j]] = self(F4[[i]][j],plantsPerRow)
-        F5rows[[j]] = setPheno(F5rows[[j]], varE = varE, reps = repRow)
+        F5rows[[j]] = setPheno(F5rows[[j]], varE = varE, reps = repRow, p = p)
         F5pheno[j] = meanP(F5rows[[j]])
       }
       #  Select "nSelF5" F5 rows per cross
@@ -86,6 +93,7 @@ for(cohort in 1:9){
   }
   if(cohort < 5){
     # Stage 6
+    p = P[5-cohort]
     # Grow selected plants in F6 rows
     F6 = vector("list",nCrosses) # Selected plants from each cross
     for(i in 1:nCrosses){ # Loop over crosses
@@ -95,7 +103,7 @@ for(cohort in 1:9){
       for(j in 1:n){
         F6lines[[j]] = F5[[i]][j] # No selfing due to deriving lines
         F6_j = self(F5[[i]][j],plantsPerRow)
-        F6_j = setPheno(F6_j, varE = varE, reps = repRow)
+        F6_j = setPheno(F6_j, varE = varE, reps = repRow, p = p)
         F6pheno[j] = meanP(F6_j)
       }
       # Select "nRowF6" F6 rows per cross
@@ -105,24 +113,27 @@ for(cohort in 1:9){
       F6[[i]] = mergePops(F6lines)
     }
     F6 = mergePops(F6)
-    F6 = setPheno(F6, varE = varE, reps = repF6)
+    F6 = setPheno(F6, varE = varE, reps = repF6, p = p)
   }
   if(cohort < 4){
     # Stage 7
+    p = P[4-cohort]
     # Test newly derived lines in PYT
     PYT = selectInd(F6, nPYT)
-    PYT = setPheno(PYT, varE = varE, reps = repPYT)
+    PYT = setPheno(PYT, varE = varE, reps = repPYT, p = p)
   }
   if(cohort < 3){
     # Stage 8
+    p = P[3-cohort]
     # AYT
     AYT = selectInd(PYT, nAYT)
-    AYT = setPheno(AYT, varE = varE, reps = repAYT)
+    AYT = setPheno(AYT, varE = varE, reps = repAYT, p = p)
   }
   if(cohort < 2){
     # Stage 9
+    p = P[2-cohort]
     # EYT
     EYT = selectInd(AYT, nEYT)
-    EYT = setPheno(EYT, varE = varE, reps = repEYT)
+    EYT = setPheno(EYT, varE = varE, reps = repEYT, p = p)
   }
 }
